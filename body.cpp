@@ -53,3 +53,8 @@ void Body::step(float dt, bool throttling)
 		advanceStateIndex();
 	}
 }
+
+Body* Body::calcRoot()
+{
+	return (getParent() ? getParent()->calcRoot() : this);
+}
