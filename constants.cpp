@@ -4,15 +4,15 @@
 #include "math.h"
 using namespace RBX;
 
-const float Constants::MAX_LEGO_JOINT_FORCES_MEASURED[7] = {0.0, 1.098, 2.1340001, 2.427, 3.191, 4.5710001, 4.6810002};
+const float Constants::MAX_LEGO_JOINT_FORCES_MEASURED[7] = {0.0f, 1.098f, 2.1340001f, 2.427f, 3.191f, 4.5710001f, 4.6810002f};
 
 const int Constants::kernelStepsPerWorldStep(){return 19;}
 const int Constants::worldStepsPerSec() {return 240;}
 const int Constants::kernelStepsPerSec() {return 4560;}
 const int Constants::kernelStepsPerUiStep() {return 152;}
-const float Constants::uiDt() {return 0.033333335;}
-const float Constants::worldDt() {return 0.0041666669;}
-const float Constants::kernelDt() {return 0.00021929825;}
+const float Constants::uiDt() {return 0.033333335f;}
+const float Constants::worldDt() {return 0.0041666669f;}
+const float Constants::kernelDt() {return 0.00021929825f;}
 
 const float Constants::getElasticMultiplier(float elasticity)
 {
@@ -58,9 +58,9 @@ const float RBX::Constants::getKmsMaxJointForce(float grid1, float grid2)
 const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize, bool ball)
 {
 	float result = 12;
-	float good2;
+	float good2 = 96;
 	float ughhhh = 0.434343f;
-	G3D::Vector3 moredummy = Vector3(1.6, 1.2, 1.7);
+	G3D::Vector3 moredummy = Vector3(1.6f, 1.2f, 1.7f);
 
 	for (int i = 0; i < 7; i++)
 	{
