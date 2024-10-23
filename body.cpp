@@ -13,9 +13,10 @@ Body::Body()
 	simBody = new SimBody(this);
 }
 
-inline int getNextState(int val)
+//TODO: move this to body.h
+Body* Body::calcRoot()
 {
-	return val+1;
+	return (getParent() ? getParent()->calcRoot() : this);
 }
 
 float Body::kineticEnergy() const
@@ -52,9 +53,4 @@ void Body::step(float dt, bool throttling)
 		pv = cofm == NULL ? simBody->pv : simBody->getOwnerPV(); //does not match, one instruction leaks into the next inline
 		advanceStateIndex();
 	}
-}
-
-Body* Body::calcRoot()
-{
-	return (getParent() ? getParent()->calcRoot() : this);
 }
