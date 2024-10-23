@@ -34,7 +34,7 @@ namespace RBX {
 			const G3D::CoordinateFrame& getMeInParent() const;
 			void updatePV();
 			void onChildAdded(RBX::Body* child);
-			void onChildRemoved(RBX::Body*);
+			void onChildRemoved(RBX::Body* child);
 			const RBX::Body* calcRootConst() const;
 			Body* Body::calcRoot()
 			{

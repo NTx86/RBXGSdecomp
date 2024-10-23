@@ -84,18 +84,28 @@ void Body::makeCofmDirty()
 	}
 }
 
-//incomplete for now, got sidetracked by makeCofmDirty()
-/*void Body::onChildAdded(RBX::Body* child)
+void Body::onChildAdded(RBX::Body* child)
 {
 	makeCofmDirty();
 	children.fastAppend(child);
 	if (!cofm)
 	{
 		RBXAssert(numChildren() == 1);
-		cofm = new Cofm;
+		cofm = new Cofm(this);
 	}
+}
 
-}*/
+void Body::onChildRemoved(RBX::Body* child)
+{
+	RBXAssert(cofm);
+	children.fastRemove(child);
+	if (numChildren() == 0)
+	{
+		delete cofm;
+		cofm = NULL;
+	}
+	makeCofmDirty();
+}
 
 void Body::step(float dt, bool throttling)
 {
