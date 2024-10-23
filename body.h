@@ -34,7 +34,6 @@ namespace RBX {
 			bool validateParentCofmDirty();
 			const G3D::CoordinateFrame& getMeInParent() const;
 			void updatePV();
-			_inline PV unkPVInline();
 			void onChildAdded(RBX::Body*);
 			void onChildRemoved(RBX::Body*);
 			const RBX::Body* calcRootConst() const;
@@ -51,7 +50,10 @@ namespace RBX {
 			int getStateIndex() const;
 			int numChildren() const;
 			RBX::Body* getChild(int) const;
-			RBX::Body* getParent() const;
+			inline RBX::Body* getParent() const
+			{
+				return parent;
+			}
 			RBX::Link* getLink() const;
 			const RBX::Body* getRootConst() const;
 			RBX::Body* getRoot();

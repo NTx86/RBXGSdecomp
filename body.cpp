@@ -18,17 +18,6 @@ inline int getNextState(int val)
 	return val+1;
 }
 
-_inline PV Body::unkPVInline()
-{
-	//PV ownerPV;
-	//if (cofm)
-	//	ownerPV = simBody->getOwnerPV();
-	//else
-	//	ownerPV = simBody->pv;
-
-	return (!cofm) ? simBody->pv : simBody->getOwnerPV();
-}
-
 float Body::kineticEnergy() const
 {
 	return 1.0; //temporary
@@ -36,7 +25,7 @@ float Body::kineticEnergy() const
 
 void Body::updatePV()
 {
-	RBXAssert(this->parent);
+	RBXAssert(getParent());
 }
 
 void Body::advanceStateIndex()
@@ -49,7 +38,7 @@ void Body::advanceStateIndex()
 
 void Body::step(float dt, bool throttling)
 {
-	RBXAssert(!parent);
+	RBXAssert(!getParent());
 	RBXAssert(simBody);
 
 	if (throttling && canThrottle)
