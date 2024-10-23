@@ -13,10 +13,14 @@ Body::Body()
 	simBody = new SimBody(this);
 }
 
-//TODO: move this to body.h
-Body* Body::calcRoot()
+void Body::resetRoot(RBX::Body* newRoot)
 {
-	return (getParent() ? getParent()->calcRoot() : this);
+	RBXAssert(newRoot == calcRoot());
+	root = newRoot;
+	for (int i = 0; i < children.size(); i++)
+	{
+		children[i]->resetRoot(newRoot);
+	}
 }
 
 float Body::kineticEnergy() const

@@ -13,10 +13,11 @@ namespace RBX {
 	class Body : KernelIndex
 	{
 		private:
+			int& getIndex() {return index;};
 			Body *root;
 			Body *parent;
 			int index;
-			IndexArrayOld<RBX::Body> children;
+			IndexArray<RBX::Body, &getIndex> children;
 			Cofm *cofm;
 			SimBody *simBody;
 			bool canThrottle;
@@ -27,17 +28,19 @@ namespace RBX {
 			int stateIndex;
 			PV pv;
 			//int& getKernelIndex();
-			int& getIndex();
 			const RBX::SimBody* getRootSimBody() const;
 			RBX::SimBody* getRootSimBody();
-			void resetRoot(RBX::Body*);
+			void resetRoot(RBX::Body* newRoot);
 			bool validateParentCofmDirty();
 			const G3D::CoordinateFrame& getMeInParent() const;
 			void updatePV();
 			void onChildAdded(RBX::Body*);
 			void onChildRemoved(RBX::Body*);
 			const RBX::Body* calcRootConst() const;
-			RBX::Body* calcRoot();
+			Body* Body::calcRoot()
+			{
+				return (getParent() ? getParent()->calcRoot() : this);
+			}
 		public:
 			int& getKernelIndex() {return kernelIndex;}
 			Body();
@@ -56,7 +59,7 @@ namespace RBX {
 			}
 			RBX::Link* getLink() const;
 			const RBX::Body* getRootConst() const;
-			RBX::Body* getRoot();
+			RBX::Body* getRoot() {return root;};
 			const G3D::Vector3& getCofmOffset() const
 			{
 				if (cofm)
