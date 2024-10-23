@@ -28,13 +28,12 @@ namespace RBX {
 			int stateIndex;
 			PV pv;
 			//int& getKernelIndex();
-			const RBX::SimBody* getRootSimBody() const;
-			RBX::SimBody* getRootSimBody();
+			const RBX::SimBody* getRootSimBody() {return getRoot()->simBody;};
 			void resetRoot(RBX::Body* newRoot);
 			bool validateParentCofmDirty();
 			const G3D::CoordinateFrame& getMeInParent() const;
 			void updatePV();
-			void onChildAdded(RBX::Body*);
+			void onChildAdded(RBX::Body* child);
 			void onChildRemoved(RBX::Body*);
 			const RBX::Body* calcRootConst() const;
 			Body* Body::calcRoot()
@@ -51,7 +50,7 @@ namespace RBX {
 			void advanceStateIndex();
 			void makeStateDirty();
 			int getStateIndex() const;
-			int numChildren() const;
+			int numChildren() {return children.size();}
 			RBX::Body* getChild(int) const;
 			inline RBX::Body* getParent() const
 			{

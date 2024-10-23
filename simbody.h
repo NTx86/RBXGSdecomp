@@ -33,8 +33,8 @@ namespace RBX {
 			SimBody(RBX::Body* body);
 			~SimBody();
 			void step(float);
-			void makeDirty();
-			bool getDirty() const;
+			void makeDirty() {dirty = true;};
+			bool getDirty() const {return dirty;};
 			PV getOwnerPV();
 			const PV& getPV();
 			void accumulateForceCofm(const G3D::Vector3&);

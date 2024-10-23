@@ -13,6 +13,7 @@ Body::Body()
 	simBody = new SimBody(this);
 }
 
+//does not match, 84%
 void Body::resetRoot(RBX::Body* newRoot)
 {
 	RBXAssert(newRoot == calcRoot());
@@ -40,6 +41,61 @@ void Body::advanceStateIndex()
 		p = 1;
 	stateIndex = p;
 }
+
+bool Body::validateParentCofmDirty()
+{
+	RBXAssert(cofm);
+	RBXAssert(cofm->getIsDirty());
+	if (getParent())
+		getParent()->validateParentCofmDirty();
+	return true;
+}
+
+//94% match
+void Body::makeCofmDirty()
+{
+	if (cofm && cofm->getIsDirty())
+	{
+		RBXAssert(!validateParentCofmDirty());
+		RBXAssert(getRootSimBody()->getDirty());
+	}
+	else
+	{
+		if (getParent())
+		{
+			RBXAssert(!simBody);
+			getParent()->makeCofmDirty();
+		}
+		else
+		{
+			RBXAssert(root == this);
+			if (simBody)
+				simBody->makeDirty();
+		}
+		if (cofm)
+		{
+			cofm->makeDirty();
+			RBXAssert(numChildren() > 0);
+		}
+		else
+		{
+			RBXAssert(!numChildren());
+		}
+	}
+}
+
+//incomplete for now, got sidetracked by makeCofmDirty()
+/*void Body::onChildAdded(RBX::Body* child)
+{
+	makeCofmDirty();
+	children.fastAppend(child);
+	if (!cofm)
+	{
+		RBXAssert(numChildren() == 1);
+		cofm = new Cofm;
+	}
+
+}*/
 
 void Body::step(float dt, bool throttling)
 {
