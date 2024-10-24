@@ -13,7 +13,6 @@ Body::Body()
 	simBody = new SimBody(this);
 }
 
-//does not match, 84%
 void Body::resetRoot(RBX::Body* newRoot)
 {
 	RBXAssert(newRoot == calcRoot());
@@ -56,7 +55,7 @@ void Body::makeCofmDirty()
 {
 	if (cofm && cofm->getIsDirty())
 	{
-		RBXAssert(!validateParentCofmDirty());
+		RBXAssert(validateParentCofmDirty());
 		RBXAssert(getRootSimBody()->getDirty());
 	}
 	else
