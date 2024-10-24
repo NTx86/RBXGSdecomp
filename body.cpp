@@ -106,6 +106,15 @@ void Body::onChildRemoved(RBX::Body* child)
 	makeCofmDirty();
 }
 
+void Body::setMass(float _mass)
+{
+	if (mass != _mass)
+	{
+		makeCofmDirty();
+		mass = _mass;
+	}
+}
+
 void Body::step(float dt, bool throttling)
 {
 	RBXAssert(!getParent());

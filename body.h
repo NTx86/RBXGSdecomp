@@ -100,7 +100,7 @@ namespace RBX {
 			void setParent(RBX::Body*);
 			void setMeInParent(RBX::Link*);
 			void setMeInParent(const G3D::CoordinateFrame&);
-			void setMass(float);
+			void setMass(float _mass);
 			void setMoment(const G3D::Matrix3&);
 			void setPv(const RBX::PV&);
 			void setCoordinateFrame(const G3D::CoordinateFrame&);
