@@ -1,8 +1,8 @@
 #pragma once
 #include <G3DAll.h>
-#include "quaternion.h"
-#include "pv.h"
-//#include "body.h"
+#include "Quaternion.h"
+#include "PV.h"
+//#include "Body.h"
 
 namespace RBX {
 	class Body;

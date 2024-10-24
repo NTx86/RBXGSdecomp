@@ -1,6 +1,6 @@
 // RBXGSdecomp.cpp : Defines the entry point for the DLL application.
 //
-#include "kernel.h"
+#include "Kernel.h"
 #include <windows.h>
 #include <boost/shared_ptr.hpp>
 

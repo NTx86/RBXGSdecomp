@@ -1,4 +1,4 @@
-#include "connector.h"
+#include "Connector.h"
 using namespace RBX;
 
 bool Connector::canThrottle(){

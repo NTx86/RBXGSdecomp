@@ -1,4 +1,4 @@
-#include "profiling.h"
+#include "Profiling.h"
 #include <g3d/system.h>
 using namespace RBX;
 

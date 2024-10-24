@@ -1,5 +1,5 @@
 #pragma once
-#include "debug.h"
+#include "Debug.h"
 
 /*
 class RBX::IStage { // Size=0xc

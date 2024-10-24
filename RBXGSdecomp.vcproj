@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1257"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="RBXGSdecomp"
 	ProjectGUID="{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}"
 	RootNamespace="RBXGSdecomp"
@@ -187,27 +187,27 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\body.cpp"
+				RelativePath=".\Body.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\cofm.cpp"
+				RelativePath=".\Cofm.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\connector.cpp"
+				RelativePath=".\Connector.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\constants.cpp"
+				RelativePath=".\Constants.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\kernel.cpp"
+				RelativePath=".\Kernel.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\point.cpp"
+				RelativePath=".\Point.cpp"
 				>
 			</File>
 			<File
@@ -215,22 +215,22 @@
 				>
 			</File>
 			<File
-				RelativePath=".\simbody.cpp"
+				RelativePath=".\SimBody.cpp"
 				>
 			</File>
 			<Filter
 				Name="util"
 				>
 				<File
-					RelativePath=".\debug.cpp"
+					RelativePath=".\Debug.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\math.cpp"
+					RelativePath=".\Math.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\profiling.cpp"
+					RelativePath=".\Profiling.cpp"
 					>
 				</File>
 			</Filter>
@@ -241,86 +241,86 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\body.h"
+				RelativePath=".\Body.h"
 				>
 			</File>
 			<File
-				RelativePath=".\cofm.h"
+				RelativePath=".\Cofm.h"
 				>
 			</File>
 			<File
-				RelativePath=".\connector.h"
+				RelativePath=".\Connector.h"
 				>
 			</File>
 			<File
-				RelativePath=".\constants.h"
+				RelativePath=".\Constants.h"
 				>
 			</File>
 			<File
-				RelativePath=".\istage.h"
+				RelativePath=".\IStage.h"
 				>
 			</File>
 			<File
-				RelativePath=".\kernel.h"
+				RelativePath=".\Kernel.h"
 				>
 			</File>
 			<File
-				RelativePath=".\kerneldata.h"
+				RelativePath=".\KernelData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\kernelindex.h"
+				RelativePath=".\KernelIndex.h"
 				>
 			</File>
 			<File
-				RelativePath=".\kernelinput.h"
+				RelativePath=".\KernelInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\link.h"
+				RelativePath=".\Link.h"
 				>
 			</File>
 			<File
-				RelativePath=".\pair.h"
+				RelativePath=".\Pair.h"
 				>
 			</File>
 			<File
-				RelativePath=".\point.h"
+				RelativePath=".\Point.h"
 				>
 			</File>
 			<File
-				RelativePath=".\simbody.h"
+				RelativePath=".\SimBody.h"
 				>
 			</File>
 			<Filter
 				Name="util"
 				>
 				<File
-					RelativePath=".\debug.h"
+					RelativePath=".\Debug.h"
 					>
 				</File>
 				<File
-					RelativePath=".\indexarray.h"
+					RelativePath=".\IndexArray.h"
 					>
 				</File>
 				<File
-					RelativePath=".\math.h"
+					RelativePath=".\Math.h"
 					>
 				</File>
 				<File
-					RelativePath=".\profiling.h"
+					RelativePath=".\Profiling.h"
 					>
 				</File>
 				<File
-					RelativePath=".\pv.h"
+					RelativePath=".\PV.h"
 					>
 				</File>
 				<File
-					RelativePath=".\quaternion.h"
+					RelativePath=".\Quaternion.h"
 					>
 				</File>
 				<File
-					RelativePath=".\velocity.h"
+					RelativePath=".\Velocity.h"
 					>
 				</File>
 			</Filter>

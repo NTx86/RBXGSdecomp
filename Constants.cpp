@@ -1,7 +1,7 @@
 #include <G3DAll.h>
-#include "constants.h"
-#include "debug.h"
-#include "math.h"
+#include "Constants.h"
+#include "Debug.h"
+#include "Math.h"
 using namespace RBX;
 
 const float Constants::MAX_LEGO_JOINT_FORCES_MEASURED[7] = {0.0f, 1.098f, 2.1340001f, 2.427f, 3.191f, 4.5710001f, 4.6810002f};

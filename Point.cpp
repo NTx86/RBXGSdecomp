@@ -1,5 +1,5 @@
-#include "point.h"
-#include "body.h"
+#include "Point.h"
+#include "Body.h"
 
 using namespace RBX;
 

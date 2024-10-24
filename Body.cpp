@@ -1,6 +1,6 @@
-#include "body.h"
-#include "simbody.h"
-#include "debug.h"
+#include "Body.h"
+#include "SimBody.h"
+#include "Debug.h"
 using namespace RBX;
 
 int p;
