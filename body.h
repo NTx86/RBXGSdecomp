@@ -36,7 +36,7 @@ namespace RBX {
 			void onChildAdded(RBX::Body* child);
 			void onChildRemoved(RBX::Body* child);
 			const RBX::Body* calcRootConst() const;
-			Body* Body::calcRoot()
+			__declspec(noinline) Body* Body::calcRoot()
 			{
 				return (getParent() ? getParent()->calcRoot() : this);
 			}
