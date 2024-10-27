@@ -132,3 +132,12 @@ void Body::step(float dt, bool throttling)
 		advanceStateIndex();
 	}
 }
+
+void Body::setMoment(const G3D::Matrix3& _momentInBody)
+{
+	if (moment != _momentInBody)
+	{
+		makeCofmDirty();
+		moment = _momentInBody;
+	}
+}
