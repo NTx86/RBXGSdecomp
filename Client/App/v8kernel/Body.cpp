@@ -149,3 +149,9 @@ void Body::accumulateForceAtBranchCofm(const G3D::Vector3& force)
 	if (root->simBody)
 		root->simBody->accumulateForceCofm(force);
 }
+
+void Body::resetAccumulators()
+{
+	if (root->simBody)
+		root->simBody->resetAccumulators();
+}
