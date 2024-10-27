@@ -37,7 +37,11 @@ namespace RBX {
 			bool getDirty() const {return dirty;};
 			PV getOwnerPV();
 			const PV& getPV();
-			void accumulateForceCofm(const G3D::Vector3&);
+			void accumulateForceCofm(const G3D::Vector3& _force)
+			{
+				updateIfDirty();
+				force += _force;	
+			};
 			inline static G3D::Vector3 accumulateInline(const G3D::Vector3& _force, const G3D::Vector3& pvWorld, const G3D::Vector3& worldPos)
 			{
 				G3D::Vector3 temp = worldPos - pvWorld;

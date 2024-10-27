@@ -141,3 +141,11 @@ void Body::setMoment(const G3D::Matrix3& _momentInBody)
 		moment = _momentInBody;
 	}
 }
+
+void Body::accumulateForceAtBranchCofm(const G3D::Vector3& force)
+{
+	RBXAssert(root == this);
+
+	if (root->simBody)
+		root->simBody->accumulateForceCofm(force);
+}

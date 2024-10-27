@@ -91,7 +91,7 @@ namespace RBX {
 			const RBX::PV& getPV() const;
 			const bool getCanThrottle() const;
 			void accumulateForceAtCofm(const G3D::Vector3&);
-			void accumulateForceAtBranchCofm(const G3D::Vector3&);
+			void accumulateForceAtBranchCofm(const G3D::Vector3& force);
 			void accumulateForce(const G3D::Vector3&, const G3D::Vector3&);
 			void accumulateTorque(const G3D::Vector3&);
 			void resetAccumulators();
