@@ -1,5 +1,5 @@
-#include "SimBody.h"
-#include "Body.h"
+#include "v8kernel/SimBody.h"
+#include "v8kernel/Body.h"
 
 using namespace RBX;
 

@@ -1,8 +1,8 @@
 #pragma once
-#include "Body.h"
-#include "Point.h"
-#include "Connector.h"
-#include "IndexArray.h"
+#include "v8kernel/Body.h"
+#include "v8kernel/Point.h"
+#include "v8kernel/Connector.h"
+#include "util/IndexArray.h"
 
 namespace RBX {
 	class KernelData

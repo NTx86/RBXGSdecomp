@@ -1,12 +1,12 @@
 #pragma once
 #include <G3DAll.h>
-#include "indexarray.h"
-#include "SimBody.h"
-#include "Link.h"
-#include "PV.h"
-#include "Link.h"
-#include "KernelIndex.h"
-#include "Cofm.h"
+#include "util/indexarray.h"
+#include "v8kernel/SimBody.h"
+#include "v8kernel/Link.h"
+#include "util/PV.h"
+#include "v8kernel/Link.h"
+#include "v8kernel/KernelIndex.h"
+#include "v8kernel/Cofm.h"
 
 namespace RBX {
 	//class SimBody;

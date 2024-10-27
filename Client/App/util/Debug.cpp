@@ -1,4 +1,4 @@
-#include "Debug.h"
+#include "util/Debug.h"
 using namespace RBX;
 
 bool DoCrash = true; //this varialbe is suppose to be have the same name as the function, but that causes issues

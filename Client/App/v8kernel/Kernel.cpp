@@ -1,7 +1,7 @@
-#include "Kernel.h"
-#include "Debug.h"
-#include "Constants.h"
-#include "Connector.h"
+#include "v8kernel/Kernel.h"
+#include "util/Debug.h"
+#include "v8kernel/Constants.h"
+#include "v8kernel/Connector.h"
 using namespace RBX;
 
 int Kernel::numKernels;

@@ -1,6 +1,6 @@
-#include "Body.h"
-#include "SimBody.h"
-#include "Debug.h"
+#include "v8kernel/Body.h"
+#include "v8kernel/SimBody.h"
+#include "util/Debug.h"
 using namespace RBX;
 
 int p;

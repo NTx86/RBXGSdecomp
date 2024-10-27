@@ -2,9 +2,9 @@
 #include <g3d/array.h>
 #include <boost/serialization/scoped_ptr.hpp>
 #include <boost/noncopyable.hpp>
-#include "IStage.h"
-#include "KernelData.h"
-#include "Profiling.h"
+#include "v8kernel/IStage.h"
+#include "v8kernel/KernelData.h"
+#include "util/Profiling.h"
 
 namespace RBX {
 class Kernel : IStage {

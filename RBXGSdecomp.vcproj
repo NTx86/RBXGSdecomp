@@ -121,7 +121,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="D:\NT_x86&apos;s\workspace\clientsearch\rbxgsstuff\nov15_2007\RBXGSdecomp\boost_1_34_1"
+				AdditionalIncludeDirectories="&quot;.\Client\App\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;RBXGSDECOMP_EXPORTS"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -182,157 +182,151 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="App"
 			>
-			<File
-				RelativePath=".\Body.cpp"
+			<Filter
+				Name="include"
 				>
-			</File>
-			<File
-				RelativePath=".\Cofm.cpp"
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath=".\Client\App\include\util\Debug.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\util\IndexArray.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\util\Math.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\util\Profiling.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\util\PV.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\util\Quaternion.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\util\Velocity.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="v8kernel"
+					>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Body.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Cofm.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Connector.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Constants.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\IStage.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Kernel.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\KernelData.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\KernelIndex.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\KernelInput.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Link.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Pair.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\Point.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Client\App\include\v8kernel\SimBody.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="v8kernel"
 				>
-			</File>
-			<File
-				RelativePath=".\Connector.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Constants.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Kernel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Point.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RBXGSdecomp.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SimBody.cpp"
-				>
-			</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\Body.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\Cofm.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\Connector.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\Constants.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\Kernel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\Point.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Client\App\v8kernel\SimBody.cpp"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="util"
 				>
 				<File
-					RelativePath=".\Debug.cpp"
+					RelativePath=".\Client\App\util\Debug.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Math.cpp"
+					RelativePath=".\Client\App\util\Math.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Profiling.cpp"
+					RelativePath=".\Client\App\util\Profiling.cpp"
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\Body.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Cofm.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Connector.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Constants.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IStage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Kernel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\KernelData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\KernelIndex.h"
-				>
-			</File>
-			<File
-				RelativePath=".\KernelInput.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Link.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Pair.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Point.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SimBody.h"
-				>
-			</File>
-			<Filter
-				Name="util"
-				>
-				<File
-					RelativePath=".\Debug.h"
-					>
-				</File>
-				<File
-					RelativePath=".\IndexArray.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Math.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Profiling.h"
-					>
-				</File>
-				<File
-					RelativePath=".\PV.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Quaternion.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Velocity.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt"
+			RelativePath=".\RBXGSdecomp.cpp"
 			>
 		</File>
 	</Files>

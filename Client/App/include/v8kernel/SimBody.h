@@ -1,8 +1,8 @@
 #pragma once
 #include <G3DAll.h>
-#include "Quaternion.h"
-#include "PV.h"
-//#include "Body.h"
+#include "util/Quaternion.h"
+#include "util/PV.h"
+//#include "v8kernel/Body.h"
 
 namespace RBX {
 	class Body;

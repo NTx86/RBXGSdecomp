@@ -1,7 +1,7 @@
 #pragma once
 
 #include <G3DAll.h>
-#include "Velocity.h"
+#include "util/Velocity.h"
 
 namespace RBX {
 	class PV

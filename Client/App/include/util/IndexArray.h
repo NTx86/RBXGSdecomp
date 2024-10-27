@@ -1,8 +1,8 @@
 #pragma once
 #include <g3d/array.h>
 #include <boost/noncopyable.hpp>
-#include "Debug.h"
-#include "Connector.h"
+#include "util/Debug.h"
+#include "v8kernel/Connector.h"
 
 namespace RBX {
 	template <typename tInstance>
