@@ -150,6 +150,7 @@ void Body::matchDummy()
 	index = getBranchForce().z + getBranchTorque().y;
 }
 
+//does not match because of advanceStateIndex() memes
 void Body::setVelocity(const Velocity& worldVelocity)
 {
 	if (!getParent())
