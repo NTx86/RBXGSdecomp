@@ -40,6 +40,7 @@ namespace RBX {
 			{
 				return (getParent() ? getParent()->calcRoot() : this);
 			}
+			void matchDummy();
 		public:
 			int& getKernelIndex() {return kernelIndex;}
 			Body();
@@ -91,7 +92,13 @@ namespace RBX {
 			const RBX::PV& getPV() const;
 			const bool getCanThrottle() const;
 			void accumulateForceAtCofm(const G3D::Vector3&);
-			void accumulateForceAtBranchCofm(const G3D::Vector3& force);
+			void accumulateForceAtBranchCofm(const G3D::Vector3& force)
+			{
+				RBXAssert(root == this);
+
+				if (root->simBody)
+					root->simBody->accumulateForceCofm(force);
+			}
 			void accumulateForce(const G3D::Vector3&, const G3D::Vector3&);
 			void accumulateTorque(const G3D::Vector3&);
 			void resetAccumulators();
@@ -101,7 +108,14 @@ namespace RBX {
 			void setMeInParent(RBX::Link*);
 			void setMeInParent(const G3D::CoordinateFrame&);
 			void setMass(float _mass);
-			void setMoment(const G3D::Matrix3& _momentInBody);
+			void setMoment(const G3D::Matrix3& _momentInBody)
+			{
+				if (moment != _momentInBody)
+				{
+					makeCofmDirty();
+					moment = _momentInBody;
+				}
+			}
 			void setPv(const RBX::PV&);
 			void setCoordinateFrame(const G3D::CoordinateFrame&);
 			void setVelocity(const RBX::Velocity&);

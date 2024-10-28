@@ -133,19 +133,8 @@ void Body::step(float dt, bool throttling)
 	}
 }
 
-void Body::setMoment(const G3D::Matrix3& _momentInBody)
+void Body::matchDummy()
 {
-	if (moment != _momentInBody)
-	{
-		makeCofmDirty();
-		moment = _momentInBody;
-	}
-}
-
-void Body::accumulateForceAtBranchCofm(const G3D::Vector3& force)
-{
-	RBXAssert(root == this);
-
-	if (root->simBody)
-		root->simBody->accumulateForceCofm(force);
+	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
+	setMoment(Matrix3());
 }
