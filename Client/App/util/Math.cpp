@@ -23,3 +23,8 @@ G3D::Vector3 Math::sortVector3(const G3D::Vector3& v)
 
 	return result;
 }
+
+G3D::Matrix3 Math::momentToWorldSpace(const G3D::Matrix3& iBody, const G3D::Matrix3& bodyRotation)
+{
+	return (bodyRotation * iBody) * bodyRotation.transpose();
+}

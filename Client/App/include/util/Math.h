@@ -86,7 +86,7 @@ namespace RBX
 			static void rotateMatrixAboutZ90(G3D::Matrix3&);
 			static G3D::Matrix3 rotateAboutZ(const G3D::Matrix3&, float);
 			static G3D::Matrix3 momentToObjectSpace(const G3D::Matrix3&, const G3D::Matrix3&);
-			static G3D::Matrix3 momentToWorldSpace(const G3D::Matrix3&, const G3D::Matrix3&);
+			static G3D::Matrix3 momentToWorldSpace(const G3D::Matrix3& iBody, const G3D::Matrix3& bodyRotation);
 			static G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3&, const G3D::Vector3&, const G3D::Matrix3&, float);
 			static void rotateAboutYLocal(G3D::CoordinateFrame&, float);
 			static void rotateAboutYGlobal(G3D::CoordinateFrame&, float);
