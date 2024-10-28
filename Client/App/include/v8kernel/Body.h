@@ -50,14 +50,18 @@ namespace RBX {
 			void makeCofmDirty();
 			void advanceStateIndex();
 			void makeStateDirty();
-			int getStateIndex() const;
+			int getStateIndex() 
+			{
+				updatePV();
+				return stateIndex;
+			}
 			int numChildren() {return children.size();}
 			RBX::Body* getChild(int) const;
 			inline RBX::Body* getParent() const
 			{
 				return parent;
 			}
-			RBX::Link* getLink() const;
+			RBX::Link* getLink() const {return link;}
 			const RBX::Body* getRootConst() const;
 			RBX::Body* getRoot() {return root;};
 			const G3D::Vector3& getCofmOffset() const
