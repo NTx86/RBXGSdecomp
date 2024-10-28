@@ -122,5 +122,7 @@ namespace RBX {
 			void setCanThrottle(bool);
 			float kineticEnergy() const;
 			float potentialEnergy() const;
+			static int getNextStateIndex();
+			static Body* getWorldBody();
 	};
 }

@@ -41,6 +41,14 @@ void Body::advanceStateIndex()
 	stateIndex = p;
 }
 
+int Body::getNextStateIndex()
+{
+	p++;
+	if (p == INT_MAX)
+		p = 1;
+	return p;
+}
+
 bool Body::validateParentCofmDirty()
 {
 	RBXAssert(cofm);
