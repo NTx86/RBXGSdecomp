@@ -12,3 +12,9 @@ void Cofm::updateIfDirty()
 {
 	return; //placeholder
 }
+
+float Cofm::getMass()
+{
+	updateIfDirty();
+	return mass;
+}

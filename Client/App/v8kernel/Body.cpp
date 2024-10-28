@@ -145,4 +145,18 @@ void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
 	setMoment(Matrix3());
+	resetAccumulators();
+	mass = getBranchMass();
+	index = getBranchForce().z + getBranchTorque().y;
+}
+
+void Body::setVelocity(const Velocity& worldVelocity)
+{
+	if (!getParent())
+	{
+		pv.velocity = worldVelocity;
+		advanceStateIndex();
+		if (simBody)
+			simBody->makeDirty();
+	}
 }

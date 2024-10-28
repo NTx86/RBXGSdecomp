@@ -18,5 +18,6 @@ namespace RBX {
 			G3D::Vector3& getCofmInBody() const;
 			bool getIsDirty() const {return dirty;}
 			void makeDirty() {dirty = true;}
+			float getMass();
 	};
 }

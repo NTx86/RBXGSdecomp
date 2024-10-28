@@ -83,7 +83,10 @@ namespace RBX {
 			G3D::Vector3 getIBodyV3() const;
 			G3D::Matrix3 getIWorld() const;
 			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3&) const;
-			float getBranchMass() const;
+			float getBranchMass() const
+			{
+				return (cofm ? cofm->getMass() : mass);
+			}
 			G3D::Matrix3 getBranchIBody() const;
 			G3D::Vector3 getBranchIBodyV3() const;
 			G3D::Matrix3 getBranchIWorld() const;
@@ -105,9 +108,25 @@ namespace RBX {
 			}
 			void accumulateForce(const G3D::Vector3&, const G3D::Vector3&);
 			void accumulateTorque(const G3D::Vector3&);
-			void resetAccumulators();
-			const G3D::Vector3& getBranchForce() const;
-			const G3D::Vector3& getBranchTorque() const;
+			void resetAccumulators()
+			{
+				if (root->simBody)
+					root->simBody->resetAccumulators();
+			}
+			const G3D::Vector3& getBranchForce() const
+			{
+				if (root->simBody)
+					return root->simBody->force;
+				else
+					return Vector3::zero();
+			}
+			const G3D::Vector3& getBranchTorque() const
+			{
+				if (root->simBody)
+					return root->simBody->torque;
+				else
+					return Vector3::zero();
+			}
 			void setParent(RBX::Body*);
 			void setMeInParent(RBX::Link*);
 			void setMeInParent(const G3D::CoordinateFrame&);
@@ -122,7 +141,7 @@ namespace RBX {
 			}
 			void setPv(const RBX::PV&);
 			void setCoordinateFrame(const G3D::CoordinateFrame&);
-			void setVelocity(const RBX::Velocity&);
+			void setVelocity(const RBX::Velocity& worldVelocity);
 			void setCanThrottle(bool);
 			float kineticEnergy() const;
 			float potentialEnergy() const;
