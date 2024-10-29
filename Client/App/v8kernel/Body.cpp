@@ -3,8 +3,6 @@
 #include "util/Debug.h"
 using namespace RBX;
 
-//int p;
-
 Body::Body()
 	:index(-1),
 	canThrottle(true),
@@ -83,8 +81,12 @@ void Body::makeCofmDirty()
 {
 	if (cofm && cofm->getIsDirty())
 	{
-		RBXAssert(validateParentCofmDirty());
+		if (Debugable::assertAction == Debugable::CrashOnAssert)
+		{
+			if (parent)
+			parent->validateParentCofmDirty();
 		RBXAssert(getRootSimBody()->getDirty());
+		}
 	}
 	else
 	{
