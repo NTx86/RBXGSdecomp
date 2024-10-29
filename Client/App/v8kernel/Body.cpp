@@ -145,15 +145,6 @@ void Body::step(float dt, bool throttling)
 	}
 }
 
-void Body::matchDummy()
-{
-	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
-	setMoment(Matrix3());
-	resetAccumulators();
-	mass = getBranchMass();
-	index = getBranchForce().z + getBranchTorque().y;
-}
-
 //does not match because of advanceStateIndex() memes
 void Body::setVelocity(const Velocity& worldVelocity)
 {
@@ -164,4 +155,56 @@ void Body::setVelocity(const Velocity& worldVelocity)
 		if (simBody)
 			simBody->makeDirty();
 	}
+}
+
+void Body::setParent(Body* newParent)
+{
+	RBXAssert(!newParent || newParent->getParent() != this);
+	RBXAssert(newParent != this);
+
+	if (parent != newParent)
+	{
+		if (link)
+		{
+			link->setBody(NULL);
+			link = NULL;
+		}
+
+		if (getParent())
+		{
+			RBXAssert(root == getParent()->getRoot());
+			RBXAssert(!simBody);
+			parent->onChildRemoved(this);
+		}
+		else
+		{
+			RBXAssert(root = this);
+			RBXAssert(simBody);
+			delete simBody;
+			simBody = NULL;
+		}
+
+		parent = newParent;
+
+		if (newParent)
+		{
+			newParent->onChildAdded(this);
+		}
+		else
+		{
+			simBody = new SimBody(this);
+		}
+		Body* myRoot = getParent() ? getParent()->calcRoot() : this;
+		myRoot->advanceStateIndex();
+		resetRoot(myRoot);
+	}
+}
+
+void Body::matchDummy()
+{
+	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
+	setMoment(Matrix3());
+	resetAccumulators();
+	mass = getBranchMass();
+	index = getBranchForce().z + getBranchTorque().y;
 }

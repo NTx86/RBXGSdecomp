@@ -127,7 +127,7 @@ namespace RBX {
 				else
 					return Vector3::zero();
 			}
-			void setParent(RBX::Body*);
+			void setParent(Body* newParent);
 			void setMeInParent(RBX::Link*);
 			void setMeInParent(const G3D::CoordinateFrame&);
 			void setMass(float _mass);
