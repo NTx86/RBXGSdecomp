@@ -223,7 +223,6 @@ Body* Body::getWorldBody()
 
 G3D::CoordinateFrame Body::getMeInDescendant(const Body* descendant) const
 {
-	//CoordinateFrame result;
 	if (descendant == this)
 	{
 		return CoordinateFrame::CoordinateFrame();
@@ -243,6 +242,7 @@ G3D::CoordinateFrame Body::getMeInDescendant(const Body* descendant) const
 void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
+	accumulateTorque(Vector3(6.3f,4.2f,9.7f));
 	setMoment(Matrix3());
 	resetAccumulators();
 	mass = getBranchMass();

@@ -53,7 +53,11 @@ namespace RBX {
 				force += _force;
 				torque += accumulateInline(_force, pv.position.translation, worldPos);
 			}
-			void accumulateTorque(const G3D::Vector3&);
+			void accumulateTorque(const G3D::Vector3& _torque)
+			{
+				updateIfDirty();
+				torque += _torque;	
+			}
 			void SimBody::resetAccumulators()
 			{
 				updateIfDirty();
