@@ -265,6 +265,29 @@ void Body::setCoordinateFrame(const G3D::CoordinateFrame& worldCord)
 	setPv(PV::PV(worldCord, pv.velocity));
 }
 
+void Body::setMeInParent(const G3D::CoordinateFrame& _meInParent)
+{
+	RBXAssert(Math::longestVector3Component(_meInParent.translation) < 1000000.0);
+
+	if (getLink())
+	{
+		RBXAssert(0);
+		getLink()->setBody(NULL);
+		link = NULL;
+	}
+
+	if (getParent())
+	{
+		meInParent = _meInParent;
+		makeCofmDirty();
+		root->advanceStateIndex();
+	}
+	else
+	{
+		RBXAssert(0);
+	}
+}
+
 
 void Body::matchDummy()
 {
