@@ -200,6 +200,12 @@ void Body::setParent(Body* newParent)
 	}
 }
 
+Body* Body::getWorldBody()
+{
+	static Body b = Body();
+	return &b;
+}
+
 void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
