@@ -3,7 +3,7 @@
 #include "util/Debug.h"
 using namespace RBX;
 
-int p;
+//int p;
 
 Body::Body()
 	:index(-1),
@@ -58,6 +58,7 @@ __declspec(noinline) void Body::updatePV()
 
 int Body::getNextStateIndex()
 {
+	static int p;
 	if (++p == INT_MAX)
 		p = 1;
 	return p;
