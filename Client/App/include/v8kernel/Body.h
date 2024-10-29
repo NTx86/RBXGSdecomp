@@ -33,7 +33,7 @@ namespace RBX {
 			void resetRoot(RBX::Body* newRoot);
 			bool validateParentCofmDirty();
 			const G3D::CoordinateFrame& getMeInParent() const;
-			void updatePV();
+			__declspec(noinline) void updatePV();
 			void onChildAdded(RBX::Body* child);
 			void onChildRemoved(RBX::Body* child);
 			const RBX::Body* calcRootConst() const;
@@ -151,7 +151,7 @@ namespace RBX {
 				}
 			}
 			void setPv(const PV& _pv);
-			void setCoordinateFrame(const G3D::CoordinateFrame&);
+			void setCoordinateFrame(const G3D::CoordinateFrame& worldCord);
 			void setVelocity(const RBX::Velocity& worldVelocity);
 			void setCanThrottle(bool);
 			float kineticEnergy() const;

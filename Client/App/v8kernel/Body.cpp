@@ -51,7 +51,7 @@ float Body::kineticEnergy() const
 	return 1.0; //temporary
 }
 
-void Body::updatePV()
+__declspec(noinline) void Body::updatePV()
 {
 	RBXAssert(getParent());
 }
@@ -258,6 +258,13 @@ void Body::setPv(const PV& _pv)
 	RBXAssert(!Math::isNanInfDenormVector3(pv.velocity.linear));
 	RBXAssert(!Math::isNanInfDenormVector3(pv.velocity.rotational));
 }
+
+void Body::setCoordinateFrame(const G3D::CoordinateFrame& worldCord)
+{
+	updatePV();
+	setPv(PV::PV(worldCord, pv.velocity));
+}
+
 
 void Body::matchDummy()
 {

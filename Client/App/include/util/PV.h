@@ -10,5 +10,7 @@ namespace RBX {
 			G3D::CoordinateFrame position;
 			RBX::Velocity velocity;
 			PV pvAtLocalOffset(G3D::Vector3& localOffset) const;
+			PV() {}
+			PV(const G3D::CoordinateFrame& worldPos, const RBX::Velocity& _velocity):position(worldPos),velocity(_velocity) {}
 	};
 }
