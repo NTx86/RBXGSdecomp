@@ -68,7 +68,7 @@ namespace RBX
 			static bool orthonormalizeIfNecessary(G3D::Matrix3&);
 			static G3D::Vector3 toFocusSpace(const G3D::Vector3&, const G3D::CoordinateFrame&);
 			static G3D::Vector3 fromFocusSpace(const G3D::Vector3&, const G3D::CoordinateFrame&);
-			static G3D::Vector3 toDiagonal(const G3D::Matrix3&);
+			static G3D::Vector3 toDiagonal(const G3D::Matrix3& m);
 			static G3D::Matrix3 fromDiagonal(const G3D::Vector3&);
 			static G3D::Vector3 getColumn(const G3D::Matrix3&, int);
 			static unsigned char rotationToByte(float);

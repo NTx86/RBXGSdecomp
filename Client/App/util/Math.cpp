@@ -28,3 +28,8 @@ G3D::Matrix3 Math::momentToWorldSpace(const G3D::Matrix3& iBody, const G3D::Matr
 {
 	return (bodyRotation * iBody) * bodyRotation.transpose();
 }
+
+G3D::Vector3 Math::toDiagonal(const G3D::Matrix3& m)
+{
+	return Vector3(m[0][0],m[1][1],m[2][2]);
+}
