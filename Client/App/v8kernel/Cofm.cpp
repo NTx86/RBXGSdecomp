@@ -18,3 +18,9 @@ float Cofm::getMass()
 	updateIfDirty();
 	return mass;
 }
+
+G3D::Matrix3& Cofm::getMoment()
+{
+	updateIfDirty();
+	return moment;
+}

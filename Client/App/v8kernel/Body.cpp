@@ -246,5 +246,5 @@ void Body::matchDummy()
 	setMoment(Matrix3());
 	resetAccumulators();
 	mass = getBranchMass();
-	index = getBranchForce().z + getBranchTorque().y;
+	index = getBranchForce().z + getBranchTorque().y + getBranchIBodyV3().x;
 }

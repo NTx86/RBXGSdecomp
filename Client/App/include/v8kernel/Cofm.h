@@ -19,5 +19,6 @@ namespace RBX {
 			bool getIsDirty() const {return dirty;}
 			void makeDirty() {dirty = true;}
 			float getMass();
+			G3D::Matrix3& getMoment();
 	};
 }

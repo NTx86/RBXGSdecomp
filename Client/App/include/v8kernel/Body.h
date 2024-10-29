@@ -7,6 +7,7 @@
 #include "v8kernel/Link.h"
 #include "v8kernel/KernelIndex.h"
 #include "v8kernel/Cofm.h"
+#include "util/math.h"
 
 namespace RBX {
 	//class SimBody;
@@ -87,8 +88,14 @@ namespace RBX {
 			{
 				return (cofm ? cofm->getMass() : mass);
 			}
-			G3D::Matrix3 getBranchIBody() const;
-			G3D::Vector3 getBranchIBodyV3() const;
+			G3D::Matrix3 getBranchIBody() const
+			{
+				return cofm ? cofm->getMoment() : moment;
+			}
+			G3D::Vector3 getBranchIBodyV3() const
+			{
+				return Math::toDiagonal(getBranchIBody());
+			}
 			G3D::Matrix3 getBranchIWorld() const;
 			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3&) const;
 			G3D::Vector3 getBranchCofmPos() const;
