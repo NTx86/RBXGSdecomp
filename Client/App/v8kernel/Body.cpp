@@ -221,6 +221,25 @@ Body* Body::getWorldBody()
 	return &b;
 }
 
+G3D::CoordinateFrame Body::getMeInDescendant(const Body* descendant) const
+{
+	//CoordinateFrame result;
+	if (descendant == this)
+	{
+		return CoordinateFrame::CoordinateFrame();
+	}
+	else if (descendant == parent)
+	{
+		RBXAssert(parent);
+		return getLink() ? getLink()->getChildInParent() : meInParent;
+	}
+	else
+	{
+		RBXAssert(parent);
+		return parent->getMeInDescendant(descendant) * meInParent;
+	}
+}
+
 void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
