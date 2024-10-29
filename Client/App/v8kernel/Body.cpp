@@ -21,6 +21,21 @@ Body::Body()
 	simBody = new SimBody(this);
 }
 
+Body::~Body()
+{
+	RBXAssert(numChildren() == 0);
+	if (parent)
+		setParent(NULL);
+	RBXAssert(!parent);
+	RBXAssert(!link);
+	RBXAssert(index == -1);
+	RBXAssert(simBody);
+	delete simBody;
+	simBody = NULL;
+	RBXAssert(!cofm);
+	RBXAssert(root == this);
+}
+
 void Body::resetRoot(RBX::Body* newRoot)
 {
 	RBXAssert(newRoot == calcRoot());
