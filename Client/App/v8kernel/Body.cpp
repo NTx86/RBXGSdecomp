@@ -6,10 +6,18 @@ using namespace RBX;
 int p;
 
 Body::Body()
-	//:kernelIndex(-1),
 	:index(-1),
-	canThrottle(true)
+	canThrottle(true),
+	cofm(NULL),
+	root(NULL),
+	parent(NULL),
+	link(NULL),
+	simBody(NULL),
+	stateIndex(getNextStateIndex()),
+	moment(Matrix3::identity()),
+	mass(0.0f)
 {
+	root = this;
 	simBody = new SimBody(this);
 }
 
