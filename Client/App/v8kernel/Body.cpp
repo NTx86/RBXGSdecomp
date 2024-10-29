@@ -41,20 +41,16 @@ void Body::updatePV()
 	RBXAssert(getParent());
 }
 
-void Body::advanceStateIndex()
-{
-	p++;
-	if (p == INT_MAX)
-		p = 1;
-	stateIndex = p;
-}
-
 int Body::getNextStateIndex()
 {
-	p++;
-	if (p == INT_MAX)
+	if (++p == INT_MAX)
 		p = 1;
 	return p;
+}
+
+void Body::advanceStateIndex()
+{
+	stateIndex = getNextStateIndex();
 }
 
 bool Body::validateParentCofmDirty()
