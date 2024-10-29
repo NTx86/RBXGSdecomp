@@ -55,7 +55,10 @@ namespace RBX
 			static G3D::Vector3 toGrid(const G3D::Vector3&, float);
 			static G3D::Vector3 toGrid(const G3D::Vector3&, const G3D::Vector3&);
 			static bool lessThan(const G3D::Vector3&, const G3D::Vector3&);
-			static float longestVector3Component(const G3D::Vector3&);
+			static __forceinline float longestVector3Component(const G3D::Vector3& v)
+			{
+				return std::max(fabs(v.x), std::max(fabs(v.y), fabs(v.z)));
+			}
 			static float planarSize(const G3D::Vector3&);
 			static float taxiCabMagnitude(const G3D::Vector3&);
 			static const G3D::Plane& yPlane();

@@ -150,7 +150,7 @@ namespace RBX {
 					moment = _momentInBody;
 				}
 			}
-			void setPv(const RBX::PV&);
+			void setPv(const PV& _pv);
 			void setCoordinateFrame(const G3D::CoordinateFrame&);
 			void setVelocity(const RBX::Velocity& worldVelocity);
 			void setCanThrottle(bool);

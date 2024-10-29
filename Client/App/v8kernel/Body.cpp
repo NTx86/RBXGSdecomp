@@ -239,6 +239,26 @@ G3D::CoordinateFrame Body::getMeInDescendant(const Body* descendant) const
 	}
 }
 
+void Body::setPv(const PV& _pv)
+{
+	if (parent)
+	{
+		RBXAssert(0);
+	}
+	else
+	{
+		pv = _pv;
+		if (simBody)
+			simBody->makeDirty();
+		advanceStateIndex();
+	}
+	RBXAssert(Math::longestVector3Component(pv.position.translation) < 1000000.0);
+	RBXAssert(Math::isOrthonormal(pv.position.rotation));
+	RBXAssert(!Math::isNanInfDenormVector3(pv.position.translation));
+	RBXAssert(!Math::isNanInfDenormVector3(pv.velocity.linear));
+	RBXAssert(!Math::isNanInfDenormVector3(pv.velocity.rotational));
+}
+
 void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
