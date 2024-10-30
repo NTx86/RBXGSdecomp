@@ -7,5 +7,5 @@ Some tools we recommend for matching are [objdiff](https://github.com/encounter/
 
 # Dependencies
 * [boost 1.34.1](https://www.boost.org/users/history/version_1_34_1.html)
-* [SDL 1.2.6](https://www.libsdl.org/release/SDL-1.2.6-win32.zip)
+* [SDL 1.2.6](https://www.libsdl.org/release/SDL-1.2.6.zip)
 * [Graphics3D 6.09](https://sourceforge.net/projects/g3d/files/g3d-cpp/6.09/)
