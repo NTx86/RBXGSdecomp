@@ -37,7 +37,18 @@ namespace RBX {
 				RBXAssert(getParent());
 				return getLink() ? getLink()->getChildInParent() : meInParent;
 			}
-			void updatePV();
+			void updatePV()
+			{
+				RBXAssert((getParent() != NULL) || (getRoot() == this));
+
+				if (getParent() && stateIndex != getRoot()->getStateIndex())
+				{
+					Body* myParent = getParent();
+					myParent->updatePV();
+					pv = myParent->pv.pvAtLocalCoord(getMeInParent());
+					stateIndex = root->getStateIndex();
+				}
+			}
 			void onChildAdded(RBX::Body* child);
 			void onChildRemoved(RBX::Body* child);
 			const RBX::Body* calcRootConst() const;

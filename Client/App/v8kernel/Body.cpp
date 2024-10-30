@@ -57,19 +57,6 @@ float Body::kineticEnergy()
 
 }
 
-void Body::updatePV()
-{
-	RBXAssert((getParent() != NULL) || (getRoot() == this));
-
-	if (getParent() && stateIndex != getRoot()->getStateIndex())
-	{
-		Body* myParent = getParent();
-		myParent->updatePV();
-		pv = myParent->pv.pvAtLocalCoord(getMeInParent());
-		stateIndex = root->getStateIndex();
-	}
-}
-
 int Body::getNextStateIndex()
 {
 	static int p;
