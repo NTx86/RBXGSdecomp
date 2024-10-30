@@ -166,12 +166,11 @@ void Body::step(float dt, bool throttling)
 	{
 		simBody->step(dt);
 
-		pv = cofm == NULL ? simBody->pv : simBody->getOwnerPV(); //does not match, one instruction leaks into the next inline
+		pv = cofm == NULL ? simBody->pv : simBody->getOwnerPV();
 		advanceStateIndex();
 	}
 }
 
-//does not match because of advanceStateIndex() memes
 void Body::setVelocity(const Velocity& worldVelocity)
 {
 	if (!getParent())
