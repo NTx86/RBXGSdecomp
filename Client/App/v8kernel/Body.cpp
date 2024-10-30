@@ -308,6 +308,15 @@ G3D::CoordinateFrame Body::getBranchCofmCoordinateFrame()
 	return CoordinateFrame::CoordinateFrame(getPV().position.rotation, getBranchCofmPos());
 }
 
+G3D::Matrix3 Body::getIWorldAtPoint(const G3D::Vector3& point)
+{
+	float _mass = mass;
+	updatePV();
+	G3D::Matrix3 iBody = moment;
+	G3D::Matrix3& iWorldAtCofm = Math::momentToWorldSpace(iBody, pv.position.rotation);
+	return Math::getIWorldAtPoint(getPV().position.translation, point, iWorldAtCofm, _mass);
+}
+
 void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));

@@ -87,7 +87,7 @@ namespace RBX {
 			G3D::Matrix3 getIBody() const;
 			G3D::Vector3 getIBodyV3() const;
 			G3D::Matrix3 getIWorld() const;
-			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3&) const;
+			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3& point);
 			float getBranchMass() const
 			{
 				return (cofm ? cofm->getMass() : mass);
