@@ -39,13 +39,14 @@ namespace RBX {
 			}
 			void updatePV()
 			{
-				RBXAssert((getParent() != NULL) || (getRoot() == this));
+				RBXAssert((parent != NULL) || (getRoot() == this));
 
-				if (getParent() && stateIndex != getRoot()->getStateIndex())
+				if (parent && stateIndex != getRoot()->getStateIndex())
 				{
-					Body* myParent = getParent();
-					myParent->updatePV();
-					pv = myParent->pv.pvAtLocalCoord(getMeInParent());
+					Body* tempParent = getParent();
+					tempParent->updatePV();
+					PV& tempPV = tempParent->pv;
+					pv = tempPV.pvAtLocalCoord(getMeInParent());
 					stateIndex = root->getStateIndex();
 				}
 			}
