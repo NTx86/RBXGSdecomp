@@ -83,7 +83,7 @@ namespace RBX {
 
 			G3D::CoordinateFrame getMeInDescendant(const RBX::Body* descendant) const;
 			G3D::CoordinateFrame getMeInRoot() const;
-			float getMass() const;
+			float getMass() const {return cofm ? cofm->getMass() : mass;}
 			G3D::Matrix3 getIBody() const;
 			G3D::Vector3 getIBodyV3() const;
 			G3D::Matrix3 getIWorld() const;
@@ -101,7 +101,7 @@ namespace RBX {
 				return Math::toDiagonal(getBranchIBody());
 			}
 			G3D::Matrix3 getBranchIWorld() const;
-			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3&) const;
+			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3& point);
 			G3D::Vector3 getBranchCofmPos();
 			G3D::CoordinateFrame getBranchCofmCoordinateFrame();
 			const G3D::Vector3& getPos()

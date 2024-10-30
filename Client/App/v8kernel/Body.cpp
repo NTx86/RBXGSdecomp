@@ -311,10 +311,19 @@ G3D::CoordinateFrame Body::getBranchCofmCoordinateFrame()
 G3D::Matrix3 Body::getIWorldAtPoint(const G3D::Vector3& point)
 {
 	float _mass = mass;
-	updatePV();
+	updatePV(); //supposed to be inlined probably
 	G3D::Matrix3 iBody = moment;
 	G3D::Matrix3& iWorldAtCofm = Math::momentToWorldSpace(iBody, pv.position.rotation);
 	return Math::getIWorldAtPoint(getPV().position.translation, point, iWorldAtCofm, _mass);
+}
+
+G3D::Matrix3 Body::getBranchIWorldAtPoint(const G3D::Vector3& point)
+{
+	float _mass = getMass();
+	updatePV(); //more probably inlined updatePV calls
+	G3D::Matrix3 _moment = cofm ? cofm->getMoment() : moment;
+	G3D::Matrix3& iWorldAtCofm = Math::momentToWorldSpace(_moment, pv.position.rotation);
+	return Math::getIWorldAtPoint(getBranchCofmPos(), point, iWorldAtCofm, _mass);
 }
 
 void Body::matchDummy()
