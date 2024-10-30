@@ -1,9 +1,10 @@
 #pragma once
+#include <ostream>
 
 namespace RBX {
 	class Debugable {
 		public:
-			virtual void PlaceHolder();
+			virtual void dump(std::ostream& stream);
 			static void doCrash();
 			enum AssertAction
 			{

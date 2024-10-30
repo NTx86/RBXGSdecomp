@@ -1,11 +1,14 @@
 #include "util/Debug.h"
+#include <typeinfo>
 using namespace RBX;
 
 bool doCrash = true;
 Debugable::AssertAction Debugable::assertAction = IgnoreAssert;
 
-void Debugable::PlaceHolder() { //vtable temporary
-	return;
+void Debugable::dump(std::ostream& stream)
+{
+	const std::type_info& type = typeid(*this);
+	stream << type.name();
 }
 
 void Debugable::doCrash() {
