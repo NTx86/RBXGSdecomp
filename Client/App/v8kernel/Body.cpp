@@ -49,9 +49,17 @@ float Body::kineticEnergy() const
 	return 1.0; //temporary
 }
 
-__declspec(noinline) void Body::updatePV()
+void Body::updatePV()
 {
-	RBXAssert(getParent());
+	RBXAssert((getParent() != NULL) || (getRoot() == this));
+
+	if (getParent() && stateIndex != getRoot()->getStateIndex())
+	{
+		Body* myParent = getParent();
+		myParent->updatePV();
+		pv = myParent->pv.pvAtLocalCoord(getMeInParent());
+		stateIndex = root->getStateIndex();
+	}
 }
 
 int Body::getNextStateIndex()
@@ -76,16 +84,16 @@ bool Body::validateParentCofmDirty()
 	return true;
 }
 
-//94% match
 void Body::makeCofmDirty()
 {
 	if (cofm && cofm->getIsDirty())
 	{
+		//this match is super fake, i dont know roblox managed to create this cursed assertion
 		if (Debugable::assertAction == Debugable::CrashOnAssert)
 		{
 			if (parent)
-			parent->validateParentCofmDirty();
-		RBXAssert(getRootSimBody()->getDirty());
+				parent->validateParentCofmDirty();
+			RBXAssert(getRootSimBody()->getDirty());
 		}
 	}
 	else

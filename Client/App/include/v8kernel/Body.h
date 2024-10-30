@@ -32,8 +32,12 @@ namespace RBX {
 			const RBX::SimBody* getRootSimBody() {return getRoot()->simBody;};
 			void resetRoot(RBX::Body* newRoot);
 			bool validateParentCofmDirty();
-			const G3D::CoordinateFrame& getMeInParent() const;
-			__declspec(noinline) void updatePV();
+			const G3D::CoordinateFrame& getMeInParent() const
+			{
+				RBXAssert(getParent());
+				return getLink() ? getLink()->getChildInParent() : meInParent;
+			}
+			void updatePV();
 			void onChildAdded(RBX::Body* child);
 			void onChildRemoved(RBX::Body* child);
 			const RBX::Body* calcRootConst() const;
@@ -103,7 +107,7 @@ namespace RBX {
 			const G3D::Vector3& getPos() const;
 			const G3D::CoordinateFrame& getCoordinateFrame() const;
 			const RBX::Velocity& getVelocity() const;
-			const RBX::PV& getPV() const;
+			const RBX::PV& getPV() const {return pv;}
 			const bool getCanThrottle() const;
 			void accumulateForceAtCofm(const G3D::Vector3&);
 			void accumulateForceAtBranchCofm(const G3D::Vector3& force)
