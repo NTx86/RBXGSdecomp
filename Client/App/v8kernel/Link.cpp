@@ -18,7 +18,7 @@ const G3D::CoordinateFrame& Link::getChildInParent()
 {
 	int bodyStateIndex = body->getParent()->getStateIndex();
 
-	if (bodyStateIndex != stateIndex)
+	if (stateIndex != bodyStateIndex)
 	{
 		computeChildInParent(childInParent);
 		stateIndex = bodyStateIndex;
