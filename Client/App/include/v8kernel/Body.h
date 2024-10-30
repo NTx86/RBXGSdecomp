@@ -102,10 +102,18 @@ namespace RBX {
 			}
 			G3D::Matrix3 getBranchIWorld() const;
 			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3&) const;
-			G3D::Vector3 getBranchCofmPos() const;
+			G3D::Vector3 getBranchCofmPos();
 			G3D::CoordinateFrame getBranchCofmCoordinateFrame() const;
-			const G3D::Vector3& getPos() const;
-			const G3D::CoordinateFrame& getCoordinateFrame() const;
+			const G3D::Vector3& getPos()
+			{
+				updatePV();
+				return cofm->getCofmInBody();
+			}
+			const G3D::CoordinateFrame& getCoordinateFrame()
+			{
+				updatePV();
+				return pv.position;
+			}
 			const RBX::Velocity& getVelocity() const;
 			const RBX::PV& getPV() const {return pv;}
 			const bool getCanThrottle() const;

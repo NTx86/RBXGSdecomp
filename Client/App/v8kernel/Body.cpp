@@ -298,6 +298,10 @@ void Body::setMeInParent(const G3D::CoordinateFrame& _meInParent)
 	}
 }
 
+G3D::Vector3 Body::getBranchCofmPos()
+{
+	return cofm ? pv.position.pointToObjectSpace(getPos()) : getCoordinateFrame().translation;
+}
 
 void Body::matchDummy()
 {
