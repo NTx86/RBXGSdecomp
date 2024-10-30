@@ -103,9 +103,7 @@ namespace RBX {
 			G3D::Vector3 getIBodyV3() const;
 			G3D::Matrix3 getIWorld()
 			{
-				G3D::Matrix3 iBody = getIBody();
-				Math::momentToWorldSpace(iBody, pv.position.rotation);
-				return iBody;
+				return Math::momentToWorldSpace(getIBody(), pv.position.rotation);
 			}
 			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3& point);
 			float getBranchMass() const

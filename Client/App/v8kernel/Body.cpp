@@ -44,16 +44,10 @@ void Body::resetRoot(RBX::Body* newRoot)
 	}
 }
 
-//88% matching for now
 float Body::kineticEnergy()
 {
-	
-	//updatePV();
-	//G3D::Matrix3 iBody = moment;
-	//G3D::Vector3& result = Math::momentToWorldSpace(iBody, pv.position.rotation) * pv.velocity.rotational;
-	//G3D::Vector3& result = getIWorld() * pv.velocity.rotational;
-	return 0.5f * pv.velocity.rotational.dot(getIWorld() * pv.velocity.rotational) + 0.5f * pv.velocity.linear.dot(pv.velocity.linear) * mass;
-	//return calc;
+	float calc = 0.5f * pv.velocity.rotational.dot(getIWorld() * pv.velocity.rotational) + 0.5f * pv.velocity.linear.dot(pv.velocity.linear) * mass;
+	return calc;
 
 }
 
