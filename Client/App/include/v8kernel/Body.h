@@ -84,9 +84,18 @@ namespace RBX {
 			G3D::CoordinateFrame getMeInDescendant(const RBX::Body* descendant) const;
 			G3D::CoordinateFrame getMeInRoot() const;
 			float getMass() const {return cofm ? cofm->getMass() : mass;}
-			G3D::Matrix3 getIBody() const;
+			G3D::Matrix3 getIBody() 
+			{
+				updatePV();
+				return moment;
+			}
 			G3D::Vector3 getIBodyV3() const;
-			G3D::Matrix3 getIWorld() const;
+			G3D::Matrix3 getIWorld()
+			{
+				G3D::Matrix3 iBody = getIBody();
+				Math::momentToWorldSpace(iBody, pv.position.rotation);
+				return iBody;
+			}
 			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3& point);
 			float getBranchMass() const
 			{
@@ -170,7 +179,7 @@ namespace RBX {
 			void setCoordinateFrame(const G3D::CoordinateFrame& worldCord);
 			void setVelocity(const RBX::Velocity& worldVelocity);
 			void setCanThrottle(bool);
-			float kineticEnergy() const;
+			float kineticEnergy();
 			float potentialEnergy() const;
 			static int getNextStateIndex();
 			static Body* getWorldBody();
