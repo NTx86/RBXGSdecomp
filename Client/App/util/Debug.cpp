@@ -1,7 +1,7 @@
 #include "util/Debug.h"
 using namespace RBX;
 
-bool DoCrash = true; //this varialbe is suppose to be have the same name as the function, but that causes issues
+bool doCrash = true;
 Debugable::AssertAction Debugable::assertAction = IgnoreAssert;
 
 void Debugable::PlaceHolder() { //vtable temporary
@@ -9,7 +9,7 @@ void Debugable::PlaceHolder() { //vtable temporary
 }
 
 void Debugable::doCrash() {
-	if (DoCrash)
+	if (::doCrash)
 	{
 		int* nullPtr1 = (int*)0;
 		int* nullPtr2 = (int*)4;
