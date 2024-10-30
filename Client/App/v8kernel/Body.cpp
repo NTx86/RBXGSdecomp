@@ -303,6 +303,11 @@ G3D::Vector3 Body::getBranchCofmPos()
 	return cofm ? pv.position.pointToObjectSpace(getPos()) : getCoordinateFrame().translation;
 }
 
+G3D::CoordinateFrame Body::getBranchCofmCoordinateFrame()
+{
+	return CoordinateFrame::CoordinateFrame(getPV().position.rotation, getBranchCofmPos());
+}
+
 void Body::matchDummy()
 {
 	accumulateForceAtBranchCofm(Vector3(1.3f,1.2f,1.7f));
