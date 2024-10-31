@@ -17,11 +17,11 @@ namespace RBX
 			static const int maxOrientationId;
 			static const int minOrientationId;
 
-			static const float pi();
-			static const float piHalf();
-			static const float twoPi();
+			static const float pi() {return 3.1415927f;}
+			static const float piHalf() {return 1.5707964f;}
+			static const float twoPi() {return 6.283185f;}
 			static const float& inf();
-			static inline int iRound(float fvalue);
+			static inline int iRound(float fvalue) {return G3D::iRound(fvalue);}
 			static int iFloor(float);
 			static float polarity(float);
 			static float sign(float);
@@ -41,7 +41,7 @@ namespace RBX
 			static int nextEven(int);
 			static int nextOdd(int);
 			static float angleToE0(const G3D::Vector2&);
-			static int hash(const G3D::Vector3&);
+			static size_t hash(const G3D::Vector3&);
 			static bool isIntegerVector3(const G3D::Vector3&);
 			static G3D::Vector3 iRoundVector3(const G3D::Vector3&);
 			static float angle(const G3D::Vector3&, const G3D::Vector3&);
