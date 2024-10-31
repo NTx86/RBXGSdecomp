@@ -5,33 +5,25 @@ using namespace RBX;
 
 Point::Point(Body* _body)
 	:numOwners(1),
-	body(_body)
-	{}
-
-Point::Point(Body& _body)
-	:numOwners(1)
-	//body(_body)
+	body(_body ? _body : Body::getWorldBody()),
+	localPos(0, 0, 0),
+	worldPos(0, 0, 0),
+	force(0, 0, 0)
 	{}
 
 void Point::step()
 {
-	RBXAssert(force); //placeholder
+	this->worldPos = this->body->getPV().position.pointToWorldSpace(this->localPos);
+	this->force = Vector3::zero();
 }
 
 void Point::forceToBody()
 {
-	RBXAssert(force); //placeholder
+	this->body->accumulateForce(this->force, this->worldPos);
 }
 
-void Point::setWorldPos(const G3D::Vector3& argWorldPos)
+void Point::setWorldPos(const G3D::Vector3& _worldPos)
 {
-	worldPos = argWorldPos;
+	this->worldPos = _worldPos;
+	this->localPos = this->body->getPV().position.pointToObjectSpace(this->worldPos);
 }
-
-/*inline bool Point::sameBodyAndOffset(const RBX::Point& p1, const RBX::Point& p2)
-{
-	return (p1.body == p2.body
-		&& p1.localPos.x == p2.localPos.x
-		&& p1.localPos.y == p2.localPos.y
-		&& p1.localPos.z == p2.localPos.z);
-}*/
