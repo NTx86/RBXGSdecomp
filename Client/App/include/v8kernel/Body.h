@@ -148,7 +148,12 @@ namespace RBX {
 				if (root->simBody)
 					root->simBody->accumulateForceCofm(force);
 			}
-			void accumulateForce(const G3D::Vector3&, const G3D::Vector3&);
+			void accumulateForce(const G3D::Vector3& force, const G3D::Vector3& worldPos)
+			{
+				SimBody* simBody = root->simBody;
+				if (simBody)
+					simBody->accumulateForce(force, worldPos);
+			}
 			void accumulateTorque(const G3D::Vector3& torque)
 			{
 				if (root->simBody)
