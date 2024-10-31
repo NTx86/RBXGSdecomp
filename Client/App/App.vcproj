@@ -295,6 +295,10 @@
 				RelativePath=".\util\Profiling.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\util\Quaternion.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
