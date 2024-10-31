@@ -291,7 +291,7 @@ namespace RBX
 		return Vector3(Math::iRound(point.x), Math::iRound(point.y), Math::iRound(point.z));
 	}
 
-	const float& rotationConstant()
+	const float& segSizeRadians()
 	{
 		// TODO: this is meant to be 0.024543691 but it's slightly off... why???????????????????????
 		static float bruh = Math::pi() / 128;
@@ -303,7 +303,7 @@ namespace RBX
 		RBXAssert(angle <= Math::pi());
 		RBXAssert(angle >= -Math::pi());
 
-		float result = (angle + Math::pi()) / rotationConstant();
+		float result = (angle + Math::pi()) / segSizeRadians();
 		int resInt = G3D::iRound(result);
 		
 		RBXAssert(resInt >= -1);
@@ -326,6 +326,6 @@ namespace RBX
 
 	float Math::rotationFromByte(unsigned char byteAngle)
 	{
-		return byteAngle * rotationConstant() - pi();
+		return byteAngle * segSizeRadians() - pi();
 	}
 }
