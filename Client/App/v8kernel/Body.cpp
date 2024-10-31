@@ -46,7 +46,7 @@ void Body::resetRoot(RBX::Body* newRoot)
 
 float Body::kineticEnergy()
 {
-	float calc = 0.5f * pv.velocity.rotational.dot(getIWorld() * pv.velocity.rotational) + 0.5f * pv.velocity.linear.dot(pv.velocity.linear) * mass;
+	float calc = (pv.velocity.rotational.dot(getIWorld() * pv.velocity.rotational) + pv.velocity.linear.dot(pv.velocity.linear) * mass) / 2;
 	return calc;
 
 }
