@@ -1,4 +1,5 @@
 #include "util/Math.h"
+#include "util/Debug.h"
 #include <boost/functional/hash/hash.hpp>
 #include <limits>
 #include <cmath>
@@ -82,12 +83,6 @@ namespace RBX
 		float rot = 1/twoPi();
 		float f = floor((rad + pi()) * rot);
 		return rad - Math::iRound(f) * twoPi();
-	}
-
-	float Math::rotationFromByte(unsigned char byteAngle)
-	{
-		static float bruh = pi()/128; // this is off by 0.0000000002 or whatever
-		return byteAngle * bruh - pi();
 	}
 
 	G3D::Vector3 Math::sortVector3(const G3D::Vector3& v)
@@ -294,5 +289,43 @@ namespace RBX
 	G3D::Vector3 Math::iRoundVector3(const G3D::Vector3& point)
 	{
 		return Vector3(Math::iRound(point.x), Math::iRound(point.y), Math::iRound(point.z));
+	}
+
+	const float& rotationConstant()
+	{
+		// TODO: this is meant to be 0.024543691 but it's slightly off... why???????????????????????
+		static float bruh = Math::pi() / 128;
+		return bruh;
+	}
+
+	G3D::uint8 rotationToByteBase(float angle)
+	{
+		RBXAssert(angle <= Math::pi());
+		RBXAssert(angle >= -Math::pi());
+
+		float result = (angle + Math::pi()) / rotationConstant();
+		int resInt = G3D::iRound(result);
+		
+		RBXAssert(resInt >= -1);
+		RBXAssert(resInt <= 256);
+
+		resInt = std::max(0, resInt);
+		resInt = std::min(255, resInt);
+
+		G3D::uint8 byte = (G3D::uint8)resInt;
+
+		RBXAssert(byte <= 255);
+
+		return byte;
+	}
+
+	G3D::uint8 Math::rotationToByte(float angle)
+	{
+		return rotationToByteBase(angle);
+	}
+
+	float Math::rotationFromByte(unsigned char byteAngle)
+	{
+		return byteAngle * rotationConstant() - pi();
 	}
 }
