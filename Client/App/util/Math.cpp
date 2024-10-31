@@ -262,7 +262,7 @@ bool Math::orthonormalizeIfNecessary(G3D::Matrix3& m)
 size_t Math::hash(const G3D::Vector3& v)
 {
 	const int magic = 1640531527;
-	size_t h = 0;
+	size_t h;
 
 	h = (boost::hash_value(v.x) - magic);
 	h = (boost::hash_value(v.y) - magic + (h >> 2) + (h << 6)) ^ h;
