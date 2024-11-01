@@ -53,25 +53,108 @@ const float RBX::Constants::getKmsMaxJointForce(float grid1, float grid2)
 	return maxJointForce * 7500.0f;
 }
 
-//random crap so getJointK would match better
-//i cant even attempt this right now because i can't export this function as a obj
+__forceinline Vector3 Vector3_max_inline_hack(const Vector3& _this, const Vector3 &v) {
+    return Vector3(G3D::max(v.x, _this.x), G3D::max(v.y, _this.y), G3D::max(v.z, _this.z));
+}
+
 const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize, bool ball)
 {
-	float result = 12;
-	float good2 = 96;
-	float ughhhh = 0.434343f;
-	G3D::Vector3 moredummy = Vector3(1.6f, 1.2f, 1.7f);
+	RBXAssert(clippedSortedSize.y >= clippedSortedSize.x);
+	RBXAssert(clippedSortedSize.z >= clippedSortedSize.y);
+	//RBXAssert(clippedSortedSize.max(Vector3(1,1,1)) == clippedSortedSize);
+	// This assert is meant to be the same as the above line. G3D::Vector3::max didn't feel like inlining for this one specific call.
+	RBXAssert(Vector3_max_inline_hack(clippedSortedSize, Vector3(1,1,1)) == clippedSortedSize);
 
-	for (int i = 0; i < 7; i++)
+	Vector3int16 size(clippedSortedSize);
+
+	if (ball)
 	{
-		result *= MAX_LEGO_JOINT_FORCES_MEASURED[i];
-		good2 += good2 * result / i;
-		ughhhh = ughhhh * clippedSortedSize.y / clippedSortedSize.z + ball;
-		result /= ughhhh;
-		result *= good2;
-		moredummy.y += good2 + moredummy.z;
+		RBXAssert(size.x >= 1);
+
+		switch(size.x)
+		{
+		case 1:
+			return 0.23f;
+		case 2:
+			return 1.49f;
+		case 3:
+			return 4.43f;
+		case 4:
+			return 11.5f;
+		default:
+			return (size.x * size.x * size.x) * 0.175f;
+		}
 	}
-	return result + moredummy.y / good2 + clippedSortedSize.x / ughhhh + clippedSortedSize.y + clippedSortedSize.z * MAX_LEGO_JOINT_FORCES_MEASURED[6] / 500.0f;
+
+	switch (size.x)
+	{
+	case 1:
+		switch (size.y)
+		{
+		case 1:
+			switch (size.z)
+			{
+			case 1:
+				return 0.91f;
+			case 2:
+				return 1.61f;
+			case 3:
+				return 2.0f;
+			case 4:
+				return 2.13f;
+			default:
+				return size.z * 0.4f;
+			}
+		case 2:
+			switch (size.z)
+			{
+			case 2:
+				return 3.5f;
+			case 3:
+				return 4.16f;
+			case 4:
+				return 4.79f;
+			default:
+				return size.z < 15.0f ? size.z * 0.9f : size.z * 0.75f;
+			}
+		case 3:
+			return size.z < 7.0f ? size.z * 1.66f : size.z * 1.18f;
+		case 4:
+			return size.z < 7.0f ? size.z * 2.26f : size.z * 1.53f;
+		default:
+			return (size.y * 0.3f + 0.66f) * size.z;
+		}
+	case 2:
+		switch (size.y)
+		{
+		case 2:
+			switch (size.z)
+			{
+			case 2:
+				return 7.34f;
+			case 3:
+				return 9.90f;
+			case 4:
+				return 11.22f;
+			default:
+				return size.z < 15.0f ? size.z * 1.9f : size.z * 1.5f;
+			}
+		case 3:
+			switch (size.z)
+			{
+			case 3:
+				return 15.0f;
+			case 4:
+				return 19.0f;
+			default:
+				return size.z < 15.0f ? size.z * 2.0f : size.z * 1.5f;
+			}
+		default:
+			return (size.y * 0.66f) * size.z;
+		}
+	default:
+		return (size.x * size.y * size.z) * 0.25f;
+	}
 }
 
 /*inline G3D::Vector3& unkInline(const G3D::Vector3& vector)
