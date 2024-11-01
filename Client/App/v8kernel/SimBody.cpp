@@ -12,18 +12,35 @@ SimBody::SimBody(RBX::Body* _body)
 			constantForceY(0.0f)
 {}
 
+G3D::Vector3 vecUnkPercent(G3D::Vector3& input)
+{
+	return Vector3(1.0f / input.x, 1.0f / input.y, 1.0f / input.z);
+}
+
+float precentInline(float fNum)
+{
+	return 1.0f / fNum;
+}
+
+__forceinline void SimBody::unkSimInline(float fNum)
+{
+	massRecip = 1.0f / fNum;
+	momentRecip = vecUnkPercent(Math::toDiagonal(body->getBranchIBody()));
+	//return body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
+}
+
 void SimBody::update()
 {
 	RBXAssert(dirty);
-	G3D::Vector3 cofmOffset = body->getCofmOffset();
+	const G3D::Vector3 cofmOffset = body->getCofmOffset();
 	pv = body->getPV().pvAtLocalOffset(cofmOffset);
 	qOrientation = Quaternion::Quaternion(pv.position.rotation);
-	qOrientation *= 1.0f / sqrt(qOrientation.magnitude());
-	angMomentum = pv.velocity.rotational * body->getBranchIWorld();
+	qOrientation *= precentInline(qOrientation.magnitude());
+	angMomentum = body->getBranchIWorld() * pv.velocity.rotational;
 	float _mass = body->getMass();
-	massRecip = 1.0f / _mass;
-	G3D::Vector3 diagonal = Math::toDiagonal(body->getBranchIBody());
-	momentRecip = Vector3(1.0f / diagonal.x, 1.0f / diagonal.y, 1.0f / diagonal.z);
+	unkSimInline(_mass);
+	//float ret = unkSimInline(_mass);
+	//constantForceY = ret;
 	constantForceY = body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
 	dirty = false;
 }

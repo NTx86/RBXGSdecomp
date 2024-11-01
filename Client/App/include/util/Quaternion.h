@@ -20,7 +20,7 @@ namespace RBX {
 			{
 				return (other.w * w + other.z *z + other.y * y + other.x * x);
 			}
-			float magnitude() const { return (x * x + y * y + z * z + w * w);}
+			float magnitude() const { return sqrtf(x * x + y * y + z * z + w * w);}
 			float maxComponent() const;
 			float& operator[](int index) const;
 			operator float *();

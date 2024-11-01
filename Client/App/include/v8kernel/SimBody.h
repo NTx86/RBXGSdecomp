@@ -29,6 +29,7 @@ namespace RBX {
 			G3D::Vector3 force;
 			G3D::Vector3 torque;
 			//funcs
+			__forceinline void SimBody::unkSimInline(float fNum);
 			//void SimBody(const RBX::SimBody&);
 			SimBody(RBX::Body* body);
 			~SimBody();
