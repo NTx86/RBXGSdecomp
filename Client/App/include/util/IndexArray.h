@@ -29,7 +29,7 @@ namespace RBX {
 				return array[index]; 
 			}
 
-			inline int size() {return array.size();}
+			inline int size() const {return array.size();}
 
 			__declspec(noinline) void fastRemove(tInstance* instance)
 			{
