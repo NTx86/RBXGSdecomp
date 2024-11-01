@@ -1,4 +1,5 @@
 #pragma once
+#include <G3DAll.h>
 
 namespace RBX {
 	class Quaternion
@@ -9,7 +10,7 @@ namespace RBX {
 			float z;
 			float w;
 			Quaternion(const G3D::Matrix3& rot);
-			Quaternion():x(0.0f),y(0.0f),z(0.0f),w(1.0f) {}
+			Quaternion();
 			Quaternion(const G3D::Vector3&, float);
 			Quaternion(float _x, float _y, float _z, float _w):x(_x),y(_y),z(_z),w(_w) {}
 			Quaternion& operator=(const Quaternion& other);
