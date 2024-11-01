@@ -26,8 +26,8 @@ namespace RBX {
 			CoordinateFrame meInParent;
 			Matrix3 moment;
 			float mass;
-			int stateIndex;
-			PV pv;
+			mutable int stateIndex;
+			mutable PV pv;
 			//int& getKernelIndex();
 			const RBX::SimBody* getRootSimBody() {return getRoot()->simBody;};
 			void resetRoot(RBX::Body* newRoot);
@@ -37,19 +37,7 @@ namespace RBX {
 				RBXAssert(getParent());
 				return getLink() ? getLink()->getChildInParent() : meInParent;
 			}
-			void updatePV()
-			{
-				RBXAssert((parent != NULL) || (getRoot() == this));
-
-				if (parent && stateIndex != getRoot()->getStateIndex())
-				{
-					Body* tempParent = getParent();
-					tempParent->updatePV();
-					PV& tempPV = tempParent->pv;
-					pv = tempPV.pvAtLocalCoord(getMeInParent());
-					stateIndex = root->getStateIndex();
-				}
-			}
+			void updatePV() const;
 			void onChildAdded(RBX::Body* child);
 			void onChildRemoved(RBX::Body* child);
 			const RBX::Body* calcRootConst() const;
@@ -67,20 +55,20 @@ namespace RBX {
 			void makeCofmDirty();
 			void advanceStateIndex();
 			void makeStateDirty();
-			int getStateIndex() 
+			int getStateIndex() const
 			{
 				updatePV();
 				return stateIndex;
 			}
-			int numChildren() {return children.size();}
+			int numChildren() const {return children.size();}
 			RBX::Body* getChild(int) const;
 			inline RBX::Body* getParent() const
 			{
 				return parent;
 			}
 			RBX::Link* getLink() const {return link;}
-			const RBX::Body* getRootConst() const;
-			RBX::Body* getRoot() {return root;};
+			const RBX::Body* getRootConst() const {return root;}
+			RBX::Body* getRoot() {return root;}
 			const G3D::Vector3& getCofmOffset() const
 			{
 				if (cofm)
@@ -96,17 +84,17 @@ namespace RBX {
 			G3D::CoordinateFrame getMeInDescendant(const RBX::Body* descendant) const;
 			G3D::CoordinateFrame getMeInRoot() const;
 			float getMass() const {return cofm ? cofm->getMass() : mass;}
-			G3D::Matrix3 getIBody() 
+			G3D::Matrix3 getIBody() const
 			{
 				updatePV();
 				return moment;
 			}
 			G3D::Vector3 getIBodyV3() const;
-			G3D::Matrix3 getIWorld()
+			G3D::Matrix3 getIWorld() const
 			{
 				return Math::momentToWorldSpace(getIBody(), pv.position.rotation);
 			}
-			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3& point);
+			G3D::Matrix3 getIWorldAtPoint(const G3D::Vector3& point) const;
 			float getBranchMass() const
 			{
 				return (cofm ? cofm->getMass() : mass);
@@ -120,21 +108,21 @@ namespace RBX {
 				return Math::toDiagonal(getBranchIBody());
 			}
 			G3D::Matrix3 getBranchIWorld() const;
-			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3& point);
-			G3D::Vector3 getBranchCofmPos();
-			G3D::CoordinateFrame getBranchCofmCoordinateFrame();
-			const G3D::Vector3& getPos()
+			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3& point) const;
+			G3D::Vector3 getBranchCofmPos() const;
+			G3D::CoordinateFrame getBranchCofmCoordinateFrame() const;
+			const G3D::Vector3& getPos() const
 			{
 				updatePV();
 				return cofm->getCofmInBody();
 			}
-			const G3D::CoordinateFrame& getCoordinateFrame()
+			const G3D::CoordinateFrame& getCoordinateFrame() const
 			{
 				updatePV();
 				return pv.position;
 			}
 			const RBX::Velocity& getVelocity() const;
-			const RBX::PV& getPV() 
+			const RBX::PV& getPV() const
 			{
 				updatePV();
 				return pv;
@@ -179,7 +167,7 @@ namespace RBX {
 					return Vector3::zero();
 			}
 			void setParent(Body* newParent);
-			//void setMeInParent(RBX::Link*);
+			void setMeInParent(RBX::Link*);
 			void setMeInParent(const G3D::CoordinateFrame& _meInParent);
 			void setMass(float _mass);
 			void setMoment(const G3D::Matrix3& _momentInBody)
@@ -194,7 +182,7 @@ namespace RBX {
 			void setCoordinateFrame(const G3D::CoordinateFrame& worldCord);
 			void setVelocity(const RBX::Velocity& worldVelocity);
 			void setCanThrottle(bool);
-			float kineticEnergy();
+			float kineticEnergy() const;
 			float potentialEnergy() const;
 			static int getNextStateIndex();
 			static Body* getWorldBody();

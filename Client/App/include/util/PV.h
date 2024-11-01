@@ -23,5 +23,11 @@ namespace RBX {
 			PV pvAtLocalOffset(const G3D::Vector3& localOffset) const;
 			PV pvAtLocalCoord(const G3D::CoordinateFrame& localCoord) const;
 			PV operator*(const PV&) const;
+			PV& operator=(const PV& other)
+			{
+				this->position = other.position;
+				this->velocity = other.velocity;
+				return *this;
+			}
 	};
 }

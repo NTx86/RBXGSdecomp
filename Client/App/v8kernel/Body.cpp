@@ -34,6 +34,20 @@ Body::~Body()
 	RBXAssert(root == this);
 }
 
+void Body::updatePV() const
+{
+	RBXAssert((parent != NULL) || (getRootConst() == this));
+
+	if (parent && this->stateIndex != getRootConst()->getStateIndex())
+	{
+		Body* tempParent = getParent();
+		tempParent->updatePV();
+		PV& tempPV = tempParent->pv;
+		this->pv = tempPV.pvAtLocalCoord(getMeInParent());
+		this->stateIndex = root->getStateIndex();
+	}
+}
+
 void Body::resetRoot(RBX::Body* newRoot)
 {
 	RBXAssert(newRoot == calcRoot());
@@ -44,7 +58,7 @@ void Body::resetRoot(RBX::Body* newRoot)
 	}
 }
 
-float Body::kineticEnergy()
+float Body::kineticEnergy() const
 {
 	float calc = (pv.velocity.rotational.dot(getIWorld() * pv.velocity.rotational) + pv.velocity.linear.dot(pv.velocity.linear) * mass) / 2;
 	return calc;
@@ -287,17 +301,17 @@ void Body::setMeInParent(const G3D::CoordinateFrame& _meInParent)
 	}
 }
 
-G3D::Vector3 Body::getBranchCofmPos()
+G3D::Vector3 Body::getBranchCofmPos() const
 {
 	return cofm ? pv.position.pointToObjectSpace(getPos()) : getCoordinateFrame().translation;
 }
 
-G3D::CoordinateFrame Body::getBranchCofmCoordinateFrame()
+G3D::CoordinateFrame Body::getBranchCofmCoordinateFrame() const
 {
-	return CoordinateFrame::CoordinateFrame(getPV().position.rotation, getBranchCofmPos());
+	return CoordinateFrame(getPV().position.rotation, getBranchCofmPos());
 }
 
-G3D::Matrix3 Body::getIWorldAtPoint(const G3D::Vector3& point)
+G3D::Matrix3 Body::getIWorldAtPoint(const G3D::Vector3& point) const
 {
 	float _mass = mass;
 	updatePV(); //supposed to be inlined probably
@@ -306,7 +320,7 @@ G3D::Matrix3 Body::getIWorldAtPoint(const G3D::Vector3& point)
 	return Math::getIWorldAtPoint(getPV().position.translation, point, iWorldAtCofm, _mass);
 }
 
-G3D::Matrix3 Body::getBranchIWorldAtPoint(const G3D::Vector3& point)
+G3D::Matrix3 Body::getBranchIWorldAtPoint(const G3D::Vector3& point) const
 {
 	float _mass = getMass();
 	updatePV(); //more probably inlined updatePV calls
