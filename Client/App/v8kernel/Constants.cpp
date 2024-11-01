@@ -53,17 +53,16 @@ const float RBX::Constants::getKmsMaxJointForce(float grid1, float grid2)
 	return maxJointForce * 7500.0f;
 }
 
-__forceinline Vector3 Vector3_max_inline_hack(const Vector3& _this, const Vector3 &v) {
-    return Vector3(G3D::max(v.x, _this.x), G3D::max(v.y, _this.y), G3D::max(v.z, _this.z));
+__forceinline Vector3 getClippedSortedSize(const Vector3& v)
+{
+	return v.max(Vector3(1.0f, 1.0f, 1.0f));
 }
 
 const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize, bool ball)
 {
 	RBXAssert(clippedSortedSize.y >= clippedSortedSize.x);
 	RBXAssert(clippedSortedSize.z >= clippedSortedSize.y);
-	//RBXAssert(clippedSortedSize.max(Vector3(1,1,1)) == clippedSortedSize);
-	// This assert is meant to be the same as the above line. G3D::Vector3::max didn't feel like inlining for this one specific call.
-	RBXAssert(Vector3_max_inline_hack(clippedSortedSize, Vector3(1,1,1)) == clippedSortedSize);
+	RBXAssert(getClippedSortedSize(clippedSortedSize) == clippedSortedSize);
 
 	Vector3int16 size(clippedSortedSize);
 
@@ -177,7 +176,7 @@ const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize
 const float Constants::getJointK(const G3D::Vector3& gridSize, bool ball)
 {
 	G3D::Vector3 sortedSize = Math::sortVector3(gridSize);
-	G3D::Vector3 clippedSize = sortedSize.max(Vector3(1.0f, 1.0f, 1.0f)); //spent way too much time on this
+	G3D::Vector3 clippedSize = getClippedSortedSize(sortedSize);
 
 	float JointKMultiplier = getJointKMultiplier(clippedSize, ball);
 
