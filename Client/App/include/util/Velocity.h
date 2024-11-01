@@ -9,7 +9,7 @@ namespace RBX {
 			G3D::Vector3 rotational;
 			bool operator==(const Velocity&) const;
 			bool operator!=(const Velocity&) const;
-			Velocity(const G3D::Vector3&, const G3D::Vector3&);
+			Velocity(const G3D::Vector3& _linear, const G3D::Vector3& _rotational) : linear(_linear), rotational(_rotational) {}
 			Velocity():linear(Vector3::zero()),rotational(Vector3::zero()) {}
 			Velocity operator+(const Velocity&) const;
 			Velocity operator-() const;
