@@ -26,21 +26,20 @@ __forceinline void SimBody::unkSimInline(float fNum)
 {
 	massRecip = 1.0f / fNum;
 	momentRecip = vecUnkPercent(Math::toDiagonal(body->getBranchIBody()));
-	//return body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
 }
 
 void SimBody::update()
 {
 	RBXAssert(dirty);
-	const G3D::Vector3 cofmOffset = body->getCofmOffset();
-	pv = body->getPV().pvAtLocalOffset(cofmOffset);
+	{
+		const G3D::Vector3 cofmOffset = body->getCofmOffset();
+		pv = body->getPV().pvAtLocalOffset(cofmOffset);
+	}
 	qOrientation = Quaternion::Quaternion(pv.position.rotation);
 	qOrientation *= precentInline(qOrientation.magnitude());
-	angMomentum = body->getBranchIWorld() * pv.velocity.rotational;
+	angMomentum = pv.velocity.rotational * body->getBranchIWorld();
 	float _mass = body->getMass();
 	unkSimInline(_mass);
-	//float ret = unkSimInline(_mass);
-	//constantForceY = ret;
 	constantForceY = body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
 	dirty = false;
 }
