@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1257"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="App"
 	ProjectGUID="{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}"
 	RootNamespace="RBXGSdecomp"
@@ -300,11 +300,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\util\Units.cpp"
+				RelativePath=".\util\PV.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\util\Quaternion.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Units.cpp"
 				>
 			</File>
 		</Filter>
