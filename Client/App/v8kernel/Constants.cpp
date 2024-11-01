@@ -53,7 +53,7 @@ const float RBX::Constants::getKmsMaxJointForce(float grid1, float grid2)
 	return maxJointForce * 7500.0f;
 }
 
-__forceinline Vector3 getClippedSize(const Vector3& v)
+__forceinline Vector3 getClippedSortedSize(const Vector3& v)
 {
 	return v.max(Vector3(1.0f, 1.0f, 1.0f));
 }
@@ -62,7 +62,7 @@ const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize
 {
 	RBXAssert(clippedSortedSize.y >= clippedSortedSize.x);
 	RBXAssert(clippedSortedSize.z >= clippedSortedSize.y);
-	RBXAssert(getClippedSize(clippedSortedSize) == clippedSortedSize);
+	RBXAssert(getClippedSortedSize(clippedSortedSize) == clippedSortedSize);
 
 	Vector3int16 size(clippedSortedSize);
 
@@ -176,7 +176,7 @@ const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize
 const float Constants::getJointK(const G3D::Vector3& gridSize, bool ball)
 {
 	G3D::Vector3 sortedSize = Math::sortVector3(gridSize);
-	G3D::Vector3 clippedSize = getClippedSize(sortedSize);
+	G3D::Vector3 clippedSize = getClippedSortedSize(sortedSize);
 
 	float JointKMultiplier = getJointKMultiplier(clippedSize, ball);
 
