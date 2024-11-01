@@ -51,7 +51,11 @@ namespace RBX {
 		  static const float uiDt();
 		  static const float worldDt();
 		  static const float kernelDt();
-		  static const G3D::Vector3& getKmsGravity(); //optimized out
+		  static const G3D::Vector3& getKmsGravity()
+		  {
+			  static G3D::Vector3 result = Vector3(0.0f, -9.8100004f, 0.0f);
+			  return result;
+		  }
 		  static const float getKmsMaxJointForce(float grid1, float grid2);
 		  static const float getElasticMultiplier(float);
 		  static const float getJointK(const G3D::Vector3&, bool);

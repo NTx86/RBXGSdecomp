@@ -1,6 +1,7 @@
 #include "v8kernel/SimBody.h"
+#include "v8kernel/Constants.h"
 #include "v8kernel/Body.h"
-
+#include "util/Units.h"
 using namespace RBX;
 
 SimBody::SimBody(RBX::Body* _body)
@@ -11,13 +12,37 @@ SimBody::SimBody(RBX::Body* _body)
 			constantForceY(0.0f)
 {}
 
+G3D::Vector3 vecUnkPercent(G3D::Vector3& input)
+{
+	return Vector3(1.0f / input.x, 1.0f / input.y, 1.0f / input.z);
+}
+
+float precentInline(float fNum)
+{
+	return 1.0f / fNum;
+}
+
+__forceinline void SimBody::unkSimInline(float fNum)
+{
+	massRecip = 1.0f / fNum;
+	momentRecip = vecUnkPercent(Math::toDiagonal(body->getBranchIBody()));
+	//return body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
+}
+
 void SimBody::update()
 {
-	//force = Vector3(0.1f, 0.5f, 0.2f); //temp
-	RBXAssert(!dirty);
-	G3D::Vector3 cofmOffset = body->getCofmOffset();
-
-	return;
+	RBXAssert(dirty);
+	const G3D::Vector3 cofmOffset = body->getCofmOffset();
+	pv = body->getPV().pvAtLocalOffset(cofmOffset);
+	qOrientation = Quaternion::Quaternion(pv.position.rotation);
+	qOrientation *= precentInline(qOrientation.magnitude());
+	angMomentum = body->getBranchIWorld() * pv.velocity.rotational;
+	float _mass = body->getMass();
+	unkSimInline(_mass);
+	//float ret = unkSimInline(_mass);
+	//constantForceY = ret;
+	constantForceY = body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
+	dirty = false;
 }
 
 PV SimBody::getOwnerPV()
