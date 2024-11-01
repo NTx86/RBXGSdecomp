@@ -89,6 +89,11 @@ namespace RBX {
 				updatePV();
 				return moment;
 			}
+			G3D::Matrix3 getIBodyUnknown() const //same but uses cofm matrix3 if available
+			{
+				updatePV();
+				return cofm ? cofm->getMoment() : moment;
+			}
 			G3D::Vector3 getIBodyV3() const;
 			G3D::Matrix3 getIWorld() const
 			{
@@ -107,7 +112,10 @@ namespace RBX {
 			{
 				return Math::toDiagonal(getBranchIBody());
 			}
-			G3D::Matrix3 getBranchIWorld() const;
+			G3D::Matrix3 getBranchIWorld() const //might not be correct
+			{
+				return Math::momentToWorldSpace(getIBodyUnknown(), pv.position.rotation);
+			}
 			G3D::Matrix3 getBranchIWorldAtPoint(const G3D::Vector3& point) const;
 			G3D::Vector3 getBranchCofmPos() const;
 			G3D::CoordinateFrame getBranchCofmCoordinateFrame() const;

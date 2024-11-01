@@ -1,6 +1,7 @@
 #include "v8kernel/SimBody.h"
+#include "v8kernel/Constants.h"
 #include "v8kernel/Body.h"
-
+#include "util/Units.h"
 using namespace RBX;
 
 SimBody::SimBody(RBX::Body* _body)
@@ -13,11 +14,18 @@ SimBody::SimBody(RBX::Body* _body)
 
 void SimBody::update()
 {
-	//force = Vector3(0.1f, 0.5f, 0.2f); //temp
-	RBXAssert(!dirty);
+	RBXAssert(dirty);
 	G3D::Vector3 cofmOffset = body->getCofmOffset();
-
-	return;
+	pv = body->getPV().pvAtLocalOffset(cofmOffset);
+	qOrientation = Quaternion::Quaternion(pv.position.rotation);
+	qOrientation *= 1.0f / sqrt(qOrientation.magnitude());
+	angMomentum = pv.velocity.rotational * body->getBranchIWorld();
+	float _mass = body->getMass();
+	massRecip = 1.0f / _mass;
+	G3D::Vector3 diagonal = Math::toDiagonal(body->getBranchIBody());
+	momentRecip = Vector3(1.0f / diagonal.x, 1.0f / diagonal.y, 1.0f / diagonal.z);
+	constantForceY = body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
+	dirty = false;
 }
 
 PV SimBody::getOwnerPV()
