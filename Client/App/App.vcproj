@@ -302,6 +302,7 @@
 			<File
 				RelativePath=".\util\Units.cpp"
 				>
+			</File>
 			<File
 				RelativePath=".\util\Quaternion.cpp"
 				>
