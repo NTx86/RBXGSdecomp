@@ -10,7 +10,7 @@ namespace RBX {
 			float z;
 			float w;
 			Quaternion(const G3D::Matrix3& rot);
-			Quaternion();
+			Quaternion(): x(0), y(0), z(0), w(1) {}
 			Quaternion(const G3D::Vector3&, float);
 			Quaternion(float _x, float _y, float _z, float _w):x(_x),y(_y),z(_z),w(_w) {}
 			Quaternion& operator=(const Quaternion& other);
