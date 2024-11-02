@@ -33,11 +33,11 @@ namespace RBX {
 			//void SimBody(const RBX::SimBody&);
 			SimBody(RBX::Body* body);
 			~SimBody();
-			void step(float);
+			void step(float dt);
 			void makeDirty() {dirty = true;};
 			bool getDirty() const {return dirty;};
 			PV getOwnerPV();
-			const PV& getPV();
+			const PV& getPV() {return pv;}
 			void accumulateForceCofm(const G3D::Vector3& _force)
 			{
 				updateIfDirty();
@@ -65,8 +65,8 @@ namespace RBX {
 				force = Vector3(0.0f, constantForceY, 0.0f);
 				torque = Vector3(0.0f, 0.0f, 0.0f);
 			}
-			const G3D::Vector3& getForce() const;
-			const G3D::Vector3& getTorque() const;
+			const G3D::Vector3& getForce() const {return force;}
+			const G3D::Vector3& getTorque() const {return torque;}
 			void matchDummy();
 	};
 }

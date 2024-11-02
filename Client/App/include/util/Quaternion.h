@@ -11,7 +11,7 @@ namespace RBX {
 			float w;
 			Quaternion(const G3D::Matrix3& rot);
 			Quaternion(): x(0), y(0), z(0), w(1) {}
-			Quaternion(const G3D::Vector3&, float);
+			Quaternion(const G3D::Vector3& vec, float fNum):x(vec.x),y(vec.y),z(vec.z),w(fNum) {}
 			Quaternion(float _x, float _y, float _z, float _w):x(_x),y(_y),z(_z),w(_w) {}
 			Quaternion& operator=(const Quaternion& other);
 			G3D::Vector3& imag();
@@ -41,7 +41,14 @@ namespace RBX {
 				w = fNum * w;
 				return *this;
 			}
-			Quaternion& operator+=(const Quaternion&);
+			Quaternion& operator+=(const Quaternion& other)
+			{
+				x = x + other.x;
+				y = y + other.y;
+				z = z + other.z;
+				w = w + other.w;
+				return *this;
+			}
 			void normalize();
 	};
 }

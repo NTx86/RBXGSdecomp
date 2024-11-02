@@ -44,6 +44,49 @@ void SimBody::update()
 	dirty = false;
 }
 
+
+G3D::Vector3 computeRotVel(const G3D::Matrix3& rot, const G3D::Vector3& momentRecip, const G3D::Vector3& angMomentum);
+
+//temporary for now?
+G3D::Vector3& denormFixFunc()
+{
+	static G3D::Vector3 denormFix = Vector3(9.9999997e-21f, 9.9999997e-21f, 9.9999997e-21f);
+	return denormFix;
+}
+
+void SimBody::step(float dt)
+{
+	//line 103
+	//static G3D::Vector3 denormFix = Vector3(9.9999997e-21f, 9.9999997e-21f, 9.9999997e-21f);
+	G3D::Vector3& denormFix = denormFixFunc();
+	//line 109
+	updateIfDirty();
+	//line 115?
+	float someConstant = 0.99980003f;
+	//line 117
+	angMomentum = torque * dt + angMomentum * someConstant;
+	pv.velocity.rotational = computeRotVel(getPV().position.rotation, momentRecip, angMomentum) + denormFix;
+	//line 118
+	Quaternion& rotateQuat = Quaternion::Quaternion(getPV().velocity.rotational, 0) * qOrientation * 0.5 * dt;
+	//line 119
+	qOrientation += rotateQuat;
+	// line 121
+	qOrientation *= precentInline(qOrientation.magnitude());
+	qOrientation.toRotationMatrix(pv.position.rotation);
+	//line 123
+	pv.velocity.linear += force * massRecip * dt;
+	pv.position.translation += getPV().velocity.linear * dt;
+	//line 129
+	force = Vector3(0, constantForceY, 0);
+	torque = Vector3(0, 0, 0);
+	//line 131
+	angMomentum += denormFix;
+	//line 132
+	pv.velocity.linear += denormFix;
+
+	
+}
+
 PV SimBody::getOwnerPV()
 {
 	RBXAssert(!dirty);
