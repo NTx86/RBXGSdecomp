@@ -42,9 +42,13 @@ namespace RBX
 	{
 		const PV& body0PV = this->body0->getPV();
 		const PV& body1PV = this->body1->getPV();
-		_params.normal = body1PV.position.translation - body0PV.position.translation;
+
+		const Vector3& body0Trans = body0PV.position.translation;
+		const Vector3& body1Trans = body1PV.position.translation;
+
+		_params.normal = body1Trans - body0Trans;
 		_params.length = _params.normal.unitize() - this->pairData.radiusSum;
-		_params.position = _params.normal * this->pairData.radius0 + body0PV.position.translation;
+		_params.position = _params.normal * this->pairData.radius0 + body0Trans;
 	}
 
 	void GeoPair::computeBallPoint(PairParams& _params)
