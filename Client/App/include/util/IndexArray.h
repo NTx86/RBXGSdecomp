@@ -2,7 +2,6 @@
 #include <g3d/array.h>
 #include <boost/noncopyable.hpp>
 #include "util/Debug.h"
-#include "v8kernel/Connector.h"
 
 namespace RBX {
 	template <typename tInstance>

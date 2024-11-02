@@ -1,31 +1,91 @@
 #pragma once
 #include "v8kernel/KernelIndex.h"
+#include "v8kernel/Body.h"
+#include "v8kernel/Pair.h"
+#include "v8kernel/Point.h"
+#include "util/Math.h"
+#include <G3DAll.h>
 
-/*class RBX::Connector : public RBX::KernelIndex { // Size=0x8
-  //0x0004: fields for RBX::KernelIndex
-  
-  private: int32_t& getKernelIndex();
-  public: void Connector(const RBX::Connector&);
-  public: void Connector();
-  public: virtual ~Connector();
-  public: virtual void computeForce(const float, bool);
-  public: virtual bool canThrottle() const;
-  public: virtual bool getBroken();
-  public: virtual float potentialEnergy();
-  public: RBX::Connector& operator=(const RBX::Connector&);
-  public: void __local_vftable_ctor_closure();
-  public: virtual void* __vecDelDtor(uint32_t);
-};/*/
-
-namespace RBX {
+namespace RBX
+{
 	class Connector : public RBX::KernelIndex
 	{
-		public:
-			__declspec(noinline) int& getKernelIndex() {return kernelIndex;}
-			virtual ~Connector() {}
-			virtual void computeForce(const float, bool) {}
-			virtual bool canThrottle();
-			virtual bool getBroken() {return false;} //placeholder
-			virtual float potentialEnergy() {return 0;};
+	public: // this is meant to be private
+		__declspec(noinline) int& getKernelIndex() {return kernelIndex;}
+	public:
+		Connector(const Connector&);
+		Connector() {};
+		virtual ~Connector() {}
+		virtual void computeForce(const float dt, bool throttling) {}
+		virtual bool canThrottle() {return false;}
+		virtual bool getBroken() {return false;}
+		virtual float potentialEnergy() {return 0;};
+		RBX::Connector& operator=(const RBX::Connector&);
+	};
+
+	class ContactConnector : public Connector
+	{
+	protected:
+		RBX::GeoPair geoPair;
+		float k;
+		float kFriction;
+		float kNeg;
+		float firstApproach;
+		float threshold;
+		float forceMagLast;
+		G3D::Vector3 frictionOffset;
+	public:
+		ContactConnector(const ContactConnector& other);
+		ContactConnector::ContactConnector(float _k, float _kNeg, float _kFriction)
+			: geoPair()
+		{
+			this->k = _k;
+			this->kNeg = _kNeg;
+			this->kFriction = _kFriction;
+			this->frictionOffset = G3D::Vector3::zero();
+			this->firstApproach = 0;
+			this->threshold = 0;
+			this->forceMagLast = 0;
+		}
+
+		void reset();
+		void setBallBall(RBX::Body*, RBX::Body*, float, float);
+		void setBallBlock(RBX::Body*, RBX::Body*, float, const G3D::Vector3*, RBX::NormalId, RBX::GeoPairType);
+		void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
+		void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
+		void setEdgeEdge(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId);
+		bool match(RBX::Body*, RBX::Body*, RBX::GeoPairType, int, int);
+		virtual void computeForce(const float, bool);
+		virtual bool canThrottle() const;
+		virtual ~ContactConnector() {};
+		RBX::ContactConnector& operator=(const RBX::ContactConnector&);
+	};
+
+	class PointToPointBreakConnector : public Connector
+	{
+	protected:
+		Point* point0;
+		Point* point1;
+		float k;
+		float breakForce;
+		bool broken;
+	protected:
+		void forceToPoints(const G3D::Vector3&);
+	public:
+		PointToPointBreakConnector(const RBX::PointToPointBreakConnector&);
+		// TODO:: check if the ctor matches
+		PointToPointBreakConnector(RBX::Point* _point0, RBX::Point* _point1, float _k, float _breakForce)
+			: point0(_point0),
+			  point1(_point1),
+			  k(_k),
+			  breakForce(_breakForce)
+		{}
+
+		virtual void computeForce(const float dt, bool throttling);
+		virtual bool getBroken() {return this->broken;}
+		virtual float potentialEnergy();
+		void setBroken() {this->broken = true;}
+		virtual ~PointToPointBreakConnector() {};
+		PointToPointBreakConnector& operator=(const PointToPointBreakConnector&);
 	};
 }

@@ -1,7 +1,9 @@
+#pragma once
 #include <G3DAll.h>
 
 namespace RBX 
 {
+	// TODO: move this into it's correct file
 	enum NormalId : int {
 	NORM_X = 0x0000,
 	NORM_Y = 0x0001,
@@ -20,7 +22,11 @@ namespace RBX
 			static const float pi() {return 3.1415927f;}
 			static const float piHalf() {return 1.5707964f;}
 			static const float twoPi() {return 6.283185f;}
-			static const float& inf();
+			static const float& inf()
+			{
+				static float inf = std::numeric_limits<float>::infinity();
+				return inf;
+			}
 			static inline int iRound(float fvalue) {return G3D::iRound(fvalue);}
 			static int iFloor(float);
 			static float polarity(float);

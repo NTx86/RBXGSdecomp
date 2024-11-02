@@ -8,12 +8,6 @@
 
 namespace RBX
 {
-	const float& Math::inf()
-	{
-		static float inf = std::numeric_limits<float>::infinity();
-		return inf;
-	}
-
 	const G3D::Matrix3& Math::matrixRotateY()
 	{
 		static G3D::Matrix3 rotateY(0, 0, 1, 0, 1, 0, -1, 0, 0);
