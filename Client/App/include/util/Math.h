@@ -79,7 +79,10 @@ namespace RBX
 			static G3D::Vector3 fromFocusSpace(const G3D::Vector3&, const G3D::CoordinateFrame&);
 			static G3D::Vector3 toDiagonal(const G3D::Matrix3& m);
 			static G3D::Matrix3 fromDiagonal(const G3D::Vector3&);
-			static G3D::Vector3 getColumn(const G3D::Matrix3&, int);
+			static G3D::Vector3 getColumn(const G3D::Matrix3& m, int c)
+			{
+				return Vector3(m[0][c], m[1][c], m[2][c]);
+			}
 			static unsigned char rotationToByte(float);
 			static float rotationFromByte(unsigned char);
 			static bool isAxisAligned(const G3D::Matrix3&);
@@ -115,8 +118,14 @@ namespace RBX
 			static int toYAxisQuadrant(const G3D::CoordinateFrame&);
 			static G3D::Matrix3 alignAxesClosest(const G3D::Matrix3&, const G3D::Matrix3&);
 			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3&, const G3D::Matrix3&);
-			static G3D::Vector3 getWorldNormal(RBX::NormalId, const G3D::CoordinateFrame&);
-			static G3D::Vector3 getWorldNormal(RBX::NormalId, const G3D::Matrix3&);
+			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::CoordinateFrame& coord)
+			{
+				return Math::getColumn(coord.rotation, id % 3) * (1 - (id / 3) * 2);
+			}
+			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::Matrix3& mat)
+			{
+				return Math::getColumn(mat, id % 3) * (1 - (id / 3) * 2);
+			}
 			static float radWrap(float);
 			static const G3D::Matrix3& getAxisRotationMatrix(int);
 			static G3D::Vector3 vectorToObjectSpace(const G3D::Vector3&, const G3D::Matrix3&);

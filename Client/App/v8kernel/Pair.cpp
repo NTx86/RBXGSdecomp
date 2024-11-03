@@ -1,4 +1,5 @@
 #include "v8kernel/Pair.h"
+#include "util/Math.h"
 #include "util/Debug.h"
 
 namespace RBX
@@ -53,46 +54,32 @@ namespace RBX
 
 	void GeoPair::computeBallPoint(PairParams& _params)
 	{
-		const PV& body0PV = this->body0->getPV();
-		const PV& body1PV = this->body1->getPV();
+		const Vector3& body0Trans = this->body0->getPV().position.translation;
+		const CoordinateFrame& body1Pos = this->body1->getPV().position;
 
-		Vector3 v1 = body1PV.position.rotation * *this->offset1;
-		v1 += body1PV.position.translation;
-
-		_params.position = v1;
-		_params.normal = _params.position - body0PV.position.translation;
+		const G3D::Vector3& myoffset1 = *this->offset1;
+		_params.position = body1Pos.pointToWorldSpace(myoffset1);
+		_params.normal = _params.position - body0Trans;
 		_params.length = _params.normal.unitize() - this->pairData.radius0;
 	}
 
-	__forceinline Vector3 getColumn(const Matrix3& m, int c)
+	Vector3 somemaththing(const Vector3& normal, const Vector3& trans)
 	{
-		// this does the same thing as G3D::Matrix3::getColumn but inlined
-		return Vector3(m[0][c], m[1][c], m[2][c]);
+		return trans - normal * normal.dot(trans);
 	}
 
 	void GeoPair::computeBallEdge(PairParams& _params)
 	{
-		const PV& body0PV = this->body0->getPV();
-		const PV& body1PV = this->body1->getPV();
+		const Vector3& body0PV = this->body0->getPV().position.translation;
+		const CoordinateFrame& body1PV = this->body1->getPV().position;
+		const G3D::Vector3& myoffset1 = *this->offset1;
+		const Vector3& worldPoint = body1PV.pointToWorldSpace(myoffset1);
 
-		Vector3 v1 = body1PV.position.rotation * *this->offset1;
-		v1 += body1PV.position.translation;
+		const Vector3& normal = Math::getWorldNormal(this->pairData.normalID1, body1PV);
 
-		//int face = this->pairData.normalID1;
-		//int v10 = face / 3;
-		//face %= 3;
-		//int mult = (1 - 2 * v10);
-
-		NormalId id = this->pairData.normalID1;
-		int v11 = id % 3;
-		int mult = 1 - (id / 3) * 2;
-
-		Vector3 v4 = getColumn(body1PV.position.rotation, v11) * mult;
-		Vector3 v5 = v1 - body0PV.position.translation;
-		Vector3 v6 = v5 - v4 * v4.dot(v5);
-
-		_params.normal = v6;
-		_params.position = v6 + body0PV.position.translation;
+		const Vector3& temp = worldPoint - body0PV;
+		_params.normal = somemaththing(normal, temp);
+		_params.position = _params.normal + body0PV;
 		_params.length = _params.normal.unitize() - this->pairData.radius0;
 	}
 }
