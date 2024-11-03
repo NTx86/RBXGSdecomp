@@ -25,6 +25,7 @@ namespace RBX {
 		void setLocalPos(const G3D::Vector3& _localPos);
 		void setWorldPos(const G3D::Vector3& _worldPos);
 		void setBody(RBX::Body* _body) { this->body = _body; }
+		RBX::Body* getBody() {return this->body;}
 		const G3D::Vector3& getWorldPos() {return worldPos;}
 		Point& operator=(const Point&);
 
