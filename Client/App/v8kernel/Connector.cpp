@@ -85,14 +85,14 @@ namespace RBX
 
 	void PointToPointBreakConnector::computeForce(const float dt, bool throttling)
 	{
-		if (this->broken)
-			return;
+		if (!this->broken)
+		{
+			Vector3 force = (this->point1->getWorldPos() - this->point0->getWorldPos()) * -this->k;
 
-		Vector3 diff = this->point1->getWorldPos() - this->point0->getWorldPos();
-		Vector3 force = diff * -this->k;
-
-		this->broken = Math::taxiCabMagnitude(force) > this->breakForce;
-		this->forceToPoints(force);
+			float taxi = Math::taxiCabMagnitude(force);
+			this->broken = taxi > this->breakForce;
+			this->forceToPoints(force);
+		}
 	}
 
 	float PointToPointBreakConnector::potentialEnergy()
