@@ -1,5 +1,6 @@
 #pragma once
 #include "v8kernel/KernelIndex.h"
+#include "v8kernel/KernelInput.h"
 #include "v8kernel/Body.h"
 #include "v8kernel/Pair.h"
 #include "v8kernel/Point.h"
@@ -87,5 +88,27 @@ namespace RBX
 		void setBroken() {this->broken = true;}
 		virtual ~PointToPointBreakConnector() {};
 		PointToPointBreakConnector& operator=(const PointToPointBreakConnector&);
+	};
+
+	class RotateConnector : public Connector
+	{
+	private:
+		float k;
+		Point* base0;
+		Point* ray0;
+		Point* ref0;
+		Point* ref1;
+		float lastRotation;
+		int windings;
+		KernelInput kernelInput;
+	private:
+		void computeParams(G3D::Vector3& normal, float& rotation, float& rotVel);
+	public:
+		RotateConnector(const RotateConnector& other);
+		RotateConnector(Point* base0, Point* ray0, Point* ref0, Point* ref1, float kValue, float armLength);
+		KernelInput* getKernelInput() {return &kernelInput;}
+		virtual void computeForce(const float dt, bool throttling);
+		virtual ~RotateConnector() {}
+		RBX::RotateConnector& operator=(const RotateConnector& other);
 	};
 }

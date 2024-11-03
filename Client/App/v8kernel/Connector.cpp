@@ -101,4 +101,36 @@ namespace RBX
 		float mag = diff.magnitude();
 		return this->k * mag * mag * 0.5f;
 	}
+
+	RotateConnector::RotateConnector(Point* base0, Point* ray0, Point* ref0, Point* ref1, float kValue, float armLength)
+		: base0(base0),
+		  ray0(ray0),
+		  ref0(ref0),
+		  ref1(ref1),
+  		  k(kValue * armLength * armLength),
+		  lastRotation(0),
+		  windings(0),
+		  kernelInput()
+	{}
+
+	void RotateConnector::computeForce(const float dt, bool throttling)
+	{
+		Vector3 normal;
+		float rotation;
+		float rotVel;
+		this->computeParams(normal, rotation, rotVel);
+
+		this->kernelInput.setGoal(rotation);
+
+		float lastGoal = 0;
+		float currentGoal;
+		float increment;
+		this->kernelInput.get(lastGoal, currentGoal, increment);
+
+		float v1 = (currentGoal - rotation) * this->k;
+		Vector3 v2 = normal * v1;
+
+		this->ref0->getBody()->accumulateTorque(-v2);
+		this->ref1->getBody()->accumulateTorque(v2);
+	}
 }
