@@ -98,7 +98,7 @@ namespace RBX
 	float PointToPointBreakConnector::potentialEnergy()
 	{
 		Vector3 diff = this->point1->getWorldPos() - this->point0->getWorldPos();
-		float mag = diff.magnitude();
+		float mag = diff.length();
 		return this->k * mag * mag * 0.5f;
 	}
 
