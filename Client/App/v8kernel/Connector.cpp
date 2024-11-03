@@ -91,7 +91,7 @@ namespace RBX
 		Vector3 diff = this->point1->getWorldPos() - this->point0->getWorldPos();
 		Vector3 force = diff * -this->k;
 
-		this->broken = abs(force.x) + abs(force.y) + abs(force.z) > this->breakForce;
+		this->broken = Math::taxiCabMagnitude(force) > this->breakForce;
 		this->forceToPoints(force);
 	}
 
