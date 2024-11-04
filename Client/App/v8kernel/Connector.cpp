@@ -148,24 +148,26 @@ namespace RBX
 		Vector3 ref0base0_delta_funny = ref0base0_delta - (normal * funnyCalculation1);
 		Vector3 ref1base0_delta_funny = ref1base0_delta - (normal * funnyCalculation2);
 
+		int windings = this->windings;
+
 		Vector3 cross = ref0base0_delta_funny.cross(ref1base0_delta_funny);
 		float garbage2 = ref1base0_delta_funny.dot(ref0base0_delta_funny);
 
 		float result = atan2(cross.squaredMagnitude(), garbage2);
 
-		//todo: actually match this part instead of pasting in pseudo code
-		if ( this->lastRotation > 1.5707963267949 )
+		if (this->lastRotation > G3D::halfPi())
 		{
-			if ( this->lastRotation < -1.5707963267949 ) //line numbers show that this is an actual line
+			if (result < -G3D::halfPi()) //line numbers show that this is an actual line
 				this->windings = windings + 1; // these could be very likely temp values 
 		}									   //that are later written to actual class variable according to original asm
-		else if (result > 1.5707963267949 && result < -1.5707963267949)
+		else if (result < -G3D::halfPi())
 		{
-			this->windings = windings - 1;
+			if (result < G3D::halfPi())
+				this->windings = windings - 1;
 		}
-		double v30 = (double)this->windings * 6.283185 + result;// line 69 and line 70
-		rotation = v30;
-		rotVel = v30 - (6.283185 * (double)windings + this->lastRotation);
+
+		rotation = this->windings * Math::twoPi() + result;// line 69 and line 70
+		rotVel = rotation - (Math::twoPi() * windings + this->lastRotation);
 		this->lastRotation = result; //line 71
 	}
 
