@@ -133,4 +133,39 @@ namespace RBX
 		this->ref0->getBody()->accumulateTorque(-v2);
 		this->ref1->getBody()->accumulateTorque(v2);
 	}
+
+	void RotateConnector::computeParams(G3D::Vector3& normal, float& rotation, float& rotVel)
+	{
+		Vector3 ray0base0_delta = this->ray0->getWorldPos() - this->base0->getWorldPos();
+		normal = ray0base0_delta;
+		normal.unitize();
+		Vector3 ref0base0_delta = this->ref0->getWorldPos() - this->base0->getWorldPos();
+		Vector3 ref1base0_delta = this->ref1->getWorldPos() - this->base0->getWorldPos();
+
+		float funnyCalculation1 = normal.dot(ref0base0_delta);
+		float funnyCalculation2 = normal.dot(ref1base0_delta);
+
+		Vector3 ref0base0_delta_funny = ref0base0_delta - (normal * funnyCalculation1);
+		Vector3 ref1base0_delta_funny = ref1base0_delta - (normal * funnyCalculation2);
+
+		Vector3 cross = ref0base0_delta_funny.cross(ref1base0_delta_funny);
+		float garbage2 = ref1base0_delta_funny.dot(ref0base0_delta_funny);
+
+		float result = atan2(cross.squaredMagnitude(), garbage2);
+
+		//todo: actually match this part instead of pasting in pseudo code
+		if ( this->lastRotation > 1.5707963267949 )
+		{
+			if ( this->lastRotation < -1.5707963267949 ) //line numbers show that this is an actual line
+				this->windings = windings + 1; // these could be very likely temp values 
+		}									   //that are later written to actual class variable according to original asm
+		else if (result > 1.5707963267949 && result < -1.5707963267949)
+		{
+			this->windings = windings - 1;
+		}
+		double v30 = (double)this->windings * 6.283185 + result;// line 69 and line 70
+		rotation = v30;
+		rotVel = v30 - (6.283185 * (double)windings + this->lastRotation);
+		this->lastRotation = result; //line 71
+	}
 }
