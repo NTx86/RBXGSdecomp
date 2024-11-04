@@ -111,4 +111,16 @@ namespace RBX
 		virtual ~RotateConnector() {}
 		RBX::RotateConnector& operator=(const RotateConnector& other);
 	};
+
+	class NormalBreakConnector : public PointToPointBreakConnector {
+		private:
+			NormalId normalIdBody0;
+		public:
+			NormalBreakConnector(const NormalBreakConnector&);
+			NormalBreakConnector(RBX::Point*, RBX::Point*, float, float, RBX::NormalId);
+			virtual void computeForce(const float dt, bool throttling);
+			virtual ~NormalBreakConnector();
+			RBX::NormalBreakConnector& operator=(const NormalBreakConnector&);
+	};
+
 }

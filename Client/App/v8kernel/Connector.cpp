@@ -168,4 +168,17 @@ namespace RBX
 		rotVel = v30 - (6.283185 * (double)windings + this->lastRotation);
 		this->lastRotation = result; //line 71
 	}
+
+	void NormalBreakConnector::computeForce(const float dt, bool throttling)
+	{
+		if ( !this->broken )
+		{
+			const Vector3& worldNormal = Math::getWorldNormal(this->normalIdBody0, this->point0->getBody()->getPV().position);
+			const Vector3& force = -this->k * (this->point1->getWorldPos() - this->point0->getWorldPos());
+			
+			float forceDot = force.dot(worldNormal);
+			this->broken = -forceDot > this->breakForce;
+			this->forceToPoints(force);
+		}
+	}
 }
