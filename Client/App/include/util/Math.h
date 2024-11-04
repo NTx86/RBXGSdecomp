@@ -120,11 +120,11 @@ namespace RBX
 			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3&, const G3D::Matrix3&);
 			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::CoordinateFrame& coord)
 			{
-				return Math::getColumn(coord.rotation, id % 3) * (1 - (id / 3) * 2);
+				return (1 - (id / 3) * 2) * Math::getColumn(coord.rotation, id % 3);
 			}
 			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::Matrix3& mat)
 			{
-				return Math::getColumn(mat, id % 3) * (1 - (id / 3) * 2);
+				return(1 - (id / 3) * 2) * Math::getColumn(mat, id % 3);
 			}
 			static float radWrap(float);
 			static const G3D::Matrix3& getAxisRotationMatrix(int);
