@@ -127,8 +127,8 @@ namespace RBX
 		float increment;
 		this->kernelInput.get(lastGoal, currentGoal, increment);
 
-		float v1 = (currentGoal - rotation) * this->k;
-		Vector3 v2 = normal * v1;
+		//float v1 = (currentGoal - rotation) * this->k;
+		Vector3 v2 = normal * ((currentGoal - rotation) * this->k);
 
 		this->ref0->getBody()->accumulateTorque(-v2);
 		this->ref1->getBody()->accumulateTorque(v2);
@@ -153,7 +153,7 @@ namespace RBX
 		Vector3 cross = ref0base0_delta_funny.cross(ref1base0_delta_funny);
 		float garbage2 = ref1base0_delta_funny.dot(ref0base0_delta_funny);
 
-		float result = atan2(cross.squaredMagnitude(), garbage2);
+		float result = atan2(cross.z * cross.z + cross.y * cross.y + cross.x * cross.x, garbage2);
 
 		if (this->lastRotation > G3D::halfPi())
 		{
