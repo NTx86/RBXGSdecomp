@@ -82,4 +82,21 @@ namespace RBX
 		_params.position = _params.normal + body0PV;
 		_params.length = _params.normal.unitize() - this->pairData.radius0;
 	}
+
+	void GeoPair::computeBallPlane(RBX::PairParams& _params)
+	{
+		const Vector3& body0PV = this->body0->getPV().position.translation;
+		const CoordinateFrame& body1PV = this->body1->getPV().position;
+		const G3D::Vector3& myoffset1 = *this->offset1;
+		const Vector3& worldPoint = body1PV.pointToWorldSpace(myoffset1);
+
+		const Vector3& normal = -Math::getWorldNormal(this->pairData.normalID1, body1PV);
+
+		_params.normal = normal;
+
+		const Vector3& temp = worldPoint - body0PV;
+		Vector3 someMathThing = normal.dot(temp) * normal;
+		_params.position = body0PV + someMathThing;
+		_params.length = _params.normal.length() - this->pairData.radius0;
+	}
 }
