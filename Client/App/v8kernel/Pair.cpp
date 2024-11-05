@@ -99,4 +99,16 @@ namespace RBX
 		_params.position = body0PV + someMathThing;
 		_params.length = _params.normal.length() - this->pairData.radius0;
 	}
+
+	void GeoPair::computePointPlane(RBX::PairParams& _params)
+	{
+		_params.position = this->body0->getPV().position.pointToWorldSpace(*offset0);
+		const CoordinateFrame& body1PV = this->body1->getPV().position;
+		Vector3 body1worldSpace = body1PV.pointToWorldSpace(*offset1);
+		_params.normal = -Math::getWorldNormal(this->pairData.normalID1, body1PV);
+		_params.length = _params.normal.dot(body1worldSpace - _params.position);
+	}
+
+
+
 }
