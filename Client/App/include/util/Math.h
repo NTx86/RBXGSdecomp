@@ -30,7 +30,19 @@ namespace RBX
 			static inline int iRound(float fvalue) {return G3D::iRound(fvalue);}
 			static int iFloor(float);
 			static float polarity(float);
-			static float sign(float);
+			static float sign(float fValue)
+			{
+				// G3D::sign but it supports floats
+				if (fValue > 0.0f) {
+					return 1.0f;
+				}
+
+				if (fValue < 0.0f) {
+					return -1.0f;
+				}
+
+				return 0.0f;
+			}
 			static bool isDenormal(float);
 			static bool isNanInfDenorm(float);
 			static bool isNanInfDenormVector3(const G3D::Vector3&);

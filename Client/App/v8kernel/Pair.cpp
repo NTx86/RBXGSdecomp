@@ -109,16 +109,12 @@ namespace RBX
 		_params.length = _params.normal.dot(body1worldSpace - _params.position);
 	}
 
-	__forceinline double unkMinMaxInline(double d, float max)
+	__forceinline float unkClampInline(float d, float max)
 	{
-		if ( fabs(d) > max )
-		{
-			return max * G3D::sign(d);
-		}
-		else
-		{
-			return d;
-		}
+		if (fabs(d) > max)
+			return max * Math::sign(d);
+
+		return d;
 	}
 	
 	void GeoPair::computeEdgeEdgePlane(RBX::PairParams& _params)
@@ -144,7 +140,7 @@ namespace RBX
 			float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
 			float body0Dot = bodyWorldSpaceDelta.dot(body0Normal);
 			float theSinner = (bodyNormalDot + (body1Dot * body0Dot)) / compareResult;
-			theSinner = unkMinMaxInline(theSinner, 6.0f);
+			theSinner = unkClampInline(theSinner, 6.0f);
 			_params.position = body0Normal * theSinner + body0worldSpace;
 			_params.length = _params.normal.dot(body1worldSpace - _params.position);
 		}
