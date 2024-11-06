@@ -126,7 +126,7 @@ namespace RBX
 		Vector3 bodyWorldSpaceDelta = body1worldSpace - body0worldSpace;
 		float bodyNormalDot = body0Normal.dot(body1Normal);
 		float compareResult = 1.0f - bodyNormalDot * bodyNormalDot;
-		_params.normal = -Math::getWorldNormal(this->pairData.planeID, body0PV.rotation);
+		_params.normal = -Math::getWorldNormal(this->pairData.planeID, body1PV.rotation);
 		if ( compareResult > 0.00001 )
 		{
 			float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
