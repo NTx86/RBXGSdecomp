@@ -109,6 +109,7 @@ namespace RBX
 		_params.length = _params.normal.dot(body1worldSpace - _params.position);
 	}
 
+	// is this actually an inline?
 	__forceinline float unkClampInline(float d, float max)
 	{
 		if (fabs(d) > max)
