@@ -108,6 +108,18 @@ namespace RBX
 		_params.normal = -Math::getWorldNormal(this->pairData.normalID1, body1PV);
 		_params.length = _params.normal.dot(body1worldSpace - _params.position);
 	}
+
+	__forceinline double unkMinMaxInline(double d, float max)
+	{
+		if ( fabs(d) > max )
+		{
+			return max * G3D::sign(d);
+		}
+		else
+		{
+			return d;
+		}
+	}
 	
 	void GeoPair::computeEdgeEdgePlane(RBX::PairParams& _params)
 	{
@@ -132,22 +144,7 @@ namespace RBX
 			float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
 			float body0Dot = bodyWorldSpaceDelta.dot(body0Normal);
 			float theSinner = (bodyNormalDot + (body1Dot * body0Dot)) / compareResult;
-			//wtf is this suppose to be??? my guess is that its some sort of float fuzzyEq inline
-			//also this is probably NOT functionally equilevent, i wrote this in a way that would give the largest score
-			if ( fabs(theSinner) > 6.0 )
-			{
-				if ( theSinner <= 0.0 )                         // line 127
-				{
-					if ( theSinner < 0.0 )
-						theSinner = 6.0 * -1.0;
-					else
-						theSinner = 6.0 * 0.0;
-				}
-			}
-			else
-			{
-				theSinner = 6.0 * 1.0;
-			}
+			theSinner = unkMinMaxInline(theSinner, 6.0f);
 			_params.position = body0Normal * theSinner + body0worldSpace;
 			_params.length = _params.normal.dot(body1worldSpace - _params.position);
 		}
