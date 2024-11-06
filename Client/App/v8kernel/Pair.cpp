@@ -108,7 +108,90 @@ namespace RBX
 		_params.normal = -Math::getWorldNormal(this->pairData.normalID1, body1PV);
 		_params.length = _params.normal.dot(body1worldSpace - _params.position);
 	}
+	
+	void GeoPair::computeEdgeEdgePlane(RBX::PairParams& _params)
+	{
+		const CoordinateFrame& body0PV = this->body0->getPV().position;
+		const CoordinateFrame& body1PV = this->body1->getPV().position;
 
+		//world space defines
+		const Vector3& myOffset0 = *this->offset0; //these offset temps need to be get rid of
+		Vector3 body0worldSpace = body0PV.pointToWorldSpace(myOffset0);
+		const Vector3& myOffset1 = *this->offset1;
+		Vector3 body1worldSpace = body1PV.pointToWorldSpace(myOffset1);
+		//normals
+		Vector3 body0Normal = Math::getWorldNormal(this->pairData.normalID0, body0PV);
+		Vector3 body1Normal = Math::getWorldNormal(this->pairData.normalID1, body1PV);
+		//calcs
+		Vector3 bodyWorldSpaceDelta = body1worldSpace - body0worldSpace;
+		float bodyNormalDot = body0Normal.dot(body1Normal);
+		float compareResult = 1.0f - bodyNormalDot * bodyNormalDot;
+		_params.normal = -Math::getWorldNormal(this->pairData.planeID, body0PV.rotation);
+		if ( compareResult > 0.00001 )
+		{
+			float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
+			float body0Dot = bodyWorldSpaceDelta.dot(body0Normal);
+			float theSinner = (bodyNormalDot + (body1Dot * body0Dot)) / compareResult;
+			//wtf is this suppose to be??? my guess is that its some sort of float fuzzyEq inline
+			//also this is probably NOT functionally equilevent, i wrote this in a way that would give the largest score
+			if ( fabs(theSinner) > 6.0 )
+			{
+				if ( theSinner <= 0.0 )                         // line 127
+				{
+					if ( theSinner < 0.0 )
+						theSinner = 6.0 * -1.0;
+					else
+						theSinner = 6.0 * 0.0;
+				}
+			}
+			else
+			{
+				theSinner = 6.0 * 1.0;
+			}
+			_params.position = body0Normal * theSinner + body0worldSpace;
+			_params.length = _params.normal.dot(body1worldSpace - _params.position);
+		}
+		else
+		{
+			_params.position = body0worldSpace;
+			_params.length = 0.0;
+		}
+	}
 
+	void GeoPair::computeEdgeEdge(RBX::PairParams& _params)
+	{
+		const CoordinateFrame& body0coord = this->body0->getPV().position;
+		const CoordinateFrame& body1coord = this->body1->getPV().position;
 
+		//world space defines
+		Vector3 body0worldSpace = body0coord.pointToWorldSpace(*this->offset0);
+		Vector3 body1worldSpace = body1coord.pointToWorldSpace(*this->offset1);
+		//normals
+		Vector3 body0Normal = Math::getWorldNormal(this->pairData.normalID0, body0coord);
+		Vector3 body1Normal = Math::getWorldNormal(this->pairData.normalID1, body1coord);
+		//calcs
+		Vector3 bodyWorldSpaceDelta = body1worldSpace - body0worldSpace;
+		float bodyNormalDot = body0Normal.dot(body1Normal);
+		float body0Dot = bodyWorldSpaceDelta.dot(body0Normal);
+		float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
+		float compareResult = 1.0f - bodyNormalDot * bodyNormalDot;
+		if ( compareResult > 0.00001f )
+		{
+			float bodyDotCalc1 = (body0Dot + body1Dot * bodyNormalDot) * (1.0f / compareResult);
+			float bodyDotCalc2 = (body1Dot + body0Dot * bodyNormalDot) * (1.0f / compareResult);
+			const Vector3 body0NormalDotCalc = body0worldSpace + (body0Normal * bodyDotCalc1);
+			const Vector3 body1NormalDotCalc = body1worldSpace + (body1Normal * bodyDotCalc2);
+			_params.position = (body1NormalDotCalc + body0NormalDotCalc) * 0.5f;
+			_params.normal = body0NormalDotCalc - body1NormalDotCalc;
+			_params.length = -_params.normal.unitize();
+
+			
+		}
+		else
+		{
+			_params.position = body0worldSpace;
+			_params.normal = body0Normal;
+			_params.length = 0.0f;
+		}
+	}
 }
