@@ -123,10 +123,8 @@ namespace RBX
 		const CoordinateFrame& body1PV = this->body1->getPV().position;
 
 		//world space defines
-		const Vector3& myOffset0 = *this->offset0; //these offset temps need to be get rid of
-		Vector3 body0worldSpace = body0PV.pointToWorldSpace(myOffset0);
-		const Vector3& myOffset1 = *this->offset1;
-		Vector3 body1worldSpace = body1PV.pointToWorldSpace(myOffset1);
+		Vector3 body0worldSpace = body0PV.pointToWorldSpace(*this->offset0);
+		Vector3 body1worldSpace = body1PV.pointToWorldSpace(*this->offset1);
 		//normals
 		Vector3 body0Normal = Math::getWorldNormal(this->pairData.normalID0, body0PV);
 		Vector3 body1Normal = Math::getWorldNormal(this->pairData.normalID1, body1PV);
