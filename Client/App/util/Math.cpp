@@ -326,6 +326,6 @@ namespace RBX
 	G3D::Vector3 Math::toGrid(const G3D::Vector3& v, const G3D::Vector3& grid)
 	{
 		Vector3 units = v / grid;
-		return grid * Vector3(iRound(units.x), iRound(units.y), iRound(units.z));
+		return grid * Math::iRoundVector3(units);
 	}
 }
