@@ -1,7 +1,9 @@
+#pragma once
 #include <G3DAll.h>
 
 namespace RBX 
 {
+	// TODO: move this into it's correct file
 	enum NormalId : int {
 	NORM_X = 0x0000,
 	NORM_Y = 0x0001,
@@ -20,11 +22,27 @@ namespace RBX
 			static const float pi() {return 3.1415927f;}
 			static const float piHalf() {return 1.5707964f;}
 			static const float twoPi() {return 6.283185f;}
-			static const float& inf();
+			static const float& inf()
+			{
+				static float inf = std::numeric_limits<float>::infinity();
+				return inf;
+			}
 			static inline int iRound(float fvalue) {return G3D::iRound(fvalue);}
 			static int iFloor(float);
 			static float polarity(float);
-			static float sign(float);
+			static float sign(float fValue)
+			{
+				// G3D::sign but it supports floats
+				if (fValue > 0.0f) {
+					return 1.0f;
+				}
+
+				if (fValue < 0.0f) {
+					return -1.0f;
+				}
+
+				return 0.0f;
+			}
 			static bool isDenormal(float);
 			static bool isNanInfDenorm(float);
 			static bool isNanInfDenormVector3(const G3D::Vector3&);
@@ -60,7 +78,7 @@ namespace RBX
 				return std::max(fabs(v.x), std::max(fabs(v.y), fabs(v.z)));
 			}
 			static float planarSize(const G3D::Vector3&);
-			static float taxiCabMagnitude(const G3D::Vector3&);
+			static float taxiCabMagnitude(const G3D::Vector3& v) {return fabs(v.x) + fabs(v.y) + fabs(v.z);}
 			static const G3D::Plane& yPlane();
 			static G3D::Vector3 closestPointOnRay(const G3D::Ray&, const G3D::Ray&);
 			static bool cameraSeesPoint(const G3D::Vector3&, const G3D::GCamera&);
@@ -73,7 +91,10 @@ namespace RBX
 			static G3D::Vector3 fromFocusSpace(const G3D::Vector3&, const G3D::CoordinateFrame&);
 			static G3D::Vector3 toDiagonal(const G3D::Matrix3& m);
 			static G3D::Matrix3 fromDiagonal(const G3D::Vector3&);
-			static G3D::Vector3 getColumn(const G3D::Matrix3&, int);
+			static G3D::Vector3 getColumn(const G3D::Matrix3& m, int c)
+			{
+				return Vector3(m[0][c], m[1][c], m[2][c]);
+			}
 			static unsigned char rotationToByte(float);
 			static float rotationFromByte(unsigned char);
 			static bool isAxisAligned(const G3D::Matrix3&);
@@ -109,8 +130,14 @@ namespace RBX
 			static int toYAxisQuadrant(const G3D::CoordinateFrame&);
 			static G3D::Matrix3 alignAxesClosest(const G3D::Matrix3&, const G3D::Matrix3&);
 			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3&, const G3D::Matrix3&);
-			static G3D::Vector3 getWorldNormal(RBX::NormalId, const G3D::CoordinateFrame&);
-			static G3D::Vector3 getWorldNormal(RBX::NormalId, const G3D::Matrix3&);
+			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::CoordinateFrame& coord)
+			{
+				return (1 - (id / 3) * 2) * Math::getColumn(coord.rotation, id % 3);
+			}
+			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::Matrix3& mat)
+			{
+				return(1 - (id / 3) * 2) * Math::getColumn(mat, id % 3);
+			}
 			static float radWrap(float);
 			static const G3D::Matrix3& getAxisRotationMatrix(int);
 			static G3D::Vector3 vectorToObjectSpace(const G3D::Vector3&, const G3D::Matrix3&);

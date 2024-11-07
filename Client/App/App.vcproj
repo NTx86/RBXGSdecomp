@@ -276,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8kernel\Pair.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8kernel\Point.cpp"
 				>
 			</File>

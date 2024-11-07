@@ -4,7 +4,6 @@
 #include "v8kernel/SimBody.h"
 #include "v8kernel/Link.h"
 #include "util/PV.h"
-#include "v8kernel/Link.h"
 #include "v8kernel/KernelIndex.h"
 #include "v8kernel/Cofm.h"
 #include "util/math.h"
@@ -135,7 +134,7 @@ namespace RBX {
 				updatePV();
 				return pv;
 			}
-			const bool getCanThrottle() const;
+			const bool getCanThrottle() const {return this->canThrottle;}
 			void accumulateForceAtCofm(const G3D::Vector3&);
 			void accumulateForceAtBranchCofm(const G3D::Vector3& force)
 			{
