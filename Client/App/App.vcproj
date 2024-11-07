@@ -247,6 +247,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="v8world"
+				>
+				<File
+					RelativePath=".\include\v8world\Geometry.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -315,6 +323,10 @@
 				RelativePath=".\util\Units.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="v8world"
+			>
 		</Filter>
 	</Files>
 	<Globals>
