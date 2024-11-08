@@ -38,9 +38,9 @@ void SimBody::update()
 	qOrientation = Quaternion::Quaternion(pv.position.rotation);
 	qOrientation *= precentInline(qOrientation.magnitude());
 	angMomentum = pv.velocity.rotational * body->getBranchIWorld();
-	float _mass = body->getMass();
+	float _mass = body->getBranchMass();
 	unkSimInline(_mass);
-	constantForceY = body->getMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
+	constantForceY = body->getBranchMass() * Units::kmsAccelerationToRbx(Constants::getKmsGravity()).y;
 	dirty = false;
 }
 

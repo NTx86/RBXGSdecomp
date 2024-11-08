@@ -322,7 +322,7 @@ G3D::Matrix3 Body::getIWorldAtPoint(const G3D::Vector3& point) const
 
 G3D::Matrix3 Body::getBranchIWorldAtPoint(const G3D::Vector3& point) const
 {
-	float _mass = getMass();
+	float _mass = getBranchMass();
 	updatePV(); //more probably inlined updatePV calls
 	G3D::Matrix3 _moment = cofm ? cofm->getMoment() : moment;
 	G3D::Matrix3& iWorldAtCofm = Math::momentToWorldSpace(_moment, pv.position.rotation);

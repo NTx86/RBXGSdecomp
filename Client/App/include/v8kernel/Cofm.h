@@ -8,17 +8,17 @@ namespace RBX {
 	{
 		private:
 			Body *body;
-			bool dirty;
-			G3D::Vector3 cofmInBody;
-			float mass;
-			G3D::Matrix3 moment;
-			void updateIfDirty();
+			mutable bool dirty;
+			mutable G3D::Vector3 cofmInBody;
+			mutable float mass;
+			mutable G3D::Matrix3 moment;
+			void updateIfDirty() const;
 		public:
 			Cofm::Cofm(Body* body);
-			G3D::Vector3& getCofmInBody() const;
+			const G3D::Vector3& getCofmInBody() const;
 			bool getIsDirty() const {return dirty;}
 			void makeDirty() {dirty = true;}
-			float getMass();
-			G3D::Matrix3& getMoment();
+			const float getMass() const;
+			const G3D::Matrix3& getMoment() const;
 	};
 }

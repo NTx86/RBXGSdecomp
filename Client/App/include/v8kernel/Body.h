@@ -60,7 +60,7 @@ namespace RBX {
 				return stateIndex;
 			}
 			int numChildren() const {return children.size();}
-			RBX::Body* getChild(int) const;
+			RBX::Body* getChild(int index) {return children[index];} //suppose to be const
 			inline RBX::Body* getParent() const
 			{
 				return parent;
@@ -82,7 +82,7 @@ namespace RBX {
 
 			G3D::CoordinateFrame getMeInDescendant(const RBX::Body* descendant) const;
 			G3D::CoordinateFrame getMeInRoot() const;
-			float getMass() const {return cofm ? cofm->getMass() : mass;}
+			float getMass() const {return mass;}
 			G3D::Matrix3 getIBody() const
 			{
 				updatePV();

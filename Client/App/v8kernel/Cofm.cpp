@@ -1,6 +1,8 @@
 #include "v8kernel/Cofm.h"
+#include "v8kernel/Body.h"
+#include "util/PV.h"
 
-using namespace RBX;
+namespace RBX {
 
 //haven't checked if it matches yet
 Cofm::Cofm(Body* body):body(body)
@@ -8,19 +10,52 @@ Cofm::Cofm(Body* body):body(body)
 					,cofmInBody(Vector3(0.0f,0.0f,0.0f))
 					{}
 
-void Cofm::updateIfDirty()
-{
-	return; //placeholder
-}
-
-float Cofm::getMass()
+const float Cofm::getMass() const
 {
 	updateIfDirty();
 	return mass;
 }
 
-G3D::Matrix3& Cofm::getMoment()
+const G3D::Matrix3& Cofm::getMoment() const
 {
 	updateIfDirty();
 	return moment;
+}
+
+const G3D::Vector3& Cofm::getCofmInBody() const
+{
+	updateIfDirty();
+	return cofmInBody;
+}
+
+void Cofm::updateIfDirty() const
+{
+	if (dirty)
+	{
+		mass = body->getMass();
+		float bodyMass = body->getMass();
+		Vector3 point = body->getPV().position.translation * bodyMass;
+		for (int i = 0; i < body->numChildren(); i++)
+		{
+			Body* child = body->getChild(i);
+			mass = mass + child->getBranchMass();
+			point += child->getBranchCofmPos() * child->getBranchMass();
+		}
+		//Vector3 divCofmWorld = point / mass;
+		point = point / mass;
+
+		const PV& bodyPV = body->getPV();
+		//cofmInBody = body->getPV().position.pointToWorldSpace(point - body->getPV().position.translation);
+		cofmInBody = (point - bodyPV.position.translation) * bodyPV.position.rotation;
+		Matrix3 IWorld = body->getIWorldAtPoint(point);
+		for (int i = 0; i < body->numChildren(); i++)
+		{
+			IWorld = IWorld + body->getChild(i)->getBranchIWorldAtPoint(point);
+		}
+		moment = Math::momentToObjectSpace(IWorld, body->getPV().position.rotation);
+		dirty = false;
+	}
+}
+
+
 }
