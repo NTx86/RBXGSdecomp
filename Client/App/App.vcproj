@@ -171,6 +171,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\NormalId.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Profiling.h"
 					>
 				</File>
@@ -255,6 +259,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\Block.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Geometry.h"
 					>
 				</File>
@@ -312,6 +320,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\NormalId.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\Profiling.cpp"
 				>
 			</File>
@@ -333,6 +345,10 @@
 			>
 			<File
 				RelativePath=".\v8world\Ball.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Block.cpp"
 				>
 			</File>
 		</Filter>
