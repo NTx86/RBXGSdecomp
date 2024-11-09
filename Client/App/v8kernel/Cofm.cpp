@@ -41,11 +41,8 @@ void Cofm::updateIfDirty() const
 			mass = mass + child->getBranchMass();
 			point += child->getBranchCofmPos() * child->getBranchMass();
 		}
-		//Vector3 divCofmWorld = point / mass;
 		point = point / mass;
-
 		const PV& bodyPV = body->getPV();
-		//cofmInBody = body->getPV().position.pointToWorldSpace(point - body->getPV().position.translation);
 		cofmInBody = (point - bodyPV.position.translation) * bodyPV.position.rotation;
 		Matrix3 IWorld = body->getIWorldAtPoint(point);
 		for (int i = 0; i < body->numChildren(); i++)
