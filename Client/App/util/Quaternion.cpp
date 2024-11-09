@@ -94,4 +94,30 @@ namespace RBX
 		this->z = this->z * v3;
 		this->w = this->w * v3;
 	}
+
+	void Quaternion::toRotationMatrix(G3D::Matrix3& rot) const
+	{
+		float v2 = x * 2.0;
+		float v3 = y * 2.0;
+		float v4 = z * 2.0;
+		float v5 = x * v2;
+		float v6 = x * v3;
+		float v7 = x * v4;
+		float v8 = w * v2;
+		float v9 = w * v3;
+		float zz = w * v4;
+		float v10 = y * v3;
+		float v15 = y * v4;
+		float v12 = z * v4;
+
+		rot[0][0] = 1.0 - (v12 + v10);
+		rot[0][1] = v6 - zz;
+		rot[0][2] = v9 + v7;
+		rot[1][0] = v9 + zz;
+		rot[1][1] = 1.0 - (v12 + v5);
+		rot[1][2] = v15 - v8;
+		rot[2][0] = v7 - v9;
+		rot[2][1] = v8 + v15;
+		rot[2][2] = 1.0 - (v5 + v10);
+	}
 }
