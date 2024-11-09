@@ -328,4 +328,21 @@ namespace RBX
 		Vector3 units = v / grid;
 		return grid * Math::iRoundVector3(units);
 	}
+
+	G3D::Matrix3 Math::getIWorldAtPoint(const G3D::Vector3& cofmPos, const G3D::Vector3& worldPos, const G3D::Matrix3& iWorldAtCofm, float mass)
+	{
+		Vector3 worldPosDelta = worldPos - cofmPos;
+
+		//temporary psuedo code from IDA
+		float v8 = -(worldPosDelta.y * worldPosDelta.z);
+		float v23 = worldPosDelta.y * worldPosDelta.y + worldPosDelta.x * worldPosDelta.x;
+		float v9 = -(worldPosDelta.x * worldPosDelta.z);
+		float v12 = worldPosDelta.z * worldPosDelta.z;
+		float v19 = worldPosDelta.x * worldPosDelta.x + v12;
+		float v18 = -(worldPosDelta.y * worldPosDelta.x);
+		float v16 = worldPosDelta.y * worldPosDelta.y + v12;
+
+		return Matrix3(v16, v18, v9, v18, v19, v8, v9, v8, v23) * mass + iWorldAtCofm;
+
+	}
 }
