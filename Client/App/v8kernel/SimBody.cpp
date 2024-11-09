@@ -2,7 +2,8 @@
 #include "v8kernel/Constants.h"
 #include "v8kernel/Body.h"
 #include "util/Units.h"
-using namespace RBX;
+namespace RBX
+{
 
 SimBody::SimBody(RBX::Body* _body)
 			:body(_body),
@@ -44,8 +45,52 @@ void SimBody::update()
 	dirty = false;
 }
 
+void mulMatrixMatrixTranspose(const G3D::Matrix3& _mat0, const G3D::Matrix3& _mat1, G3D::Matrix3& _answer)
+{
+	//just like matrixMulInline, these pointers are required for matching
+	const float* matrix0 = &_mat0[0][0];
+	const float* matrix1 = &_mat1[0][0];
+	float *answer = &_answer[0][0];
 
-G3D::Vector3 computeRotVel(const G3D::Matrix3& rot, const G3D::Vector3& momentRecip, const G3D::Vector3& angMomentum);
+	//this part is mostly copied from operator* from matrix3 and transpose function as reference
+	for (int iRow = 0; iRow < 3; iRow++)
+	{
+		for (int iCol = 0; iCol < 3; iCol++)
+		{
+            answer[iRow*3+iCol] =
+                matrix0[iRow*3+0] * matrix1[iCol*3+0] +
+                matrix0[iRow*3+1] * matrix1[iCol*3+1] +
+                matrix0[iRow*3+2] * matrix1[iCol*3+2];
+		}
+	}
+}
+
+//this is cursed but its the only way i got it to match
+//this might be actually how roblox wrote it because pointers are used in mulMatrixMatrixTranspose too
+void matrixMulInline(const G3D::Matrix3& _mat, const G3D::Vector3& _vec, G3D::Matrix3& _answer)
+{
+	const float* matrix = &_mat[0][0];
+	float* answer = _answer[0];
+	answer[0] = matrix[0]*_vec.x;
+	answer[1] = matrix[1]*_vec.y;
+	answer[2] = matrix[2]*_vec.z;
+	answer[3] = matrix[3]*_vec.x;
+	answer[4] = matrix[4]*_vec.y;
+	answer[5] = matrix[5]*_vec.z;
+	answer[6] = matrix[6]*_vec.x;
+	answer[7] = matrix[7]*_vec.y;
+	answer[8] = matrix[8]*_vec.z;
+}
+
+
+G3D::Vector3 computeRotVel(const G3D::Matrix3& rot, const G3D::Vector3& momentRecip, const G3D::Vector3& angMomentum)
+{
+	Matrix3 temp;
+	Matrix3 iWorldInv;
+	matrixMulInline(rot, momentRecip, temp);
+	mulMatrixMatrixTranspose(temp, rot, iWorldInv);
+	return iWorldInv * angMomentum;
+}
 
 //temporary for now?
 G3D::Vector3& denormFixFunc()
@@ -99,4 +144,6 @@ void SimBody::matchDummy()
 {
 	resetAccumulators();
 	accumulateForce(Vector3(0.1f, 0.5f, 0.2f), Vector3(0.6f, 0.10f, 0.8f));
+}
+
 }
