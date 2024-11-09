@@ -13,6 +13,8 @@ SimBody::SimBody(RBX::Body* _body)
 			constantForceY(0.0f)
 {}
 
+SimBody::~SimBody() {}
+
 G3D::Vector3 vecUnkPercent(G3D::Vector3& input)
 {
 	return Vector3(1.0f / input.x, 1.0f / input.y, 1.0f / input.z);
