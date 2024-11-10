@@ -351,6 +351,37 @@ namespace RBX
 		this->cornerRadius = vertices->magnitude();
 	}
 
+	bool Block::hitTest(const G3D::Ray& rayInMe, G3D::Vector3& localHitPoint, bool& inside)
+	{
+		Vector3 gridSizeMul = gridSize * 0.5f;
+		inside = false;
+
+		bool result = CollisionDetection::collisionLocationForMovingPointFixedAABox(
+			rayInMe.origin,
+			rayInMe.direction,
+			AABox(-gridSizeMul, gridSizeMul),
+			localHitPoint,
+			inside);
+
+		if (inside)
+		{
+			inside = false;
+			Vector3 originMul = rayInMe.origin - (rayInMe.direction * 1000.0f);
+			Ray rayResult = Ray::fromOriginAndDirection(originMul, rayInMe.direction);
+
+			CollisionDetection::collisionLocationForMovingPointFixedAABox(
+				rayResult.origin,
+				rayResult.direction,
+				AABox(-gridSizeMul, gridSizeMul),
+				localHitPoint,
+				inside);
+
+			RBXAssert(!inside);
+			return true;
+		}
+		return result;
+	}
+
 	// TODO: remove from both here and in the header
 	void Block::matchDummy()
 	{
