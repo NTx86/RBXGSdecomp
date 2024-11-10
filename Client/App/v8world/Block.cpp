@@ -29,7 +29,27 @@ namespace RBX
 	public:
 		BlockTemplate(const BlockTemplate& other);
 	private:
-		BlockTemplate(const G3D::Vector3& _corner);
+		BlockTemplate(const G3D::Vector3& _corner) 
+		{
+			int i, j;
+			Vector3 fabsCorner; //= Vector3(fabs(_corner.x), fabs(_corner.y), fabs(_corner.z));
+			fabsCorner.x = -fabs(_corner.x);
+			fabsCorner.y = -fabs(_corner.y);
+			fabsCorner.z = -fabs(_corner.z);
+			//float fabsCornerX = -fabs(_corner.x);
+			//float fabsCornerY = -fabs(_corner.y);
+			//float fabsCornerZ = -fabs(_corner.z);
+			for (i = 0; i < 2; i++)
+			{
+				for (j = 0; j < 4; j++)
+				{
+					fabsCorner.y *= -1.0f;
+					fabsCorner.z *= -1.0f;
+					vertices[i*4+j] = fabsCorner;
+				}
+				fabsCorner.x *= -1.0f;
+			}
+		}
 	public:
 		BlockTemplate& operator=(const BlockTemplate& other);
 	
