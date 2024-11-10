@@ -247,10 +247,7 @@ namespace RBX
 
 		RBXAssert(best != 1.0e30);
 
-		if (normalID > NORM_Z)
-			offset = this->vertices + 7; // wtf?
-		else
-			offset = this->vertices;
+		offset = (normalID > NORM_Z) ? this->vertices + 7 /*wtf?*/ : this->vertices;
 
 		return BALL_PLANE_PAIR;
 	}
