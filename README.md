@@ -1,5 +1,5 @@
 # RBXGS Decompilation
-A decompilation of [RBXGS (Roblox Grid Service) version 0.3.634.0](https://archive.robloxopolis.com/api/getfile/%2FClients%2FRBXGS%2FS3FileHandler_RBXGSSetup_0.3.634.0.msi), currently focusing on specific critical components (v8kernel, v8world, etc.) for now, and will later expand out to other classes.
+A decompilation of [RBXGS (Roblox Grid Service) version 0.3.634.0](https://archive.org/download/rbxgssetup/S3FileHandler_RBXGSSetup_0.3.634.0.msi), currently focusing on specific critical components (v8kernel, v8world, etc.) for now, and will later expand out to other classes.
 
 Recommended to use Microsoft Visual Studio 2005 for matching. (Visual C/C++(14.00.50727)[C++])
 
