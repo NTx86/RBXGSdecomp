@@ -1,19 +1,9 @@
 #pragma once
 #include <G3DAll.h>
+#include "util/NormalId.h"
 
 namespace RBX 
 {
-	// TODO: move this into it's correct file
-	enum NormalId : int {
-	NORM_X = 0x0000,
-	NORM_Y = 0x0001,
-	NORM_Z = 0x0002,
-	NORM_X_NEG = 0x0003,
-	NORM_Y_NEG = 0x0004,
-	NORM_Z_NEG = 0x0005,
-	NORM_UNDEFINED = 0x0006,
-	};
-
 	class Math { /* Size=0x1 */
 		public:
 			static const int maxOrientationId;
