@@ -263,6 +263,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\Controller.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Geometry.h"
 					>
 				</File>
@@ -349,6 +353,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\Block.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Controller.cpp"
 				>
 			</File>
 		</Filter>
