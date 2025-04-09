@@ -97,7 +97,7 @@ namespace RBX
 		const Vector3& temp = worldPoint - body0PV;
 		Vector3 someMathThing = normal.dot(temp) * normal;
 		_params.position = body0PV + someMathThing;
-		_params.length = _params.normal.length() - this->pairData.radius0;
+		_params.length = someMathThing.length() - this->pairData.radius0;
 	}
 
 	void GeoPair::computePointPlane(RBX::PairParams& _params)
