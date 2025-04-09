@@ -27,7 +27,10 @@ namespace RBX {
 		bool operator!=(const PV&) const;
 		PV inverse() const;
 		PV toObjectSpace(const PV&) const;
-		G3D::Vector3 linearVelocityAtPoint(const G3D::Vector3&) const;
+		G3D::Vector3 linearVelocityAtPoint(const G3D::Vector3& pointVec3) const
+		{
+			return this->velocity.linearVelocityAtOffset(pointVec3 - this->position.translation);
+		}
 		Velocity velocityAtPoint(const G3D::Vector3&) const;
 		Velocity velocityAtLocalOffset(const G3D::Vector3&) const;
 		PV pvAtLocalOffset(const G3D::Vector3& localOffset) const;

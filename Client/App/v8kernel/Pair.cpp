@@ -14,22 +14,14 @@ namespace RBX
 
 	void GeoPair::computeNormalPerpVel(float& normalVel, G3D::Vector3& perpVel, const PairParams& _params)
 	{
-		const PV& body0PV = this->body0->getPV();
-		Vector3 v1 = _params.position - body0PV.position.translation;
-		Vector3 v2 = body0PV.velocity.rotational.cross(v1);
-		v2 += body0PV.velocity.linear;
+		Vector3 body0Velocity = this->body0->getPV().linearVelocityAtPoint(_params.position);
+		Vector3 body1Velocity = this->body1->getPV().linearVelocityAtPoint(_params.position);
+		body1Velocity -= body0Velocity;
 
-		const PV& body1PV = this->body1->getPV();
-		Vector3 v3 = _params.position - body1PV.position.translation;
-		Vector3 v4 = body1PV.velocity.rotational.cross(v3);
-		//Vector3 v4 = v3.cross(body1PV.velocity.rotational);
-		v4 += body1PV.velocity.linear;
-		v4 -= v2;
-
-		float v5 = _params.normal.dot(v4);
-		normalVel = v5;
-		Vector3 v6 = _params.normal * v5;
-		perpVel = v4 - v6;
+		float body1VelDot = _params.normal.dot(body1Velocity);
+		normalVel = body1VelDot;
+		Vector3 normalVelMul = _params.normal * body1VelDot;
+		perpVel = body1Velocity - normalVelMul;
 	}
 
 	void GeoPair::forceToBodies(const G3D::Vector3& _force, const G3D::Vector3& _position)
