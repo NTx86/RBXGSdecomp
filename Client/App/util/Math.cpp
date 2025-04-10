@@ -155,11 +155,11 @@ namespace RBX
 
 	void Math::rotateMatrixAboutY90(G3D::Matrix3& matrix, int times)
 	{
-		static G3D::Matrix3 rotateY(0, 0, 1, 0, 1, 0, -1, 0, 0);
+		static G3D::Matrix3 y90(0, 0, 1, 0, 1, 0, -1, 0, 0);
 
 		for (int i = 0; i < times; ++i)
 		{
-			matrix = matrix * rotateY;
+			matrix = y90 * matrix;
 		}
 	}
 
