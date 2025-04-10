@@ -183,15 +183,11 @@ namespace RBX
 
 	void Math::setHeadingElevation(G3D::CoordinateFrame& c, float heading, float elevation)
 	{
-		float v3 = sin(elevation);
-		float v4 = sqrt(1 - v3 * v3);
-		float v5 = -(sin(heading) * v4);
-		float v6 = -(v4 * cos(heading));
-		float v7 = sqrt(v3 * v3 + v6 * v6 + v5 * v5);
-		float v8 = v5 * (1 / v7);
-		float v9 = 1 / v7;
-		Vector3 v(v8 + c.translation.x, v3 * v9 + c.translation.y, v6 * v9 + c.translation.z);
-		c.lookAt(v);
+		float Y = sin(elevation);
+		float unk = sqrtf(1 - Y * Y);
+		float X = -(sin(heading) * unk);
+		float Z = -(unk * cos(heading));
+		c.lookAt(c.translation + Vector3(X, Y, Z).direction());
 	}
 
 	G3D::CoordinateFrame Math::getFocusSpace(const G3D::CoordinateFrame& focus)
