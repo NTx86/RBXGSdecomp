@@ -287,8 +287,7 @@ namespace RBX
 
 	const float& segSizeRadians()
 	{
-		// TODO: this is meant to be 0.024543691 but it's slightly off... why???????????????????????
-		static float bruh = Math::pi() / 128;
+		static float bruh = Math::piAlternate() / 128; //can't use normal pi because of matching purposes
 		return bruh;
 	}
 
@@ -320,7 +319,8 @@ namespace RBX
 
 	float Math::rotationFromByte(unsigned char byteAngle)
 	{
-		return byteAngle * segSizeRadians() - pi();
+		float byteAngleFloat = byteAngle;
+		return byteAngleFloat * segSizeRadians() - pi();
 	}
 
 	G3D::Vector3 Math::toGrid(const G3D::Vector3& v, const G3D::Vector3& grid)

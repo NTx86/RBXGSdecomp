@@ -20,6 +20,7 @@ namespace RBX
 			static const int minOrientationId;
 
 			static const float pi() {return 3.1415927f;}
+			static const float piAlternate() {return 3.1415926f;} //for segSizeRadians function because it uses a different value for some reason???
 			static const float piHalf() {return 1.5707964f;}
 			static const float twoPi() {return 6.283185f;}
 			static const float& inf()
