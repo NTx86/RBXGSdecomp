@@ -144,7 +144,7 @@ namespace RBX
 			static G3D::Vector3 vectorToObjectSpace(const G3D::Vector3&, const G3D::Matrix3&);
 			static bool clipRay(G3D::Vector3&, G3D::Vector3&, G3D::Vector3*, G3D::Vector3&);
 			static bool intersectLinePlane(const G3D::Line&, const G3D::Plane&, G3D::Vector3&);
-			static bool intersectRayPlane(const G3D::Ray&, const G3D::Plane&, G3D::Vector3&);
+			static bool intersectRayPlane(const G3D::Ray& ray, const G3D::Plane& plane, G3D::Vector3& hit);
 			static float computeLaunchAngle(float, float, float, float);
 	};
 }

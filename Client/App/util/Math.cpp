@@ -347,4 +347,25 @@ namespace RBX
 				deltaYSquared + deltaXSquared
 				);
 	}
+
+	bool Math::intersectRayPlane(const G3D::Ray& ray, const G3D::Plane& plane, G3D::Vector3& hit)
+	{
+		float dotProd = ray.direction.dot(plane.normal());
+		if (plane.halfSpaceContains(ray.origin))
+		{
+			if (!(dotProd < 0.0f))
+			{
+				hit = Vector3::inf();
+				return false;
+			}
+		}
+		else if (!(dotProd > 0.0f))
+		{
+			hit = Vector3::inf();
+			return false;
+		}
+		G3D::Line myLine = Line::fromPointAndDirection(ray.origin, ray.direction);
+		hit = myLine.intersection(plane);
+		return true;
+	}
 }
