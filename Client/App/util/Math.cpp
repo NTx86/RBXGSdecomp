@@ -332,17 +332,23 @@ namespace RBX
 	G3D::Matrix3 Math::getIWorldAtPoint(const G3D::Vector3& cofmPos, const G3D::Vector3& worldPos, const G3D::Matrix3& iWorldAtCofm, float mass)
 	{
 		G3D::Vector3 delta = worldPos - cofmPos;
+		float deltaXSquared = delta.x * delta.x;
+		float deltaYSquared = delta.y * delta.y;
+		float deltaZSquared = delta.z * delta.z;
+		float deltaYX = delta.y * delta.x;
+		float deltaZX = delta.z * delta.x;
+		float deltaZY = delta.z * delta.y;
 
 		return iWorldAtCofm + mass * Matrix3(
-				delta.z * delta.z + delta.y * delta.y,
-				(-delta.y * -delta.x),
-				(-delta.z * -delta.x),
-				(-delta.y * -delta.x),
-				delta.z * delta.z + delta.x * delta.x,
-				(-delta.z * -delta.y),
-				(-delta.z * -delta.x),
-				(-delta.z * -delta.y),
-				delta.y * delta.y + delta.x * delta.x
+				deltaZSquared + deltaYSquared,
+				-deltaYX,
+				-deltaZX,
+				-deltaYX,
+				deltaZSquared + deltaXSquared,
+				-deltaZY,
+				-deltaZX,
+				-deltaZY,
+				deltaYSquared + deltaXSquared
 				);
 	}
 }
