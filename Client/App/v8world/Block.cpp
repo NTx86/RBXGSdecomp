@@ -31,21 +31,20 @@ namespace RBX
 	private:
 		BlockTemplate(const G3D::Vector3& _corner) 
 		{
-			int i, j;
 			Vector3 fabsCorner;
 			fabsCorner.x = -fabs(_corner.x);
 			fabsCorner.y = -fabs(_corner.y);
 			fabsCorner.z = -fabs(_corner.z);
 
-			for (i = 0; i < 2; i++)
+			for (int i = 0; i < 2; i++)
 			{
-				for (j = 0; j < 2; j++)
+				fabsCorner.y *= -1.0f;
+				for (int j = 0; j < 2; j++)
 				{
-					fabsCorner.y *= -1.0f;
 					fabsCorner.z *= -1.0f;
+					fabsCorner.x *= -1.0f;
 					vertices[i*2+j] = fabsCorner;
 				}
-				fabsCorner.x *= -1.0f;
 			}
 		}
 	public:
