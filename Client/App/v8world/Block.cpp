@@ -32,20 +32,18 @@ namespace RBX
 		BlockTemplate(const G3D::Vector3& _corner) 
 		{
 			int i, j;
-			Vector3 fabsCorner; //= Vector3(fabs(_corner.x), fabs(_corner.y), fabs(_corner.z));
+			Vector3 fabsCorner;
 			fabsCorner.x = -fabs(_corner.x);
 			fabsCorner.y = -fabs(_corner.y);
 			fabsCorner.z = -fabs(_corner.z);
-			//float fabsCornerX = -fabs(_corner.x);
-			//float fabsCornerY = -fabs(_corner.y);
-			//float fabsCornerZ = -fabs(_corner.z);
+
 			for (i = 0; i < 2; i++)
 			{
-				for (j = 0; j < 4; j++)
+				for (j = 0; j < 2; j++)
 				{
 					fabsCorner.y *= -1.0f;
 					fabsCorner.z *= -1.0f;
-					vertices[i*4+j] = fabsCorner;
+					vertices[i*2+j] = fabsCorner;
 				}
 				fabsCorner.x *= -1.0f;
 			}
@@ -124,7 +122,10 @@ namespace RBX
 		float v18 = xCubed * z * third;
 		float v11 = z * z * x;
 
-		Vector3 I(yCubed,
+		//Vector3 I(yCubed,
+		//	((zSquared * y * x + v7 * y * third) + (zCubed * x * third) + (v7 * x) + area + v13) * v9,
+		//	((y * v11) + (x * x * z * y) + (v11 * z * third) + (xCubed * y * third) + v18 + v13) * v9);
+		Vector3 I((y*y*y)/3.f,
 			((zSquared * y * x + v7 * y * third) + (zCubed * x * third) + (v7 * x) + area + v13) * v9,
 			((y * v11) + (x * x * z * y) + (v11 * z * third) + (xCubed * y * third) + v18 + v13) * v9);
 		return Math::fromDiagonal(I);
