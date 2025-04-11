@@ -26,7 +26,7 @@ namespace RBX {
 			float& operator[](int index) const;
 			operator float *();
 			operator const float *() const;
-			Quaternion operator*(float fNum)
+			Quaternion operator*(float fNum) const
 			{
 				return Quaternion(x * fNum, y * fNum, z * fNum, w * fNum);
 			}
