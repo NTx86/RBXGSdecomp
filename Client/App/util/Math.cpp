@@ -283,8 +283,9 @@ namespace RBX
 
 	const float& segSizeRadians()
 	{
-		static float bruh = Math::piAlternate() / 128; //can't use normal pi because of matching purposes
-		return bruh;
+		// - 0.00001f is necessary to get the same value as the compiled binary
+		static float ssr = (Math::pi() - 0.00001f) / 128;
+		return ssr;
 	}
 
 	G3D::uint8 rotationToByteBase(float angle)
