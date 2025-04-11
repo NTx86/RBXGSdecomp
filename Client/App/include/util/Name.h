@@ -24,8 +24,6 @@ namespace RBX
 		const char* c_str() const { return name.c_str(); } // guess
 		int compare(const Name& other) const;
 
-		// these operators likely have something to do with the dictionary index.
-		// i dont know yet.
 		bool operator <(const RBX::Name& other) const;
 		bool operator >(const RBX::Name& other) const;
 		bool operator ==(const char* name) const;
