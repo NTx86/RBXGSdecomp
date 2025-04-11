@@ -5,7 +5,7 @@
 
 namespace RBX {
 	template <typename tInstance>
-	class IndexArrayOld : boost::noncopyable_::noncopyable
+	class IndexArrayOld : boost::noncopyable
 	{
 		public:
 			G3D::Array<tInstance *> array;

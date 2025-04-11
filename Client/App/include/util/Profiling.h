@@ -16,7 +16,7 @@ namespace RBX
 				int frames;
 		};
 
-		class Profiler : boost::noncopyable_::noncopyable
+		class Profiler : boost::noncopyable
 		{
 			public:
 				const long double bucketTimeSpan;
