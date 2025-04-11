@@ -2,9 +2,8 @@
 
 namespace RBX
 {
-	// TODO: check if this matches
 	bool validNormalId(NormalId id)
 	{
-		return id <= NORM_Z_NEG;
+		return id >= NORM_X && id <= NORM_Z_NEG;
 	}
 }
