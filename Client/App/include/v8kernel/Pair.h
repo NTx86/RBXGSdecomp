@@ -5,7 +5,8 @@
 
 namespace RBX
 {
-	enum GeoPairType {
+	enum GeoPairType
+	{
 		BALL_BALL_PAIR = 0,
 		BALL_POINT_PAIR = 1,
 		BALL_EDGE_PAIR = 2,

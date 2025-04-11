@@ -171,6 +171,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\NormalId.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Profiling.h"
 					>
 				</File>
@@ -247,6 +251,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="v8world"
+				>
+				<File
+					RelativePath=".\include\v8world\Ball.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Block.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Controller.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Geometry.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -300,6 +324,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\NormalId.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\Profiling.cpp"
 				>
 			</File>
@@ -313,6 +341,22 @@
 			</File>
 			<File
 				RelativePath=".\util\Units.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="v8world"
+			>
+			<File
+				RelativePath=".\v8world\Ball.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Block.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Controller.cpp"
 				>
 			</File>
 		</Filter>
