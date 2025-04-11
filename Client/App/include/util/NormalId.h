@@ -1,4 +1,5 @@
 #pragma once
+#include <g3d/vector3.h>
 
 namespace RBX
 {
@@ -14,4 +15,5 @@ namespace RBX
 	};
 
 	bool validNormalId(NormalId normalId);
+	NormalId Vector3ToNormalId(const G3D::Vector3& v3);
 }
