@@ -82,7 +82,7 @@ namespace RBX
 	{
 		if (this->scope != other.scope)
 		{
-			int comparison = this->scope->name.compare(other.scope->name);
+			int comparison = other.scope->name.compare(this->scope->name);
 
 			switch (comparison)
 			{
