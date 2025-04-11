@@ -1,0 +1,71 @@
+#pragma once
+#include <boost/noncopyable.hpp>
+#include <boost/thread/mutex.hpp>
+#include <string>
+#include <map>
+
+namespace RBX
+{
+	class Name : boost::noncopyable
+	{
+	private:
+		typedef std::map<std::string, Name*> NamMap;
+
+	private:
+		int dictionaryIndex;
+	public:
+		std::string name;
+
+	public:
+		int getDictionaryIndex() const { return dictionaryIndex; }
+
+		bool empty() const { return &getNullName() == this; }
+		const std::string& toString() const { return name; } // guess
+		const char* c_str() const { return name.c_str(); } // guess
+		int compare(const Name& other) const;
+
+		bool operator <(const RBX::Name& other) const;
+		bool operator >(const RBX::Name& other) const;
+		bool operator ==(const char* name) const;
+		bool operator ==(const std::string& name) const;
+		bool operator ==(const Name& other) const;
+		bool operator !=(const char* name) const;
+		bool operator !=(const std::string& name) const;
+		bool operator !=(const Name& other) const;
+
+	private:
+		Name(const char* sName, int dictionaryIndex)
+			: name(sName),
+			  dictionaryIndex(dictionaryIndex)
+		{}
+	public:
+		~Name() {}
+
+	private:
+		static boost::mutex& mutex();
+		static std::map<int, Name*>& dictionary();
+		static NamMap& namMap();
+
+	public:
+		static const Name& getNullName();
+		static const Name& declare(const char* sName, int dictionaryIndex);
+		static const Name& lookup(int dictionaryIndex);
+		static const Name& lookup(const char* sName);
+		static const Name& lookup(const std::string& sName);
+		static int compare(Name&, Name&);
+
+		// NOTE: these have not been checked
+		template<char*& sName>
+		static const Name& doDeclare()
+		{
+			static const Name& n = declare(sName, -1);
+			return n;
+		}
+
+		template<char*& sName>
+		static const Name& callDoDeclare()
+		{
+			return doDeclare<sName>();
+		}
+	};
+}
