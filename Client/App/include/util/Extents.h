@@ -44,8 +44,8 @@ namespace RBX
 		void expand(float);
 		Vector3& operator[](int);
 		const Vector3& operator[](int) const;
-		//Vector3* operator class Vector3 *(); // TODO: fix compiler error
-		//const G3D::Vector3* operator const class Vector3 *() const; // TODO: fix compiler error
+		operator Vector3 *();
+		operator const Vector3 *() const;
 		bool contains(const Vector3&) const;
 		bool overlapsOrTouches(const Extents&) const;
 		bool fuzzyContains(const Vector3&, float) const;
