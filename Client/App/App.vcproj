@@ -195,6 +195,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Vector3int32.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Velocity.h"
 					>
 				</File>
