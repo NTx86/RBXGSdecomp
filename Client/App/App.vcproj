@@ -163,6 +163,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Guid.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\IndexArray.h"
 					>
 				</File>
@@ -321,6 +325,10 @@
 			>
 			<File
 				RelativePath=".\util\Debug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Guid.cpp"
 				>
 			</File>
 			<File
