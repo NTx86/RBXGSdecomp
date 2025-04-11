@@ -130,22 +130,22 @@ namespace RBX
 		return Math::fromDiagonal(I);
 	}
 
-	// TODO: move to header
-	// TODO: improve match
-	const G3D::Vector3* Block::getEdgeVertex(int edgeId) const
+	// NOTE: not the original function name
+	// TODO: should this be in another file
+	inline NormalId getFaceId(int edgeId)
 	{
-		if (edgeId >= 12)
-			return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[edgeId / 4][edgeId % 4]];
-		NormalId edgeNormal = const_cast<Block*>(this)->getEdgeNormal(edgeId); // bruh
-		RBXAssert(!validNormalId(edgeNormal));
-		return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[edgeNormal][edgeId % 4]];
+		return (NormalId)((edgeId - 12) / 4);
 	}
 
 	// TODO: move to header
-	// TODO: is this even right?
-	NormalId Block::getEdgeNormal(int edgeId)
+	const G3D::Vector3* Block::getEdgeVertex(int edgeId) const
 	{
-		return (NormalId)((edgeId - 12) / 4);
+		if (edgeId < 12)
+			return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[edgeId / 4][edgeId % 4]];
+
+		NormalId faceId = getFaceId(edgeId);
+		RBXAssert(validNormalId(faceId));
+		return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[faceId][edgeId + 1]];
 	}
 
 	float Block::getGridVolume() const
