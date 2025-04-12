@@ -49,7 +49,7 @@ namespace RBX
 		bool contains(const Vector3& point) const;
 		bool overlapsOrTouches(const Extents& other) const;
 		bool fuzzyContains(const Vector3& point, float slop) const;
-		bool containedByFrustum(const GCamera::Frustum&) const;
+		bool containedByFrustum(const GCamera::Frustum& frustum) const;
 		bool partiallyContainedByFrustum(const GCamera::Frustum&) const;
 		bool separatedByMoreThan(const Extents& other, float distance) const;
 
