@@ -16,9 +16,146 @@ namespace RBX
 		RBXAssert(i <= 7);
 
 		return Vector3(
-			*(&this->low.x + 3 * (i / 4)),
-			*(&this->low.y + 3 * (i / 2 % 2)),
-			*(&this->low.z + 3 * (i % 2))
+			this->low[0 + 3 * (i / 4)],
+			this->low[1 + 3 * (i / 2 % 2)],
+			this->low[2 + 3 * (i % 2)]
 		);
+	}
+
+	void Extents::getFaceCorners(NormalId faceId, Vector3& v0, Vector3& v1, Vector3& v2, Vector3& v3) const
+	{
+		switch (faceId)
+		{
+		case NORM_X:
+			v0 = Vector3(this->high.x, this->low.y, this->low.z);
+			v1 = Vector3(this->high.x, this->high.y, this->low.z);
+			v2 = Vector3(this->high.x, this->high.y, this->high.z);
+			v3 = Vector3(this->high.x, this->low.y, this->high.z);
+			break;
+		case NORM_Y:
+			v0 = Vector3(this->low.x, this->high.y, this->low.z);
+			v1 = Vector3(this->low.x, this->high.y, this->high.z);
+			v2 = Vector3(this->high.x, this->high.y, this->high.z);
+			v3 = Vector3(this->high.x, this->high.y, this->low.z);
+			break;
+		case NORM_Z:
+			v0 = Vector3(this->low.x, this->low.y, this->high.z);
+			v1 = Vector3(this->high.x, this->low.y, this->high.z);
+			v2 = Vector3(this->high.x, this->high.y, this->high.z);
+			v3 = Vector3(this->low.x, this->high.y, this->high.z);
+			break;
+		case NORM_X_NEG:
+			v0 = Vector3(this->low.x, this->low.y, this->low.z);
+			v1 = Vector3(this->low.x, this->low.y, this->high.z);
+			v2 = Vector3(this->low.x, this->high.y, this->high.z);
+			v3 = Vector3(this->high.x, this->high.y, this->low.z);
+			break;
+		case NORM_Y_NEG:
+			v0 = Vector3(this->low.x, this->low.y, this->low.z);
+			v1 = Vector3(this->high.x, this->low.y, this->low.z);
+			v2 = Vector3(this->high.x, this->low.y, this->high.z);
+			v3 = Vector3(this->low.x, this->low.y, this->high.z);
+			break;
+		case NORM_Z_NEG:
+			v0 = Vector3(this->low.x, this->low.y, this->low.z);
+			v1 = Vector3(this->low.x, this->high.y, this->low.z);
+			v2 = Vector3(this->high.x, this->high.y, this->low.z);
+			v3 = Vector3(this->high.x, this->low.y, this->low.z);
+			break;
+		default:
+			RBXAssert(0);
+		}
+	}
+
+	Vector3 Extents::faceCenter(NormalId faceId) const
+	{
+		Vector3 v = (this->high + this->low) * 0.5f;
+
+		int i = faceId % 3;
+		if (faceId < NORM_X_NEG)
+		{
+			v[i] = this->high[i];
+		}
+		else
+		{
+			v[i] = this->low[i];
+		}
+
+		return v;
+	}
+
+	bool Extents::containedByFrustum(const GCamera::Frustum& frustum) const
+	{
+		if (frustum.faceArray.size() > 0)
+		{
+			for (int i = 0; i < frustum.faceArray.size(); i++)
+			{
+				const G3D::Plane* plane = &frustum.faceArray[i].plane;
+				for (int j = 0; j < 8; j++)
+				{
+					Vector3 corner = getCorner(j);
+					if (!plane->halfSpaceContains(corner))
+					{
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	bool Extents::contains(const Vector3& point) const
+	{
+		return
+			point.x >= this->low.x &&
+			point.y >= this->low.y &&
+			point.z >= this->low.z &&
+			point.x <= this->high.x &&
+			point.y <= this->high.y &&
+			point.z <= this->high.z;
+	}
+
+	bool Extents::fuzzyContains(const Vector3& point, float slop) const
+	{
+		return
+			point.x >= this->low.x - slop &&
+			point.y >= this->low.y - slop &&
+			point.z >= this->low.z - slop &&
+			point.x <= this->high.x + slop &&
+			point.y <= this->high.y + slop &&
+			point.z <= this->high.z + slop;
+	}
+
+	bool Extents::overlapsOrTouches(const Extents& other) const
+	{
+		return
+			this->low.x < other.high.x &&
+			this->low.y < other.high.y &&
+			this->low.z < other.high.z &&
+			this->high.y > other.low.y &&
+			this->high.x > other.low.x &&
+			this->high.z > other.low.z;
+	}
+
+	bool Extents::separatedByMoreThan(const Extents& other, float distance) const
+	{
+		RBXAssert(distance > 0.0);
+
+		Vector3 dv(distance, distance, distance);
+		Extents thisExpanded(this->low - dv, this->high + dv);
+		return !thisExpanded.overlapsOrTouches(other);
+	}
+
+	const Extents& Extents::zero()
+	{
+		static Extents e(Vector3::zero(), Vector3::zero());
+		return e;
+	}
+
+	const Extents& Extents::negativeInfiniteExtents()
+	{
+		static Extents e(Vector3::inf(), -Vector3::inf());
+		return e;
 	}
 }

@@ -13,7 +13,7 @@ namespace RBX
 
 	public:
 		Extents(const Vector3int32& low, const Vector3int32& high);
-		Extents(const Vector3& low, const Vector3& high);
+		Extents(const Vector3& low, const Vector3& high) : low(low), high(high) {}
 		Extents();
 
 	public:
@@ -32,8 +32,8 @@ namespace RBX
 		float areaXZ() const;
 		Extents toWorldSpace(const CoordinateFrame&);
 		Extents express(const CoordinateFrame&, const CoordinateFrame&);
-		Vector3 faceCenter(NormalId) const;
-		void getFaceCorners(NormalId, Vector3&, Vector3&, Vector3&, Vector3&) const;
+		Vector3 faceCenter(NormalId faceId) const;
+		void getFaceCorners(NormalId faceId, Vector3& v0, Vector3& v1, Vector3& v2, Vector3& v3) const;
 		Plane getPlane(NormalId) const;
 		Vector3 clip(const Vector3&) const;
 		Vector3 clamp(const Extents&) const;
@@ -46,12 +46,12 @@ namespace RBX
 		const Vector3& operator[](int) const;
 		operator Vector3 *();
 		operator const Vector3 *() const;
-		bool contains(const Vector3&) const;
-		bool overlapsOrTouches(const Extents&) const;
-		bool fuzzyContains(const Vector3&, float) const;
+		bool contains(const Vector3& point) const;
+		bool overlapsOrTouches(const Extents& other) const;
+		bool fuzzyContains(const Vector3& point, float slop) const;
 		bool containedByFrustum(const GCamera::Frustum&) const;
 		bool partiallyContainedByFrustum(const GCamera::Frustum&) const;
-		bool separatedByMoreThan(const RBX::Extents&, float) const;
+		bool separatedByMoreThan(const Extents& other, float distance) const;
 
 	private:
 		static float epsilon();
