@@ -37,7 +37,7 @@ namespace RBX
 		Plane getPlane(NormalId) const;
 		Vector3 clip(const Vector3&) const;
 		Vector3 clamp(const Extents&) const;
-		NormalId closestFace(const Vector3&);
+		NormalId closestFace(const Vector3& point);
 		void unionWith(const Extents&);
 		void shift(const Vector3&);
 		void scale(float);
