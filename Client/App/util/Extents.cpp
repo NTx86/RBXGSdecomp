@@ -190,10 +190,11 @@ namespace RBX
 		RBXAssert(distance > 0.0);
 
 		Vector3 dv(distance, distance, distance);
-		Vector3 expandedLow = this->low - dv;
-		Vector3 expandedHigh = this->high + dv;
 
-		Extents thisExpanded(expandedLow, expandedHigh);
+		Extents thisExpanded(*this);
+		thisExpanded.low -= dv;
+		thisExpanded.high += dv;
+
 		return !thisExpanded.overlapsOrTouches(other);
 	}
 
