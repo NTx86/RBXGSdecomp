@@ -116,7 +116,7 @@ namespace RBX
 
 	Vector3 Extents::faceCenter(NormalId faceId) const
 	{
-		Vector3 v = (this->high + this->low) * 0.5f;
+		Vector3 v = this->center();
 
 		int i = faceId % 3;
 		if (faceId < NORM_X_NEG)

@@ -23,8 +23,8 @@ namespace RBX
 		const Vector3& min() const;
 		const Vector3& max() const;
 		Vector3 getCorner(int i) const;
-		Vector3 size() const;
-		Vector3 center() const;
+		Vector3 size() const { return this->high - this->low; }
+		Vector3 center() const { return (this->high + this->low) * 0.5f; }
 		Vector3 bottomCenter() const;
 		Vector3 topCenter() const;
 		float longestSide() const;
