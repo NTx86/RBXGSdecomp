@@ -10,6 +10,53 @@ namespace RBX
 		return delta.x * delta.z;
 	}
 
+	NormalId Extents::closestFace(const Vector3& point)
+	{
+		NormalId faceId = NORM_X;
+
+		// bruh
+		float hy = fabs(point.y - this->high.y);
+		float hz = fabs(point.z - this->high.z);
+		float lx = fabs(point.x - this->low.x);
+		float ly = fabs(point.y - this->low.y);
+		float lz = fabs(point.z - this->low.z);
+
+		float hx = fabs(point.x - this->high.x); 
+		if (hx > hy)
+		{
+			faceId = NORM_Y;
+		}
+		else
+		{
+			hy = hx;
+		}
+
+		if (hz < hy)
+		{
+			hy = hz;
+			faceId = NORM_Z;
+		}
+
+		if (lx < hy)
+		{
+			hy = lx;
+			faceId = NORM_X_NEG;
+		}
+
+		if (ly < hy)
+		{
+			hy = ly;
+			faceId = NORM_Y_NEG;
+		}
+
+		if (lz < hy)
+		{
+			faceId = NORM_Z_NEG;
+		}
+
+		return faceId;
+	}
+
 	Vector3 Extents::getCorner(int i) const
 	{
 		RBXAssert(i >= 0);
