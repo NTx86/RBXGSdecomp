@@ -431,4 +431,16 @@ namespace RBX
 		}
 		return true;
 	}
+
+	void Math::idToMatrix3(int orientId, G3D::Matrix3& matrix)
+	{
+		NormalId norm1 = intToNormalId(orientId / 6);
+		NormalId norm2 = intToNormalId(orientId % 6);
+		Vector3 norm1Vec3 = normalIdToVector3(norm1);
+		Vector3 norm2Vec3 = normalIdToVector3(norm2);
+		Vector3 cross = norm1Vec3.cross(norm2Vec3);
+		matrix.setColumn(0, norm1Vec3);
+		matrix.setColumn(1, norm2Vec3);
+		matrix.setColumn(2, cross);
+	}
 }

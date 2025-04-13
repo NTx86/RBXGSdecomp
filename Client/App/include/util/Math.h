@@ -89,7 +89,7 @@ namespace RBX
 			static float rotationFromByte(unsigned char);
 			static bool isAxisAligned(const G3D::Matrix3&);
 			static int getOrientId(const G3D::Matrix3&);
-			static void idToMatrix3(int, G3D::Matrix3&);
+			static void idToMatrix3(int orientId, G3D::Matrix3& matrix);
 			static const G3D::Matrix3& matrixRotateY();
 			static const G3D::Matrix3& matrixRotateNegativeY();
 			static const G3D::Matrix3& matrixTiltZ();
