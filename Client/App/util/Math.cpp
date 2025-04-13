@@ -369,4 +369,10 @@ namespace RBX
 		hit = myLine.intersection(plane);
 		return true;
 	}
+
+	int Math::getOrientId(const G3D::Matrix3& matrix)
+	{
+		NormalId ColumnNormId = Vector3ToNormalId(matrix.getColumn(0));
+		return Vector3ToNormalId(matrix.getColumn(1)) + 6 * ColumnNormId;
+	}
 }

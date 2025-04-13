@@ -15,5 +15,5 @@ namespace RBX
 	};
 
 	bool validNormalId(NormalId normalId);
-	NormalId Vector3ToNormalId(const G3D::Vector3& v3);
+	NormalId Vector3ToNormalId(const G3D::Vector3& v);
 }
