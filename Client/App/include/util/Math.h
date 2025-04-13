@@ -119,7 +119,7 @@ namespace RBX
 			static G3D::CoordinateFrame getFocusSpace(const G3D::CoordinateFrame&);
 			static int toYAxisQuadrant(const G3D::CoordinateFrame&);
 			static G3D::Matrix3 alignAxesClosest(const G3D::Matrix3&, const G3D::Matrix3&);
-			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3&, const G3D::Matrix3&);
+			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3& worldV, const G3D::Matrix3& objectR);
 			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::CoordinateFrame& coord)
 			{
 				return (1 - (id / 3) * 2) * Math::getColumn(coord.rotation, id % 3);

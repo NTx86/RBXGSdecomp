@@ -381,4 +381,28 @@ namespace RBX
 		G3D::Vector3 vAbs = Vector3(fabs(v.x), fabs(v.y), fabs(v.z));
 		return std::max(vAbs.x, std::max(vAbs.y, vAbs.z));
 	}
+
+	NormalId Math::getClosestObjectNormalId(const G3D::Vector3& worldV, const G3D::Matrix3& objectR)
+	{
+		Vector3 worldObjMul = worldV * objectR;
+		float absX = fabs(worldObjMul.x);
+		float absY = fabs(worldObjMul.y);
+		float absZ = fabs(worldObjMul.z);
+		if (absX > absY)
+		{
+			if (absX > absZ)
+			{
+				return worldObjMul.x > 0 ? NORM_X : NORM_X_NEG;
+			}
+			else
+			{
+				return worldObjMul.z > 0 ? NORM_Z : NORM_Z_NEG;
+			}
+		}
+		else if (absY > absZ)
+		{
+			return worldObjMul.y > 0 ? NORM_Y : NORM_Y_NEG;
+		}
+		return worldObjMul.z > 0 ? NORM_Z : NORM_Z_NEG;
+	}
 }
