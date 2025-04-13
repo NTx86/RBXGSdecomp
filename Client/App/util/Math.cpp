@@ -375,4 +375,10 @@ namespace RBX
 		NormalId ColumnNormId = Vector3ToNormalId(matrix.getColumn(0));
 		return Vector3ToNormalId(matrix.getColumn(1)) + 6 * ColumnNormId;
 	}
+
+	float Math::maxAxisLength(const G3D::Vector3& v)
+	{
+		G3D::Vector3 vAbs = Vector3(fabs(v.x), fabs(v.y), fabs(v.z));
+		return std::max(vAbs.x, std::max(vAbs.y, vAbs.z));
+	}
 }
