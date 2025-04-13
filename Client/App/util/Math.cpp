@@ -405,4 +405,30 @@ namespace RBX
 		}
 		return worldObjMul.z > 0 ? NORM_Z : NORM_Z_NEG;
 	}
+
+	bool Math::fuzzyAxisAligned(const G3D::Matrix3& m0, const G3D::Matrix3& m1, float radTolerance)
+	{
+		Vector3 vectors[3] = {Vector3(), Vector3(), Vector3()};
+
+		for (int i = 0; i < 3; i++)
+		{
+			vectors[i] = m1.getColumn(i);
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3 m0Column = m0.getColumn(i);
+			int count = 0;
+			for (Vector3* vector = vectors; count < 3;)
+			{
+				if (m0Column.cross(*vector).magnitude() < radTolerance)
+					break;
+				count++;
+				vector++;
+				if (count >= 3)
+					return false;
+			}
+		}
+		return true;
+	}
 }
