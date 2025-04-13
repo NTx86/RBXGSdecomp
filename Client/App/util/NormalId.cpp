@@ -25,8 +25,8 @@ namespace RBX
 		if (v.y == -1.0f)
 			return NORM_Y_NEG;
 		if (v.z == -1.0f)
-			return NORM_UNDEFINED;
+			return NORM_Z_NEG;
 		RBXAssert(0);
-		return NORM_Z_NEG;
+		return NORM_UNDEFINED;
 	}
 }
