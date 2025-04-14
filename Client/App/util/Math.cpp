@@ -418,8 +418,9 @@ namespace RBX
 		for (int i = 0; i < 3; i++)
 		{
 			Vector3 m0Column = m0.getColumn(i);
+			Vector3* vector = vectors; 
 			int count = 0;
-			for (Vector3* vector = vectors; count < 3;)
+			while (count < 3)
 			{
 				if (m0Column.cross(*vector).magnitude() < radTolerance)
 					break;
