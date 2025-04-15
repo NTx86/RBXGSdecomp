@@ -464,4 +464,72 @@ namespace RBX
 		}
 		return true;
 	}
+
+	Matrix3 Math::snapToAxes(const G3D::Matrix3& align)
+	{
+		float aBest = 0.0f;
+		int second = -1;
+		int bestV = -1;
+		Matrix3 unkMat;
+		
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3 myColumn = align.getColumn(i);
+			for (int j = 0; j < 3; j++)
+			{
+				float dotProd = G3D::Matrix3::identity().getColumn(j).dot(myColumn);
+				unkMat[i][j] = dotProd;
+				if (fabs(dotProd) > fabs(aBest))
+				{
+					aBest = dotProd;
+					second = i;
+					bestV = j;
+				}
+			}
+		}
+
+		Vector3 myColumn = G3D::Matrix3::identity().getColumn(second);
+		if (aBest < 0.0f)
+		{
+			myColumn *= -1.0f;
+		}
+		
+		float v9 = 0.0f;
+		int v10 = -1;
+		int v11 = -1;
+		for (int count = 0; count < 3; count++)
+		{
+			if (count != bestV)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					if (second != i && fabs(unkMat[count][i]) > fabs(v9))
+					{
+						v10 = count;
+						v9 = unkMat[count][i];
+						v11 = i;
+					}
+				}
+			}
+		}
+
+		Vector3 myColumn2 = G3D::Matrix3::identity().getColumn(v11);
+		if (v9 < 0.0f)
+		{
+			myColumn2 *= -1.0f;
+		}
+
+		int v15 = 3 - v10 - bestV;
+		Vector3 myColumn3 = G3D::Matrix3::identity().getColumn(3 - v11 - second);
+		if (unkMat[v15][v11] < 0.0f)
+		{
+			myColumn3 *= -1.0f;
+		}
+
+		Matrix3 result;
+		result.setColumn(bestV, myColumn);
+		result.setColumn(v10, myColumn2);
+		result.setColumn(v15, myColumn3);
+		return result;
+	}
 }
