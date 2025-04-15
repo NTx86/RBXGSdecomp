@@ -123,4 +123,10 @@ namespace RBX
 		rot[2][1] = v8 + v15;
 		rot[2][2] = 1.0 - (v5 + v10);
 	}
+
+	float Quaternion::maxComponent() const
+	{
+		Quaternion qAbs = Quaternion(fabs(w), fabs(z), fabs(y), fabs(x));
+		return std::max(std::max(qAbs.w, qAbs.z), std::max(qAbs.y, qAbs.x));
+	}
 }
