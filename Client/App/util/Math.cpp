@@ -444,4 +444,24 @@ namespace RBX
 		matrix.setColumn(1, norm2Vec3);
 		matrix.setColumn(2, cross);
 	}
+
+	bool Math::legalCameraCoord(const G3D::CoordinateFrame& c)
+	{
+		int i = 0;
+		const float* transMatArr = (const float*)c.translation;
+		const float* rotMatArr = (const float*)c.rotation;
+		for (; i < 3; i++, transMatArr++, rotMatArr += 4)
+		{
+			float rotThing = *rotMatArr;
+			for (int j = 0; j < 3; j++)
+			{
+				if (!(rotThing > -1.2f) || !(rotThing < 1.2f))
+					return false;
+			}
+			float transThing = *transMatArr;
+			if (!(transThing > -1000000.0f) || !(transThing < 1000000.0f))
+				return false;
+		}
+		return true;
+	}
 }

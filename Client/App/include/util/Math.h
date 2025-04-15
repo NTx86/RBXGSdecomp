@@ -72,7 +72,7 @@ namespace RBX
 			static const G3D::Plane& yPlane();
 			static G3D::Vector3 closestPointOnRay(const G3D::Ray&, const G3D::Ray&);
 			static bool cameraSeesPoint(const G3D::Vector3&, const G3D::GCamera&);
-			static bool legalCameraCoord(const G3D::CoordinateFrame&);
+			static bool legalCameraCoord(const G3D::CoordinateFrame& c);
 			static G3D::Vector3 toSmallAngles(const G3D::Matrix3&);
 			static G3D::Matrix3 snapToAxes(const G3D::Matrix3&);
 			static bool isOrthonormal(const G3D::Matrix3&);
