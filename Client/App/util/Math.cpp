@@ -455,11 +455,11 @@ namespace RBX
 			float rotValue = *rotMatArr;
 			for (int j = 0; j < 3; j++)
 			{
-				if (!(rotValue > -1.2f) || !(rotValue < 1.2f))
+				if (!(rotValue > -1.2f && rotValue < 1.2f))
 					return false;
 			}
 			float transValue = *transMatArr;
-			if (!(transValue > -1000000.0f) || !(transValue < 1000000.0f))
+			if (!(transValue > -1000000.0f && transValue < 1000000.0f))
 				return false;
 		}
 		return true;
@@ -536,5 +536,32 @@ namespace RBX
 		result.setColumn(v10, myColumn2);
 		result.setColumn(v15, myColumn3);
 		return result;
+	}
+
+	bool Math::fuzzyEq(const G3D::Vector3& v0, const G3D::Vector3& v1, float epsilon)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			float axis1 = v0[i];
+			float axis2 = v1[i];
+
+			float num1 = fabs(axis1) + 1;
+			float num2 = fabs(axis1 - axis2);
+
+			if (!(axis1 == axis2 || num1 * epsilon <= num2))
+				return false;
+		}
+
+		return true;
+	}
+
+	G3D::CoordinateFrame Math::snapToGrid(const G3D::CoordinateFrame& snap, const G3D::Vector3& grid)
+	{
+		return CoordinateFrame(Math::snapToAxes(snap.rotation), Math::toGrid(snap.translation, grid));
+	}
+
+	G3D::CoordinateFrame Math::snapToGrid(const G3D::CoordinateFrame& snap, float grid)
+	{
+		return CoordinateFrame(Math::snapToAxes(snap.rotation), Math::toGrid(snap.translation, grid));
 	}
 }
