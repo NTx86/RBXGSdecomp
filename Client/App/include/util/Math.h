@@ -132,11 +132,6 @@ namespace RBX
 			static const G3D::Matrix3& getAxisRotationMatrix(int face);
 			static G3D::Vector3 vectorToObjectSpace(const G3D::Vector3& _vec, const G3D::Matrix3& _mat)
 			{
-				//Vector3 objectSpace(
-				//	Math::getColumn(_mat, 0).dot(_vec),
-				//	Math::getColumn(_mat, 1).dot(_vec),
-				//	Math::getColumn(_mat, 2).dot(_vec));
-
 				return _vec * _mat;
 			}
 			static bool clipRay(G3D::Vector3&, G3D::Vector3&, G3D::Vector3*, G3D::Vector3&);
