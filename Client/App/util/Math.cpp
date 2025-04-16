@@ -369,4 +369,172 @@ namespace RBX
 		hit = myLine.intersection(plane);
 		return true;
 	}
+
+	int Math::getOrientId(const G3D::Matrix3& matrix)
+	{
+		NormalId ColumnNormId = Vector3ToNormalId(matrix.getColumn(0));
+		return Vector3ToNormalId(matrix.getColumn(1)) + 6 * ColumnNormId;
+	}
+
+	float Math::maxAxisLength(const G3D::Vector3& v)
+	{
+		G3D::Vector3 vAbs = Vector3(fabs(v.x), fabs(v.y), fabs(v.z));
+		return std::max(vAbs.x, std::max(vAbs.y, vAbs.z));
+	}
+
+	NormalId Math::getClosestObjectNormalId(const G3D::Vector3& worldV, const G3D::Matrix3& objectR)
+	{
+		Vector3 worldObjMul = worldV * objectR;
+		float absX = fabs(worldObjMul.x);
+		float absY = fabs(worldObjMul.y);
+		float absZ = fabs(worldObjMul.z);
+		if (absX > absY)
+		{
+			if (absX > absZ)
+			{
+				return worldObjMul.x > 0 ? NORM_X : NORM_X_NEG;
+			}
+			else
+			{
+				return worldObjMul.z > 0 ? NORM_Z : NORM_Z_NEG;
+			}
+		}
+		else if (absY > absZ)
+		{
+			return worldObjMul.y > 0 ? NORM_Y : NORM_Y_NEG;
+		}
+		return worldObjMul.z > 0 ? NORM_Z : NORM_Z_NEG;
+	}
+
+	bool Math::fuzzyAxisAligned(const G3D::Matrix3& m0, const G3D::Matrix3& m1, float radTolerance)
+	{
+		Vector3 vectors[3] = {Vector3(), Vector3(), Vector3()};
+
+		for (int i = 0; i < 3; i++)
+		{
+			vectors[i] = m1.getColumn(i);
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3 m0Column = m0.getColumn(i);
+			Vector3* vector = vectors; 
+			int count = 0;
+			while (count < 3)
+			{
+				if (m0Column.cross(*vector).magnitude() < radTolerance)
+					break;
+				count++;
+				vector++;
+				if (count >= 3)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	void Math::idToMatrix3(int orientId, G3D::Matrix3& matrix)
+	{
+		NormalId norm1 = intToNormalId(orientId / 6);
+		NormalId norm2 = intToNormalId(orientId % 6);
+		Vector3 norm1Vec3 = normalIdToVector3(norm1);
+		Vector3 norm2Vec3 = normalIdToVector3(norm2);
+		Vector3 cross = norm1Vec3.cross(norm2Vec3);
+		matrix.setColumn(0, norm1Vec3);
+		matrix.setColumn(1, norm2Vec3);
+		matrix.setColumn(2, cross);
+	}
+
+	bool Math::legalCameraCoord(const G3D::CoordinateFrame& c)
+	{
+		int i = 0;
+		const float* transMatArr = (const float*)c.translation;
+		const float* rotMatArr = (const float*)c.rotation;
+		for (; i < 3; i++, transMatArr++, rotMatArr += 4)
+		{
+			float rotValue = *rotMatArr;
+			for (int j = 0; j < 3; j++)
+			{
+				if (!(rotValue > -1.2f) || !(rotValue < 1.2f))
+					return false;
+			}
+			float transValue = *transMatArr;
+			if (!(transValue > -1000000.0f) || !(transValue < 1000000.0f))
+				return false;
+		}
+		return true;
+	}
+
+	Matrix3 Math::snapToAxes(const G3D::Matrix3& align)
+	{
+		Matrix3 unkMat;
+		float aBest = 0.0f;
+		int second = -1;
+		int bestV = -1;
+		
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3 loopColumn = align.getColumn(i);
+			for (int j = 0; j < 3; j++)
+			{
+				float dotProd = G3D::Matrix3::identity().getColumn(j).dot(loopColumn);
+				unkMat[i][j] = dotProd;
+				if (fabs(dotProd) > fabs(aBest))
+				{
+					bestV = i;
+					second = j;
+					aBest = dotProd;
+				}
+			}
+		}
+		
+		Vector3 myColumn = G3D::Matrix3::identity().getColumn(second);
+		if (aBest < 0.0f)
+		{
+			myColumn *= -1.0f;
+		}
+
+		int v10 = -1;
+		int v11 = -1;
+		float v9 = 0.0f;
+		
+		for (int i = 0; i < 3; i++)
+		{
+			if (i != bestV)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					if (j != second)
+					{
+						if (fabs(unkMat[i][j]) > fabs(v9))
+						{
+							v9 = unkMat[i][j];
+							v10 = i;
+							v11 = j;
+						}
+					}
+				}
+			}
+		}
+
+		Vector3 myColumn2 = G3D::Matrix3::identity().getColumn(v11);
+		if (v9 < 0.0f)
+		{
+			myColumn2 *= -1.0f;
+		}
+
+		int v15 = 3 - v10 - bestV;
+		int calcColmTemp = 3 - v11 - second;
+		Vector3 myColumn3 = G3D::Matrix3::identity().getColumn(calcColmTemp);
+		if (unkMat[v15][v11] < 0.0f)
+		{
+			myColumn3 *= -1.0f;
+		}
+
+		Matrix3 result;
+		result.setColumn(bestV, myColumn);
+		result.setColumn(v10, myColumn2);
+		result.setColumn(v15, myColumn3);
+		return result;
+	}
 }

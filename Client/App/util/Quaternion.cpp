@@ -60,23 +60,15 @@ namespace RBX
 		return *this;
 	}
 
+	//needs to be moved to the header
 	Quaternion Quaternion::operator*(const Quaternion& other) const
 	{
-		Quaternion result;
+		Vector3& thisConvert = *(G3D::Vector3*)this;
+		Vector3& otherConvert = *(G3D::Vector3*)&other;
+		float thisW = this->w;
+		float otherW = other.w;
 
-		float w = this->w;
-		float v4 = other.w;
-		float v11 = this->z * v4;
-		float v8 = this->w * other.x;
-		float v9 = w * other.y;
-		float v10 = other.z * w;
-		float v6 = this->z * other.x - other.z * this->x + v4 * this->y + v9;
-		float v7 = this->x * other.y - other.x * this->y + v10 + v11;
-		result.x = other.z * this->y - this->z * other.y + this->x * v4 + v8;
-		result.y = v6;
-		result.z = v7;
-		result.w = w * v4 - (other.x * this->x + other.z * this->z + other.y * this->y);
-		return result;
+		return Quaternion(otherConvert * thisW + thisConvert * otherW + thisConvert.cross(otherConvert), thisW * otherW - thisConvert.dot(otherConvert));
 	}
 
 	float& Quaternion::operator[](int i) const
@@ -122,5 +114,12 @@ namespace RBX
 		rot[2][0] = v7 - v9;
 		rot[2][1] = v8 + v15;
 		rot[2][2] = 1.0 - (v5 + v10);
+	}
+
+	//needs to be moved to the header
+	float Quaternion::maxComponent() const
+	{
+		Quaternion qAbs = Quaternion(fabs(w), fabs(z), fabs(y), fabs(x));
+		return std::max(std::max(qAbs.w, qAbs.z), std::max(qAbs.y, qAbs.x));
 	}
 }

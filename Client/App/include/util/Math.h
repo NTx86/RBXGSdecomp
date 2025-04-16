@@ -43,7 +43,7 @@ namespace RBX
 			static bool fuzzyEq(const G3D::Matrix3&, const G3D::Matrix3&, float);
 			static bool fuzzyEq(const G3D::Vector3&, const G3D::Vector3&, float);
 			static bool fuzzyEq(float, float, float);
-			static bool fuzzyAxisAligned(const G3D::Matrix3&, const G3D::Matrix3&, float);
+			static bool fuzzyAxisAligned(const G3D::Matrix3& m0, const G3D::Matrix3& m1, float radTolerance);
 			static bool isEven(int);
 			static bool isOdd(int);
 			static int nextEven(int);
@@ -72,9 +72,9 @@ namespace RBX
 			static const G3D::Plane& yPlane();
 			static G3D::Vector3 closestPointOnRay(const G3D::Ray&, const G3D::Ray&);
 			static bool cameraSeesPoint(const G3D::Vector3&, const G3D::GCamera&);
-			static bool legalCameraCoord(const G3D::CoordinateFrame&);
+			static bool legalCameraCoord(const G3D::CoordinateFrame& c);
 			static G3D::Vector3 toSmallAngles(const G3D::Matrix3&);
-			static G3D::Matrix3 snapToAxes(const G3D::Matrix3&);
+			static G3D::Matrix3 snapToAxes(const G3D::Matrix3& align);
 			static bool isOrthonormal(const G3D::Matrix3&);
 			static bool orthonormalizeIfNecessary(G3D::Matrix3&);
 			static G3D::Vector3 toFocusSpace(const G3D::Vector3&, const G3D::CoordinateFrame&);
@@ -89,7 +89,7 @@ namespace RBX
 			static float rotationFromByte(unsigned char);
 			static bool isAxisAligned(const G3D::Matrix3&);
 			static int getOrientId(const G3D::Matrix3&);
-			static void idToMatrix3(int, G3D::Matrix3&);
+			static void idToMatrix3(int orientId, G3D::Matrix3& matrix);
 			static const G3D::Matrix3& matrixRotateY();
 			static const G3D::Matrix3& matrixRotateNegativeY();
 			static const G3D::Matrix3& matrixTiltZ();
@@ -119,7 +119,7 @@ namespace RBX
 			static G3D::CoordinateFrame getFocusSpace(const G3D::CoordinateFrame&);
 			static int toYAxisQuadrant(const G3D::CoordinateFrame&);
 			static G3D::Matrix3 alignAxesClosest(const G3D::Matrix3&, const G3D::Matrix3&);
-			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3&, const G3D::Matrix3&);
+			static RBX::NormalId getClosestObjectNormalId(const G3D::Vector3& worldV, const G3D::Matrix3& objectR);
 			static G3D::Vector3 getWorldNormal(RBX::NormalId id, const G3D::CoordinateFrame& coord)
 			{
 				return (1 - (id / 3) * 2) * Math::getColumn(coord.rotation, id % 3);

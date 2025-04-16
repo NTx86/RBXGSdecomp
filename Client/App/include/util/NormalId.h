@@ -14,6 +14,9 @@ namespace RBX
 		NORM_UNDEFINED = 6,
 	};
 
+	RBX::NormalId normalIdOpposite(RBX::NormalId normalId);
 	bool validNormalId(NormalId normalId);
-	NormalId Vector3ToNormalId(const G3D::Vector3& v3);
+	NormalId Vector3ToNormalId(const G3D::Vector3& v);
+	NormalId intToNormalId(int num);
+	const G3D::Vector3& normalIdToVector3(NormalId normalId);
 }
