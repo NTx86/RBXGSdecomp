@@ -537,4 +537,27 @@ namespace RBX
 		result.setColumn(v15, myColumn3);
 		return result;
 	}
+
+	bool Math::fuzzyEq(const G3D::Vector3& v0, const G3D::Vector3& v1, float epsilon)
+	{
+		Vector3 delta = v0 - v1;
+		for (int i = 0; i < 3; i++)
+		{
+			float axis1 = delta[i];
+			float axis2 = v1[i];
+			if (axis2 != axis1 && (fabs(axis1) + 1) * epsilon < fabs(axis1 - axis2))
+				return false;
+		}
+		return true;
+	}
+
+	G3D::CoordinateFrame Math::snapToGrid(const G3D::CoordinateFrame& snap, const G3D::Vector3& grid)
+	{
+		return CoordinateFrame(Math::snapToAxes(snap.rotation), Math::toGrid(snap.translation, grid));
+	}
+
+	G3D::CoordinateFrame Math::snapToGrid(const G3D::CoordinateFrame& snap, float grid)
+	{
+		return CoordinateFrame(Math::snapToAxes(snap.rotation), Math::toGrid(snap.translation, grid));
+	}
 }
