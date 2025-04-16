@@ -467,47 +467,51 @@ namespace RBX
 
 	Matrix3 Math::snapToAxes(const G3D::Matrix3& align)
 	{
+		Matrix3 unkMat;
 		float aBest = 0.0f;
 		int second = -1;
 		int bestV = -1;
-		Matrix3 unkMat;
 		
 		for (int i = 0; i < 3; i++)
 		{
-			Vector3 myColumn = align.getColumn(i);
+			Vector3 loopColumn = align.getColumn(i);
 			for (int j = 0; j < 3; j++)
 			{
-				float dotProd = G3D::Matrix3::identity().getColumn(j).dot(myColumn);
+				float dotProd = G3D::Matrix3::identity().getColumn(j).dot(loopColumn);
 				unkMat[i][j] = dotProd;
 				if (fabs(dotProd) > fabs(aBest))
 				{
+					bestV = i;
+					second = j;
 					aBest = dotProd;
-					second = i;
-					bestV = j;
 				}
 			}
 		}
-
+		
 		Vector3 myColumn = G3D::Matrix3::identity().getColumn(second);
 		if (aBest < 0.0f)
 		{
 			myColumn *= -1.0f;
 		}
-		
-		float v9 = 0.0f;
+
 		int v10 = -1;
 		int v11 = -1;
-		for (int count = 0; count < 3; count++)
+		float v9 = 0.0f;
+		
+		for (int i = 0; i < 3; i++)
 		{
-			if (count != bestV)
+			if (i != bestV)
 			{
-				for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 3; j++)
 				{
-					if (second != i && fabs(unkMat[count][i]) > fabs(v9))
+					if (j != second)
 					{
-						v10 = count;
-						v9 = unkMat[count][i];
-						v11 = i;
+						if (fabs(unkMat[i][j]) > fabs(v9))
+						{
+							v9 = unkMat[i][j];
+							v10 = i;
+							v11 = j;
+						}
 					}
 				}
 			}
@@ -520,7 +524,8 @@ namespace RBX
 		}
 
 		int v15 = 3 - v10 - bestV;
-		Vector3 myColumn3 = G3D::Matrix3::identity().getColumn(3 - v11 - second);
+		int calcColmTemp = 3 - v11 - second;
+		Vector3 myColumn3 = G3D::Matrix3::identity().getColumn(calcColmTemp);
 		if (unkMat[v15][v11] < 0.0f)
 		{
 			myColumn3 *= -1.0f;
