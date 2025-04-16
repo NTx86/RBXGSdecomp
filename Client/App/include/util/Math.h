@@ -1,6 +1,7 @@
 #pragma once
 #include <G3DAll.h>
 #include "util/NormalId.h"
+#include "util/Velocity.h"
 
 namespace RBX 
 {
@@ -59,7 +60,7 @@ namespace RBX
 			static float volume(const G3D::Vector3&);
 			static float maxAxisLength(const G3D::Vector3& v);
 			static G3D::Vector3 sortVector3(const G3D::Vector3& v);
-			//static RBX::Velocity calcTrajectory(const G3D::Vector3&, const G3D::Vector3&, float);
+			static RBX::Velocity calcTrajectory(const G3D::Vector3&, const G3D::Vector3&, float);
 			static G3D::Vector3 toGrid(const G3D::Vector3&, float);
 			static G3D::Vector3 toGrid(const G3D::Vector3& v, const G3D::Vector3& grid);
 			static bool lessThan(const G3D::Vector3& min, const G3D::Vector3& max);
