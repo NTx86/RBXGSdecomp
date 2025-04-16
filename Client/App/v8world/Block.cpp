@@ -340,26 +340,22 @@ namespace RBX
 
 	int Block::getClosestEdge(const G3D::Matrix3& rotation, NormalId normalID, G3D::Vector3& crossAxis)
 	{
-		Vector3 axisInBody(
-			Math::getColumn(rotation, 0).dot(crossAxis),
-			Math::getColumn(rotation, 1).dot(crossAxis),
-			Math::getColumn(rotation, 2).dot(crossAxis));
-
+		Vector3 axisInBody = Math::vectorToObjectSpace(crossAxis, rotation);
 		Vector2 projected = this->getProjectedVertex(axisInBody, normalID);
-		if (axisInBody.x <= 0.0f)
+
+		if (projected.y > 0.0f)
 		{
-			float f = 4 * projected.y + 3;
-			if (projected.y <= 0.0f)
-				return 4 * projected.y + 2;
-			return f;
+			if (projected.x > 0.0f)
+				return 4 * normalID;
+			return 4 * normalID + 1;
 		}
-		else if (projected.y <= 0.0f)
+		else if (projected.x > 0.0f)
 		{
-			return 4 * projected.y + 1;
+			return 4 * normalID + 3;
 		}
 		else
 		{
-			return 4 * projected.y;
+			return 4 * normalID + 2;
 		}
 	}
 
