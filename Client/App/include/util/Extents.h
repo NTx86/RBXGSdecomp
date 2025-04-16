@@ -58,7 +58,7 @@ namespace RBX
 	public:
 		static Extents fromCenterCorner(const Vector3&, const Vector3&);
 		static Extents fromCenterRadius(const Vector3&, float);
-		static Extents vv(const Vector3&, const Vector3&);
+		static Extents vv(const Vector3& v0, const Vector3& v1);
 		static bool overlapsOrTouches(const Extents&, const Extents&);
 		static const Extents& zero();
 		static const Extents& unit();

@@ -198,6 +198,25 @@ namespace RBX
 		return !thisExpanded.overlapsOrTouches(other);
 	}
 
+	Extents Extents::vv(const Vector3& v0, const Vector3& v1)
+	{
+		Extents result(Vector3::inf(), -Vector3::inf());
+		
+		result.low = Vector3(
+			v0.x < v1.x ? v0.x : v1.x,
+			v0.y < v1.y ? v0.y : v1.y,
+			v0.z < v1.z ? v0.z : v1.z
+		);
+		
+		result.high = Vector3(
+			v1.x < v0.x ? v0.x : v1.x,
+			v1.y < v0.y ? v0.y : v1.y,
+			v1.z < v0.z ? v0.z : v1.z
+		);
+
+		return result;
+	}
+
 	const Extents& Extents::zero()
 	{
 		static Extents e(Vector3::zero(), Vector3::zero());
