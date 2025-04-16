@@ -455,11 +455,11 @@ namespace RBX
 			float rotValue = *rotMatArr;
 			for (int j = 0; j < 3; j++)
 			{
-				if (!(rotValue > -1.2f) || !(rotValue < 1.2f))
+				if (!(rotValue > -1.2f && rotValue < 1.2f))
 					return false;
 			}
 			float transValue = *transMatArr;
-			if (!(transValue > -1000000.0f) || !(transValue < 1000000.0f))
+			if (!(transValue > -1000000.0f && transValue < 1000000.0f))
 				return false;
 		}
 		return true;
