@@ -200,19 +200,10 @@ namespace RBX
 
 	Extents Extents::vv(const Vector3& v0, const Vector3& v1)
 	{
-		Extents result(Vector3::inf(), -Vector3::inf());
-		
-		result.low = Vector3(
-			v0.x < v1.x ? v0.x : v1.x,
-			v0.y < v1.y ? v0.y : v1.y,
-			v0.z < v1.z ? v0.z : v1.z
-		);
-		
-		result.high = Vector3(
-			v1.x < v0.x ? v0.x : v1.x,
-			v1.y < v0.y ? v0.y : v1.y,
-			v1.z < v0.z ? v0.z : v1.z
-		);
+		Extents result;
+
+		result.low = v0.min(v1);
+		result.high = v0.max(v1);
 
 		return result;
 	}
@@ -225,7 +216,8 @@ namespace RBX
 
 	const Extents& Extents::negativeInfiniteExtents()
 	{
-		static Extents e(Vector3::inf(), -Vector3::inf());
+		// Extents default constructor sets high and low to inf
+		static Extents e;
 		return e;
 	}
 }
