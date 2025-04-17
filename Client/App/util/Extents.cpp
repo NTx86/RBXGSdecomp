@@ -222,20 +222,28 @@ namespace RBX
 		{
 			Vector3 corner = getCorner(i);
 			Vector3 world = localCoord.pointToWorldSpace(corner);
-			
-			Vector3 newMin;
-			if (world.z < minC.z || world.z == minC.z)
-				newMin.z = world.z;
 
-			if (world.y < minC.y || world.y == minC.y)
-				newMin.y = world.y;
+			minC = minC.min(world);
+			maxC = maxC.max(world);
+		}
 
-			if (world.x < minC.x || world.x == minC.x)
-				newMin.x = world.x;
+		Extents result = vv(minC, maxC);
+		return result;
+	}
 
-			minC = newMin;
+	Extents Extents::express(const CoordinateFrame& myFrame, const CoordinateFrame& expressInFrame)
+	{
+		Vector3 minC(Math::inf(), Math::inf(), Math::inf());
+		Vector3 maxC(-Math::inf(), -Math::inf(), -Math::inf());
 
-			// TODO: finish this...
+		for (int i = 0; i < 8; i++)
+		{
+			Vector3 corner = getCorner(i);
+			Vector3 v1 = myFrame.pointToWorldSpace(corner) - expressInFrame.translation;
+			Vector3 inOther = v1 * expressInFrame.rotation;
+
+			minC = minC.min(inOther);
+			maxC = maxC.max(inOther);
 		}
 
 		Extents result = vv(minC, maxC);
