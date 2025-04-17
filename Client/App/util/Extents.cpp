@@ -1,6 +1,7 @@
 #include "util/Extents.h"
 #include "util/Math.h"
 #include "util/Debug.h"
+#include "util/NormalId.h"
 
 namespace RBX
 {
@@ -196,6 +197,14 @@ namespace RBX
 		thisExpanded.high += dv;
 
 		return !thisExpanded.overlapsOrTouches(other);
+	}
+
+	Plane Extents::getPlane(NormalId normalId) const
+	{
+		Vector3 point = faceCenter(normalId);
+		Vector3 normal = normalIdToVector3(normalId);
+
+		return G3D::Plane(normal, point);
 	}
 
 	Extents Extents::vv(const Vector3& v0, const Vector3& v1)

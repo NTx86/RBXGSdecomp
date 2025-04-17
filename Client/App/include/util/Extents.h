@@ -34,7 +34,7 @@ namespace RBX
 		Extents express(const CoordinateFrame&, const CoordinateFrame&);
 		Vector3 faceCenter(NormalId faceId) const;
 		void getFaceCorners(NormalId faceId, Vector3& v0, Vector3& v1, Vector3& v2, Vector3& v3) const;
-		Plane getPlane(NormalId) const;
+		Plane getPlane(NormalId normalId) const;
 		Vector3 clip(const Vector3&) const;
 		Vector3 clamp(const Extents&) const;
 		NormalId closestFace(const Vector3& point);
