@@ -178,12 +178,12 @@ namespace RBX
 	bool Extents::overlapsOrTouches(const Extents& other) const
 	{
 		return
-			this->low.x < other.high.x &&
-			this->low.y < other.high.y &&
-			this->low.z < other.high.z &&
-			this->high.y > other.low.y &&
-			this->high.x > other.low.x &&
-			this->high.z > other.low.z;
+			!(this->low.x > other.high.x) &&
+			!(this->low.y > other.high.y) &&
+			!(this->low.z > other.high.z) &&
+			!(this->high.y < other.low.y) &&
+			!(this->high.x < other.low.x) &&
+			!(this->high.z < other.low.z);
 	}
 
 	bool Extents::separatedByMoreThan(const Extents& other, float distance) const
