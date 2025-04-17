@@ -227,8 +227,7 @@ namespace RBX
 			maxC = maxC.max(world);
 		}
 
-		Extents result = vv(minC, maxC);
-		return result;
+		return vv(minC, maxC);
 	}
 
 	Extents Extents::express(const CoordinateFrame& myFrame, const CoordinateFrame& expressInFrame)
@@ -246,8 +245,7 @@ namespace RBX
 			maxC = maxC.max(inOther);
 		}
 
-		Extents result = vv(minC, maxC);
-		return result;
+		return vv(minC, maxC);
 	}
 
 	Extents Extents::vv(const Vector3& v0, const Vector3& v1)
