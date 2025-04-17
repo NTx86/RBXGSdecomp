@@ -548,7 +548,7 @@ namespace RBX
 			float num1 = fabs(axis1) + 1;
 			float num2 = fabs(axis1 - axis2);
 
-			if (!(axis1 == axis2 || num1 * epsilon <= num2))
+			if (!(axis1 == axis2 || num2 <= num1 * epsilon))
 				return false;
 		}
 
