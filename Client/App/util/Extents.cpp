@@ -213,6 +213,35 @@ namespace RBX
 		this->high = this->high.max(other.high);
 	}
 
+	Extents Extents::toWorldSpace(const CoordinateFrame& localCoord)
+	{
+		Vector3 minC(Math::inf(), Math::inf(), Math::inf());
+		Vector3 maxC(-Math::inf(), -Math::inf(), -Math::inf());
+
+		for (int i = 0; i < 8; i++)
+		{
+			Vector3 corner = getCorner(i);
+			Vector3 world = localCoord.pointToWorldSpace(corner);
+			
+			Vector3 newMin;
+			if (world.z < minC.z || world.z == minC.z)
+				newMin.z = world.z;
+
+			if (world.y < minC.y || world.y == minC.y)
+				newMin.y = world.y;
+
+			if (world.x < minC.x || world.x == minC.x)
+				newMin.x = world.x;
+
+			minC = newMin;
+
+			// TODO: finish this...
+		}
+
+		Extents result = vv(minC, maxC);
+		return result;
+	}
+
 	Extents Extents::vv(const Vector3& v0, const Vector3& v1)
 	{
 		Extents result;

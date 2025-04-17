@@ -30,7 +30,7 @@ namespace RBX
 		float longestSide() const;
 		float volume() const;
 		float areaXZ() const;
-		Extents toWorldSpace(const CoordinateFrame&);
+		Extents toWorldSpace(const CoordinateFrame& localCoord);
 		Extents express(const CoordinateFrame&, const CoordinateFrame&);
 		Vector3 faceCenter(NormalId faceId) const;
 		void getFaceCorners(NormalId faceId, Vector3& v0, Vector3& v1, Vector3& v2, Vector3& v3) const;
