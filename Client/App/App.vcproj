@@ -163,6 +163,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Extents.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Guid.h"
 					>
 				</File>
@@ -329,6 +333,10 @@
 			>
 			<File
 				RelativePath=".\util\Debug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Extents.cpp"
 				>
 			</File>
 			<File
