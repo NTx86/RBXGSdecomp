@@ -38,7 +38,7 @@ namespace RBX
 		Vector3 clip(const Vector3&) const;
 		Vector3 clamp(const Extents&) const;
 		NormalId closestFace(const Vector3& point);
-		void unionWith(const Extents&);
+		void unionWith(const Extents& other);
 		void shift(const Vector3&);
 		void scale(float);
 		void expand(float);

@@ -207,6 +207,12 @@ namespace RBX
 		return G3D::Plane(normal, point);
 	}
 
+	void Extents::unionWith(const Extents& other)
+	{
+		this->low = this->low.min(other.low);
+		this->high = this->high.max(other.high);
+	}
+
 	Extents Extents::vv(const Vector3& v0, const Vector3& v1)
 	{
 		Extents result;
