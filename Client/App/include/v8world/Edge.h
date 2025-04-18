@@ -46,7 +46,7 @@ namespace RBX
 		void setEdgeState(Sim::EdgeState);
 		Primitive* getPrimitive(int i) const
 		{
-			return i == 0 ? prim0 : prim1;
+			return *(&this->prim0 + i);
 		}
 		Primitive* otherPrimitive(int) const;
 		Primitive* otherPrimitive(const Primitive* p) const
