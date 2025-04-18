@@ -25,3 +25,12 @@ const G3D::CoordinateFrame& Link::getChildInParent()
 	}
 	return childInParent;
 }
+
+void RevoluteLink::computeChildInParent(G3D::CoordinateFrame& answer) const
+{
+    G3D::CoordinateFrame rotatedParentCoord(
+        Math::rotateAboutZ(parentCoord.rotation, jointAngle), 
+        parentCoord.translation);
+
+    answer = rotatedParentCoord * childCoordInverse;
+}

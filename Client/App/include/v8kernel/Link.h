@@ -14,7 +14,7 @@ namespace RBX
 			G3D::CoordinateFrame childCoordInverse;
 			G3D::CoordinateFrame childInParent;
 			int stateIndex;
-			virtual void computeChildInParent(const G3D::CoordinateFrame&) const;
+			virtual void computeChildInParent(const G3D::CoordinateFrame& answer) const;
 			void dirty();
 			//void setBody(RBX::Body* _body){ body = _body;}
 		public:
@@ -26,20 +26,23 @@ namespace RBX
 			void setBody(RBX::Body* _body){ body = _body;} // this isn't suppose to be in public but then i can't access it in Body::setParent()
 	};
 
-	class RevoluteLink
+	class RevoluteLink : public Link
 	{
 	private:
 		float jointAngle;
   
 	private:
-		virtual void computeChildInParent(G3D::CoordinateFrame&) const;
+		virtual void computeChildInParent(G3D::CoordinateFrame& answer) const;
 	public:
 		//RevoluteLink(const RevoluteLink&);
-		RevoluteLink();
+		RevoluteLink() : jointAngle(0.0f) {}
 	public:
-		void setJointAngle(float);
+		void setJointAngle(float value)
+		{
+			jointAngle = value;
+		}
 	public:
-		~RevoluteLink();
+		~RevoluteLink() {}
 		//RBX::RevoluteLink& operator=(const RevoluteLink&);
 	};
 }
