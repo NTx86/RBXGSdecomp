@@ -70,8 +70,14 @@ namespace RBX
 		Clump(Primitive*);
 		~Clump();
 	public:
-		const Primitive* getRootPrimitive() const;
-		Primitive* getRootPrimitive();
+		const Primitive* getRootPrimitive() const
+		{
+			return rootPrimitive;
+		}
+		Primitive* getRootPrimitive()
+		{
+			return rootPrimitive;
+		}
 		const Assembly* getRootAssembly() const;
 		Assembly* getRootAssembly();
 		Assembly* getAssembly() const;

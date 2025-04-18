@@ -108,7 +108,10 @@ namespace RBX
 		void setPrimitiveType(Geometry::GeometryType);
 		Geometry::GeometryType getPrimitiveType() const;
 		const Body* getBody() const;
-		Body* getBody();
+		Body* getBody()
+		{
+			return body;
+		}
 		void setOwner(IMoving*);
 		IMoving* getOwner() const;
 		const G3D::CoordinateFrame& getCoordinateFrame() const;

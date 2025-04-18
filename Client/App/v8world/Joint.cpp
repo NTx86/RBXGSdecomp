@@ -103,20 +103,6 @@ namespace RBX
 		return canBuildJoint(p0, p1, nId0, nId1, 0.01f, 0.01f);
 	}
 
-	Joint::JointType Joint::getJointType(Edge* e)
-	{
-		if (e->getEdgeType() == Edge::JOINT)
-		{
-			RBXAssert(dynamic_cast<Joint*>(e) == e);
-			Joint* j = (Joint*)e;
-			return j->getJointType();
-		}
-		else
-		{
-			return NO_JOINT;
-		}
-	}
-
 	bool Joint::isAssemblyJoint(Edge* e)
 	{
 		return getJointType(e) >= ANCHOR_JOINT;

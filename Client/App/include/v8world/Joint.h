@@ -104,7 +104,19 @@ namespace RBX
 		static bool canBuildJointLoose(Primitive* p0, Primitive* p1, NormalId nId0, NormalId nId1);
 		static bool canBuildJointTight(Primitive* p0, Primitive* p1, NormalId nId0, NormalId nId1);
 	public:
-		static JointType getJointType(Edge* e);
+		static JointType getJointType(Edge* e)
+		{
+			if (e->getEdgeType() == Edge::JOINT)
+			{
+				RBXAssert(dynamic_cast<Joint*>(e) == e);
+				Joint* j = (Joint*)e;
+				return j->getJointType();
+			}
+			else
+			{
+				return NO_JOINT;
+			}
+		}
 		static bool isJoint(Edge*);
 		static bool isAssemblyJoint(Edge* e);
 		static bool isGroundJoint(Joint*);

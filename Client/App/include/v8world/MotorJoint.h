@@ -18,22 +18,22 @@ namespace RBX
 		virtual Joint::JointType getJointType() const;
 		virtual bool isBroken() const;
 		virtual bool isAligned();
-		void setJointAngle(float);
+		void setJointAngle(float value);
 	public:
 		float getCurrentAngle() const;
-		void setCurrentAngle(float);
-		G3D::CoordinateFrame getMeInOther(Primitive*);
-		virtual void stepUi(int);
+		void setCurrentAngle(float value);
+		G3D::CoordinateFrame getMeInOther(Primitive* me);
+		virtual void stepUi(int uiStepId);
 	public:
 		//MotorJoint(const MotorJoint&);
 		MotorJoint();
 		virtual ~MotorJoint();
 	public:
-		unsigned int hashCode() const;
+		size_t hashCode() const;
 		RevoluteLink* resetLink();
 		//MotorJoint& operator=(const MotorJoint&);
   
 	public:
-		static bool isMotorJoint(Edge*);
+		static bool isMotorJoint(Edge* e);
 	};
 }

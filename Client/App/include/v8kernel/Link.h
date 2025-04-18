@@ -40,6 +40,7 @@ namespace RBX
 		void setJointAngle(float value)
 		{
 			jointAngle = value;
+			dirty();
 		}
 	public:
 		~RevoluteLink() {}
