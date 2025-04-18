@@ -18,7 +18,7 @@ namespace RBX
 		};
 
 	private:
-		RBX::World* world;
+		World* world;
   
 	public:
 		//IWorldStage(const IWorldStage&);
@@ -26,11 +26,13 @@ namespace RBX
 	public:
 		IWorldStage* getUpstreamWS();
 		IWorldStage* getDownstreamWS();
-		World* getWorld();
+		World* getWorld() { return world; }
 		virtual void onEdgeAdded(Edge*);
 		virtual void onEdgeRemoving(Edge*);
 		virtual int getMetric(MetricType);
+	public:
 		virtual ~IWorldStage();
+	public:
 		//IWorldStage& operator=(const IWorldStage&);
 	};
 }
