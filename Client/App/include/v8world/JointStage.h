@@ -1,6 +1,7 @@
 #pragma once
 #include <set>
 #include <map>
+#include "v8world/IPipelined.h"
 #include "v8world/IWorldStage.h"
 
 namespace RBX

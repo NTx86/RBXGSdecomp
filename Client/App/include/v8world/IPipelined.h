@@ -27,8 +27,17 @@ namespace RBX
 		void putInPipeline(IStage* stage);
 		void removeFromPipeline(IStage* stage);
 		void putInStage(IStage* stage);
-		bool inPipeline() const;
-		bool inStage(IStage*) const;
+		bool inPipeline() const
+		{
+			return currentStage != NULL;
+		}
+		bool inStage(IStage* iStage) const
+		{
+			RBXAssert(iStage);
+			RBXAssert(currentStage);
+
+			return currentStage == iStage;
+		}
 		bool inStage(IStage::StageType stageType) const
 		{
 			RBXAssert(currentStage);
