@@ -19,6 +19,17 @@ namespace RBX
 		jointCoord1 = Math::snapToGrid(_jointCoord1, 0.1f);
 	}
 
+	Joint::Joint()
+		: Edge(NULL, NULL),
+		  jointOwner(NULL),
+		  active(false),
+		  jointCoord0(),
+		  jointCoord1()
+	{
+		RBXAssert(jointCoord0 == CoordinateFrame());
+		RBXAssert(jointCoord1 == CoordinateFrame());
+	}
+
 	Joint::~Joint()
 	{
 		RBXAssert(!jointOwner);
