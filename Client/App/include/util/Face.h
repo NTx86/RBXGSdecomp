@@ -1,5 +1,6 @@
 #pragma once
 #include <G3DAll.h>
+#include "util/Extents.h"
 
 namespace RBX
 {
