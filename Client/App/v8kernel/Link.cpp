@@ -14,7 +14,7 @@ void Link::dirty()
 	}
 }
 
-const G3D::CoordinateFrame& Link::getChildInParent()
+const G3D::CoordinateFrame& Link::getChildInParent() const
 {
 	int bodyStateIndex = body->getParent()->getStateIndex();
 

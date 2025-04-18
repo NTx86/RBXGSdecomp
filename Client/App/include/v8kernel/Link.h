@@ -13,14 +13,14 @@ namespace RBX
 			G3D::CoordinateFrame childCoord;
 			G3D::CoordinateFrame childCoordInverse;
 			G3D::CoordinateFrame childInParent;
-			int stateIndex;
+			mutable int stateIndex;
 			virtual void computeChildInParent(const G3D::CoordinateFrame& answer) const;
 			void dirty();
 			//void setBody(RBX::Body* _body){ body = _body;}
 		public:
 			Link();
 			~Link();
-			const G3D::CoordinateFrame& getChildInParent();
+			const G3D::CoordinateFrame& getChildInParent() const;
 			Body* getBody() const;
 			void reset(const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
 			void setBody(RBX::Body* _body){ body = _body;} // this isn't suppose to be in public but then i can't access it in Body::setParent()
