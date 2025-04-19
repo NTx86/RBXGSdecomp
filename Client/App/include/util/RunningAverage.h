@@ -11,7 +11,11 @@ namespace RBX
 
 	public:
 		//RunningAverageState(const RunningAverageState&);
-		RunningAverageState();
+		RunningAverageState()
+			: position(),
+			  angles()
+		{
+		}
 		void update(const G3D::CoordinateFrame&, float);
 		bool withinTolerance(const G3D::CoordinateFrame&, float, float);
 		//RunningAverageState& operator=(const RunningAverageState&);

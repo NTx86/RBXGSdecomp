@@ -96,10 +96,19 @@ namespace RBX
 		void setGuid(const Guid&);
 		World* getWorld() const;
 		void setWorld(World*);
-		Clump* getClump() const;
+		Clump* getClump() const
+		{
+			return clump;
+		}
 		void setClump(Clump*);
-		int getClumpDepth() const;
-		void setClumpDepth(int);
+		int getClumpDepth() const
+		{
+			return clumpDepth;
+		}
+		void setClumpDepth(int value)
+		{
+			clumpDepth = value;
+		}
 		int getTraverseId() const;
 		void setTraverseId(int);
 		Assembly* getAssembly() const;
@@ -107,7 +116,10 @@ namespace RBX
 		Geometry* getGeometry();
 		void setPrimitiveType(Geometry::GeometryType);
 		Geometry::GeometryType getPrimitiveType() const;
-		const Body* getBody() const;
+		const Body* getBody() const
+		{
+			return body;
+		}
 		Body* getBody()
 		{
 			return body;
@@ -125,11 +137,17 @@ namespace RBX
 		bool getDragging() const;
 		void setAnchor(bool);
 		bool getAnchor() const;
-		Anchor* getAnchorObject();
+		Anchor* getAnchorObject()
+		{
+			return anchorObject;
+		}
 		void setCanCollide(bool);
 		const bool getCanCollide() const;
 		void setCanSleep(bool);
-		const bool getCanSleep() const;
+		const bool getCanSleep() const
+		{
+			return canSleep;
+		}
 		void setFriction(float);
 		float getFriction() const;
 		void setElasticity(float);

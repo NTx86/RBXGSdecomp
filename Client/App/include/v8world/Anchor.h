@@ -12,6 +12,9 @@ namespace RBX
 	public:
 		Anchor(Primitive*);
 		~Anchor();
-		Primitive* getPrimitive();
+		Primitive* getPrimitive()
+		{
+			return primitive;
+		}
 	};
 }
