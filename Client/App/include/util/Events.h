@@ -6,11 +6,11 @@ namespace RBX
 	struct RaiseRange
 	{
 	public:
-		int index;
-		int upper;
+		unsigned int index;
+		unsigned int upper;
 		RaiseRange* previous;
 	public:
-		void removeIndex(int);
+		void removeIndex(unsigned int);
 	};
 
 	template<typename T, typename U>
