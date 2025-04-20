@@ -89,16 +89,28 @@ namespace RBX
 		const Assembly* getRootAssembly() const;
 		Assembly* getRootAssembly();
 		Assembly* getAssembly() const;
-		void setAssembly(Assembly*);
+		void setAssembly(Assembly* a)
+		{
+			assembly = a;
+		}
 		void addPrimitive(Primitive* p, Primitive* parent, RigidJoint* j);
 		void removePrimitive(Primitive* p);
 		void removeAllPrimitives();
 		void getRigidJoints(std::set<RigidJoint*>& internalRigids, std::set<RigidJoint*>& externalRigids);
 		void addAnchor(Anchor* a);
 		Anchor* removeAnchor();
-		bool getAnchored() const;
-		bool getCanSleep() const;
-		Sim::AssemblyState getSleepStatus();
+		bool getAnchored() const
+		{
+			return anchor != NULL;
+		}
+		bool getCanSleep() const
+		{
+			return canSleep;
+		}
+		Sim::AssemblyState getSleepStatus()
+		{
+			return sleepStatus;
+		}
 		bool moving();
 		void putInKernel(Kernel* kernel);
 		void removeFromKernel(Kernel* kernel);
@@ -114,8 +126,14 @@ namespace RBX
 		void onPrimitiveCanSleepChanged(Primitive* p);
 		Clump* otherClump(Edge* e) const;
 		int size();
-		std::set<Primitive*>::const_iterator clumpPrimBegin() const;
-		std::set<Primitive*>::const_iterator clumpPrimEnd() const;
+		std::set<Primitive*>::const_iterator clumpPrimBegin() const
+		{
+			return primitives.begin();
+		}
+		std::set<Primitive*>::const_iterator clumpPrimEnd() const
+		{
+			return primitives.end();
+		}
 		//Clump& operator=(const Clump&);
   
 	private:

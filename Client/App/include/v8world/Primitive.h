@@ -125,7 +125,10 @@ namespace RBX
 			return body;
 		}
 		void setOwner(IMoving*);
-		IMoving* getOwner() const;
+		IMoving* getOwner() const
+		{
+			return myOwner;
+		}
 		const G3D::CoordinateFrame& getCoordinateFrame() const;
 		G3D::CoordinateFrame getGridCorner() const;
 		void setCoordinateFrame(const G3D::CoordinateFrame&);
