@@ -11,11 +11,29 @@ namespace RBX
 		float paramB;
 
 	public:
-		SurfaceData();
-		bool operator==(const SurfaceData&) const;
-		bool isEmpty() const;
+		SurfaceData()
+			: paramA(-0.5f),
+			  paramB(0.5f),
+			  inputType(Controller::NO_INPUT)
+		{
+		}
+		bool operator==(const SurfaceData& other) const
+		{
+			return
+				inputType == other.inputType &&
+				paramA == other.paramA &&
+				paramB == other.paramB;
+		}
+		bool isEmpty() const
+		{
+			return *this == empty();
+		}
 
 	public:
-		static const SurfaceData& empty();
+		static const SurfaceData& empty()
+		{
+			static SurfaceData s;
+			return s;
+		}
 	};
 }

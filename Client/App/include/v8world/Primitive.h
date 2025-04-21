@@ -1,6 +1,7 @@
 #pragma once
 #include "v8world/IPipelined.h"
 #include "v8world/Geometry.h"
+#include "v8world/SurfaceData.h"
 #include "util/Guid.h"
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -15,7 +16,6 @@ namespace RBX
 	class Clump;
 	class World;
 	class SpatialNode;
-	class SurfaceData;
 	class Controller;
 	class Assembly;
 	class IMoving;
@@ -172,9 +172,18 @@ namespace RBX
 			return surfaceType[id];
 		}
 		void setSurfaceData(NormalId, const SurfaceData&);
-		const SurfaceData& getSurfaceData(NormalId) const;
+		const SurfaceData& getSurfaceData(NormalId id) const
+		{
+			// TODO: get this fully matching
+			// check RotateJoint::getChannelValue
+			const SurfaceData* data = surfaceData[id];
+			return data ? *data : SurfaceData::empty();
+		}
 		void setController(Controller*);
-		Controller* getController();
+		Controller* getController()
+		{
+			return controller;
+		}
 		float getJointK() const
 		{
 			return JointK;

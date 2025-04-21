@@ -384,6 +384,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\RotateJoint.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\SimJobStage.h"
 					>
 				</File>
@@ -586,6 +590,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\RigidJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\RotateJoint.cpp"
 				>
 			</File>
 			<File
