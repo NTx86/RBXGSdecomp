@@ -6,24 +6,38 @@ namespace RBX
 	class RigidJoint : public Joint
 	{
 	private:
-		virtual Joint::JointType getJointType() const;
-		virtual bool isBroken() const;
+		// these seem to be the same as Joint
+		virtual Joint::JointType getJointType() const
+		{
+			RBXAssert(0);
+			return NO_JOINT;
+		}
+		virtual bool isBroken() const
+		{
+			return false;
+		}
 	public:
 		//RigidJoint(const RigidJoint&);
-		RigidJoint(Primitive*, Primitive*, const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
-		RigidJoint();
-		virtual ~RigidJoint();
+		RigidJoint(Primitive* prim0, Primitive* prim1, const G3D::CoordinateFrame& _jointCoord0, const G3D::CoordinateFrame& _jointCoord1)
+			: Joint(prim0, prim1, _jointCoord0, _jointCoord1)
+		{
+		}
+		RigidJoint()
+			: Joint()
+		{
+		}
+		virtual ~RigidJoint() {}
 	public:
 		virtual bool isAligned();
-		virtual G3D::CoordinateFrame align(Primitive*, Primitive*);
-		G3D::CoordinateFrame getChildInParent(Primitive*, Primitive*);
+		virtual G3D::CoordinateFrame align(Primitive* pMove, Primitive* pStay);
+		G3D::CoordinateFrame getChildInParent(Primitive* parent, Primitive* child);
 		//RigidJoint& operator=(const RigidJoint&);
   
 	private:
 		static bool jointIsRigid(Joint*);
 	protected:
-		static void faceIdToCoords(Primitive*, Primitive*, NormalId, NormalId, G3D::CoordinateFrame&, G3D::CoordinateFrame&);
+		static void faceIdToCoords(Primitive* p0, Primitive* p1, NormalId nId0, NormalId nId1, G3D::CoordinateFrame& c0, G3D::CoordinateFrame& c1);
 	public:
-		static bool isRigidJoint(Edge*);
+		static bool isRigidJoint(Edge* e);
 	};
 }
