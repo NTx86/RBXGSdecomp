@@ -167,7 +167,10 @@ namespace RBX
 		Face getFaceInWorld(NormalId);
 		G3D::CoordinateFrame getFaceCoordInObject(NormalId);
 		void setSurfaceType(NormalId, SurfaceType);
-		SurfaceType getSurfaceType(NormalId) const;
+		SurfaceType getSurfaceType(NormalId id) const
+		{
+			return surfaceType[id];
+		}
 		void setSurfaceData(NormalId, const SurfaceData&);
 		const SurfaceData& getSurfaceData(NormalId) const;
 		void setController(Controller*);

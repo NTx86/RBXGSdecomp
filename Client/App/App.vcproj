@@ -388,11 +388,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\SnapJoint.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\SpatialHash.h"
 					>
 				</File>
 				<File
 					RelativePath=".\include\v8world\SurfaceData.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\WeldJoint.h"
 					>
 				</File>
 				<File
@@ -581,7 +589,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\SnapJoint.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\SpatialHash.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\WeldJoint.cpp"
 				>
 			</File>
 			<File
