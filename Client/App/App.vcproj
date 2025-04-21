@@ -372,6 +372,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\MultiJoint.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Primitive.h"
 					>
 				</File>
@@ -570,6 +574,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\MotorJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\MutilJoint.cpp"
 				>
 			</File>
 			<File

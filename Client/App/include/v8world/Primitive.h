@@ -175,7 +175,10 @@ namespace RBX
 		const SurfaceData& getSurfaceData(NormalId) const;
 		void setController(Controller*);
 		Controller* getController();
-		float getJointK() const;
+		float getJointK() const
+		{
+			return JointK;
+		}
 		RigidJoint* getFirstRigidAt(Edge*);
 		int getNumJoints2() const;
 		int countNumJoints() const;
