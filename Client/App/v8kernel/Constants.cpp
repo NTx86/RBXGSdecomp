@@ -158,23 +158,6 @@ const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize
 	}
 }
 
-/*inline G3D::Vector3& unkInline(const G3D::Vector3& vector)
-{
-	G3D::Vector3 clipVector = vector;
-
-	if (clipVector.z < 1.0f)
-		clipVector.z = 1.0f;
-
-	if (clipVector.y < 1.0f)
-		clipVector.y = 1.0f;
-
-	if (clipVector.x < 1.0f)
-		clipVector.x = 1.0f;
-
-	return clipVector;
-}*/
-
-//not gonna match until getJointKMultiplier is matched
 const float Constants::getJointK(const G3D::Vector3& gridSize, bool ball)
 {
 	G3D::Vector3 sortedSize = Math::sortVector3(gridSize);
