@@ -15,4 +15,6 @@ namespace RBX {
 	};
 }
 
-#define RBXAssert(expr) if ( RBX::Debugable::assertAction == Debugable::CrashOnAssert && !(expr)) RBX::Debugable::doCrash()
+//#define RBXAssert(expr) if ( RBX::Debugable::assertAction == Debugable::CrashOnAssert && !(expr)) RBX::Debugable::doCrash()
+// copied from assert.h
+#define RBXAssert(expr) (void)( ( RBX::Debugable::assertAction != Debugable::CrashOnAssert || !!(expr) ) || (RBX::Debugable::doCrash(), 0) )

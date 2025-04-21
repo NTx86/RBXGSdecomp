@@ -84,7 +84,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -109,7 +109,8 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;MBCS"
+				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableEnhancedInstructionSet="0"
@@ -159,7 +160,15 @@
 				Name="util"
 				>
 				<File
+					RelativePath=".\include\util\ComputeProp.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Debug.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Events.h"
 					>
 				</File>
 				<File
@@ -167,7 +176,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Face.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Guid.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\HitTestFilter.h"
 					>
 				</File>
 				<File
@@ -196,6 +213,14 @@
 				</File>
 				<File
 					RelativePath=".\include\util\Quaternion.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\RunningAverage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\SurfaceType.h"
 					>
 				</File>
 				<File
@@ -271,6 +296,14 @@
 				Name="v8world"
 				>
 				<File
+					RelativePath=".\include\v8world\Anchor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Assembly.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Ball.h"
 					>
 				</File>
@@ -279,11 +312,107 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\Clump.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\ClumpStage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\CollisionStage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Contact.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\ContactManager.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Controller.h"
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\Edge.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Geometry.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\IMoving.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\IPipelined.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\IWorldStage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Joint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\JointStage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Mechanism.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\MotorJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\MultiJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\Primitive.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\RigidJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\RotateJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\SimJobStage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\SleepStage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\SnapJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\SpatialHash.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\SurfaceData.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\WeldJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\World.h"
 					>
 				</File>
 			</Filter>
@@ -340,6 +469,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\Face.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\Guid.cpp"
 				>
 			</File>
@@ -368,6 +501,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\RunningAverage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\Units.cpp"
 				>
 			</File>
@@ -375,6 +512,10 @@
 		<Filter
 			Name="v8world"
 			>
+			<File
+				RelativePath=".\v8world\Assembly.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\v8world\Ball.cpp"
 				>
@@ -384,7 +525,99 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\Clump.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\ClumpStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\CollisionStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Contact.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\ContactManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\Controller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Edge.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\IMoving.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\IPipelined.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\IWorldStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Joint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\JointStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Mechanism.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\MotorJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\MutilJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\Primitive.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\RigidJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\RotateJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\SimJobStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\SleepStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\SnapJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\SpatialHash.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\WeldJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\World.cpp"
 				>
 			</File>
 		</Filter>

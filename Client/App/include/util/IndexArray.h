@@ -4,17 +4,8 @@
 #include "util/Debug.h"
 
 namespace RBX {
-	template <typename tInstance>
-	class IndexArrayOld : boost::noncopyable
-	{
-		public:
-			G3D::Array<tInstance *> array;
-			inline tInstance* operator[](int index){ return array[index]; }
-			inline int size() {return array.size();}
-	};
-
 	template <typename tInstance, int& (tInstance::*getIndex)()>
-	class IndexArray : boost::noncopyable_::noncopyable
+	class IndexArray : boost::noncopyable
 	{
 		private:
 			int& indexOf(tInstance* instance) const
@@ -30,17 +21,30 @@ namespace RBX {
 
 			inline int size() const {return array.size();}
 
-			__declspec(noinline) void fastRemove(tInstance* instance)
+			// 100% match if G3D::Array<>::find has __declspec(noinline)
+			void fastRemove(tInstance* item)
 			{
-				RBXAssert(!instance);
+				RBXAssert(array.find(item) != array.end());
+
+				int removeIndex = indexOf(item);
+				RBXAssert(removeIndex >= 0);
+				RBXAssert(array[removeIndex] == item);
+
+				// this does something similar to G3D::Array<>::fastRemove
+				tInstance* movedItem = array[size() - 1];
+				array[removeIndex] = movedItem;
+				indexOf(movedItem) = removeIndex;
+				array.resize(array.size() - 1, false);
+
+				indexOf(item) = -1;
 			}
 
-			void fastAppend(tInstance* instance)
+			void fastAppend(tInstance* item)
 			{
-				RBXAssert(instance);
-				RBXAssert(indexOf(instance) == -1);
-				indexOf(instance) = array.size();
-				array.append(instance);
+				RBXAssert(item);
+				RBXAssert(indexOf(item) == -1);
+				indexOf(item) = array.size();
+				array.append(item);
 			}
 
 	};

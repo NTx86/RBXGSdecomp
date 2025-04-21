@@ -1,5 +1,6 @@
 #pragma once
 #include <g3d/vector3.h>
+#include <g3d/matrix3.h>
 
 namespace RBX
 {
@@ -19,4 +20,5 @@ namespace RBX
 	NormalId Vector3ToNormalId(const G3D::Vector3& v);
 	NormalId intToNormalId(int num);
 	const G3D::Vector3& normalIdToVector3(NormalId normalId);
+	NormalId Matrix3ToNormalId(const G3D::Matrix3& m); // TODO: implement
 }

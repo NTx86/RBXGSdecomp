@@ -20,6 +20,10 @@ namespace RBX {
 			Velocity velocityAtOffset(const G3D::Vector3&) const;
 			Velocity rotateBy(const G3D::Matrix3&) const;
 
-			static const Velocity& zero();
+			static const Velocity& zero()
+			{
+				static Velocity v;
+				return v;
+			}
 	};
 }

@@ -14,7 +14,7 @@ void Link::dirty()
 	}
 }
 
-const G3D::CoordinateFrame& Link::getChildInParent()
+const G3D::CoordinateFrame& Link::getChildInParent() const
 {
 	int bodyStateIndex = body->getParent()->getStateIndex();
 
@@ -24,4 +24,13 @@ const G3D::CoordinateFrame& Link::getChildInParent()
 		stateIndex = bodyStateIndex;
 	}
 	return childInParent;
+}
+
+void RevoluteLink::computeChildInParent(G3D::CoordinateFrame& answer) const
+{
+    G3D::CoordinateFrame rotatedParentCoord(
+        Math::rotateAboutZ(parentCoord.rotation, jointAngle), 
+        parentCoord.translation);
+
+    answer = rotatedParentCoord * childCoordInverse;
 }

@@ -55,6 +55,7 @@ namespace RBX
 		static int compare(Name&, Name&);
 
 		// NOTE: these have not been checked
+		// TODO: these also need to support const char* inputs
 		template<char*& sName>
 		static const Name& doDeclare()
 		{

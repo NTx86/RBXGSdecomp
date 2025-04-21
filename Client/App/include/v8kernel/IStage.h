@@ -63,8 +63,8 @@ namespace RBX {
 				RBXAssert(downstream);
 				return downstream->getKernel(); 
 			};
-			RBX::IStage* getDownstream() {return upstream;};
-			RBX::IStage* getUpstream() {return downstream;};
+			RBX::IStage* getDownstream() {return downstream;};
+			RBX::IStage* getUpstream() {return upstream;};
 	};
 }
 

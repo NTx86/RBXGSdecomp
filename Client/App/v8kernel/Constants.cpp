@@ -6,13 +6,15 @@ using namespace RBX;
 
 const float Constants::MAX_LEGO_JOINT_FORCES_MEASURED[7] = {0.0f, 1.098f, 2.1340001f, 2.427f, 3.191f, 4.5710001f, 4.6810002f};
 
-const int Constants::kernelStepsPerWorldStep(){return 19;}
+const int Constants::uiStepsPerSec() {return 30;}
+const int Constants::worldStepsPerUiStep() {return 8;} // guess based on uiStepsPerSec and worldStepsPerSec
+const int Constants::kernelStepsPerWorldStep() {return 19;}
 const int Constants::worldStepsPerSec() {return 240;}
 const int Constants::kernelStepsPerSec() {return 4560;}
 const int Constants::kernelStepsPerUiStep() {return 152;}
-const float Constants::uiDt() {return 0.033333335f;}
-const float Constants::worldDt() {return 0.0041666669f;}
-const float Constants::kernelDt() {return 0.00021929825f;}
+const float Constants::uiDt() {return (float)1/uiStepsPerSec();}
+const float Constants::worldDt() {return (float)1/worldStepsPerSec();}
+const float Constants::kernelDt() {return (float)1/kernelStepsPerSec();}
 
 const float Constants::getElasticMultiplier(float elasticity)
 {
@@ -156,23 +158,6 @@ const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize
 	}
 }
 
-/*inline G3D::Vector3& unkInline(const G3D::Vector3& vector)
-{
-	G3D::Vector3 clipVector = vector;
-
-	if (clipVector.z < 1.0f)
-		clipVector.z = 1.0f;
-
-	if (clipVector.y < 1.0f)
-		clipVector.y = 1.0f;
-
-	if (clipVector.x < 1.0f)
-		clipVector.x = 1.0f;
-
-	return clipVector;
-}*/
-
-//not gonna match until getJointKMultiplier is matched
 const float Constants::getJointK(const G3D::Vector3& gridSize, bool ball)
 {
 	G3D::Vector3 sortedSize = Math::sortVector3(gridSize);
