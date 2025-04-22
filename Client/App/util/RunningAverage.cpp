@@ -5,8 +5,8 @@ namespace RBX
 {
 	void RunningAverageState::update(const G3D::CoordinateFrame& cofm, float radius)
 	{
-		this->position = this->position * 0.75f + cofm.translation * 0.25;
-		this->angles = this->angles * 0.75f + Quaternion(cofm.rotation) * (radius * 0.25);
+		this->position = this->position * 0.75f + cofm.translation * 0.25f;
+		this->angles = this->angles * 0.75f + Quaternion(cofm.rotation) * (radius * 0.25f);
 	}
 
 	bool RunningAverageState::withinTolerance(const G3D::CoordinateFrame& cofm, float radius, float tolerance)
