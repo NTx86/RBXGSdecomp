@@ -31,8 +31,14 @@ namespace RBX {
 				return Quaternion(x * fNum, y * fNum, z * fNum, w * fNum);
 			}
 			Quaternion operator*(const Quaternion& other) const;
-			Quaternion operator+(const Quaternion& other) const;
-			Quaternion operator-(const Quaternion& other) const;
+			Quaternion operator+(const Quaternion& other) const
+			{
+				return Quaternion(x + other.x, y + other.y, z + other.z, w + other.w);
+			}
+			Quaternion operator-(const Quaternion& other) const
+			{
+				return Quaternion(x - other.x, y - other.y, z - other.z, w - other.w);
+			}
 			Quaternion& operator*=(float fNum)
 			{
 				x = fNum * x;

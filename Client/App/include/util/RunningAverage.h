@@ -16,8 +16,8 @@ namespace RBX
 			  angles()
 		{
 		}
-		void update(const G3D::CoordinateFrame&, float);
-		bool withinTolerance(const G3D::CoordinateFrame&, float, float);
+		void update(const G3D::CoordinateFrame& cofm, float radius);
+		bool withinTolerance(const G3D::CoordinateFrame& cofm, float radius, float tolerance);
 		//RunningAverageState& operator=(const RunningAverageState&);
 
 	private:
