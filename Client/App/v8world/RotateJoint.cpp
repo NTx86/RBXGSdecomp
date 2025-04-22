@@ -2,6 +2,7 @@
 #include "v8world/Primitive.h"
 #include "v8world/SurfaceData.h"
 #include "v8world/Tolerance.h"
+#include "v8world/World.h"
 #include "v8kernel/Constants.h"
 #include "v8kernel/Body.h"
 #include "util/Face.h"
@@ -224,6 +225,66 @@ namespace RBX
 			RotateConnector* connector = new RotateConnector(getPoint(0), getPoint(2), pMarker0, pMarker1, getJointK(), getTorqueArmLength());
 			rotateConnector = connector;
 			addToMultiJoint(pMarker0, pMarker1, connector);
+		}
+	}
+
+	RotateVJoint::RotateVJoint(
+		Primitive* axlePrim,
+		Primitive* holePrim,
+		const G3D::CoordinateFrame& c0,
+		const G3D::CoordinateFrame& c1)
+		: RotateJoint(axlePrim, holePrim, c0, c1)
+	{
+	}
+
+	void RotateVJoint::stepUi(int uiStepId)
+	{
+		float value = getChannelValue(uiStepId);
+
+		RotateConnector* connector = rotateConnector;
+		if (connector)
+		{
+			float newValue = value / (float)Constants::kernelStepsPerUiStep();
+			connector->getKernelInput()->setDelta(newValue);
+		}
+
+		if (value != 0.0f)
+		{
+			World* world = getWorld();
+			world->ticklePrimitive(getAxlePrim());
+			world->ticklePrimitive(getHolePrim());
+		}
+	}
+
+	RotatePJoint::RotatePJoint(
+		Primitive* axlePrim,
+		Primitive* holePrim,
+		const G3D::CoordinateFrame& c0,
+		const G3D::CoordinateFrame& c1)
+		: RotateJoint(axlePrim, holePrim, c0, c1)
+	{
+	}
+
+	inline float calculateIncrementRotatePJoint(float value, float currentGoal, int steps)
+	{
+		return (value - currentGoal) / steps;
+	}
+
+	void RotatePJoint::stepUi(int uiStepId)
+	{
+		float value = getChannelValue(uiStepId);
+
+		RotateConnector* connector = rotateConnector;
+		if (connector)
+		{
+			connector->getKernelInput()->setGoalCalc(value, calculateIncrementRotatePJoint);
+		}
+
+		if (value != 0.0f)
+		{
+			World* world = getWorld();
+			world->ticklePrimitive(getAxlePrim());
+			world->ticklePrimitive(getHolePrim());
 		}
 	}
 }
