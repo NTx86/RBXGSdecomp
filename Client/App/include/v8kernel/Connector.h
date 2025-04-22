@@ -79,7 +79,8 @@ namespace RBX
 			: point0(_point0),
 			  point1(_point1),
 			  k(_k),
-			  breakForce(_breakForce)
+			  breakForce(_breakForce),
+			  broken(false)
 		{}
 
 		virtual void computeForce(const float dt, bool throttling);

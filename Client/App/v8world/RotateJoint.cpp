@@ -1,7 +1,9 @@
 #include "v8world/RotateJoint.h"
 #include "v8world/Primitive.h"
 #include "v8world/SurfaceData.h"
+#include "v8world/Block.h"
 #include "v8kernel/Constants.h"
+#include "v8kernel/Body.h"
 
 namespace RBX
 {
@@ -102,14 +104,62 @@ namespace RBX
 
 	float RotateJoint::getTorqueArmLength()
 	{
-		// TODO
-		RBXAssert(0);
-		return 0.0f;
+		Primitive* axlePrim = getAxlePrim();
+		Primitive* holePrim = getHolePrim();
+
+		Vector3 ownerSize = axlePrim->getGridSize();
+		Vector3 otherSize = holePrim->getGridSize();
+
+		NormalId ownerId = getAxleId();
+		NormalId otherId = normalIdOpposite(getHoleId());
+
+		float ownerMax = G3D::max(ownerSize[(2 + (int)ownerId) % 3], ownerSize[(1 + (int)ownerId) % 3]);
+		float otherMax = G3D::max(otherSize[(2 + (int)otherId) % 3], otherSize[(1 + (int)otherId) % 3]);
+		float min = G3D::min(ownerMax, otherMax);
+
+		return min * 0.1f;
 	}
 
 	void RotateJoint::putInKernel(Kernel* _kernel)
 	{
-		// TODO
-		RBXAssert(0);
+		MultiJoint::putInKernel(_kernel);
+
+		Body* b0 = getAxlePrim()->getBody();
+		Body* b1 = getHolePrim()->getBody();
+
+		G3D::CoordinateFrame cAxleWorld = b0->getCoordinateFrame() * jointCoord0;
+		G3D::CoordinateFrame cHoleWorld = b1->getCoordinateFrame() * jointCoord1;
+
+		G3D::Vector3 vAxleWorld = cAxleWorld.rotation.getColumn(2);
+		G3D::Vector3 vHoleWorld = cHoleWorld.rotation.getColumn(2);
+
+		for (int i = 0; i < 2; i++)
+		{
+			float multiplier = i == 0 ? -1.0f : 1.0f;
+
+			G3D::Vector3 pAxleWorldPos = vAxleWorld * multiplier + cAxleWorld.translation;
+			G3D::Vector3 pHoleWorldPos = vHoleWorld * multiplier + cHoleWorld.translation;
+
+			Point* pAxleWorld = getKernel()->newPoint(b0, pAxleWorldPos);
+			Point* pHoleWorld = getKernel()->newPoint(b1, pHoleWorldPos);
+
+			PointToPointBreakConnector* connector = new PointToPointBreakConnector(pAxleWorld, pHoleWorld, getJointK(), Math::inf());
+			addToMultiJoint(pAxleWorld, pHoleWorld, connector);
+		}
+
+		if (getJointType() == ROTATE_P_JOINT || getJointType() == ROTATE_V_JOINT)
+		{
+			G3D::Vector3 center0 = cAxleWorld.translation;
+			G3D::Vector3 perp = cAxleWorld.rotation.getColumn(0);
+			G3D::Vector3 marker0 = perp * 10.0f + center0;
+
+			Point* pMarker0 = getKernel()->newPoint(b0, marker0);
+			Point* pMarker1 = getKernel()->newPoint(b1, marker0);
+
+			RBXAssert(!rotateConnector);
+			RotateConnector* connector = new RotateConnector(getPoint(0), getPoint(2), pMarker0, pMarker1, getJointK(), getTorqueArmLength());
+			rotateConnector = connector;
+			addToMultiJoint(pMarker0, pMarker1, connector);
+		}
 	}
 }
