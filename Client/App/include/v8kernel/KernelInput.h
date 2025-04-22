@@ -1,6 +1,5 @@
 #pragma once
-
-// NOTE: all code for this class was in the header
+#include "v8kernel/Constants.h"
 
 namespace RBX
 {
@@ -12,10 +11,15 @@ namespace RBX
 		float increment;
 		bool latchToZero;
 	private:
-		const int steps();
+		// NOTE: this is a guess
+		const int steps()
+		{
+			return Constants::kernelStepsPerUiStep();
+		}
 	public:
 		KernelInput() : lastGoal(0), currentGoal(0), latchToZero(false), increment(0) {}
 
+		// NOTE: this is a guess
 		void setGoal(float goal)
 		{
 			if (this->latchToZero)
@@ -27,7 +31,29 @@ namespace RBX
 			this->currentGoal += this->increment;
 		}
 
-		void setDelta(float);
+		// NOTE: this is a guess
+		void setDelta(float value)
+		{
+			this->increment = value;
+			if (value == 0.0f)
+				this->latchToZero = true;
+		}
+
+		// NOTE: there is no evidence of this existing, but something like this is required for RotatePJoint
+		template<typename Function>
+		void setGoalCalc(float value, Function calculateIncrementFunc)
+		{
+			if (value == this->lastGoal)
+			{
+				this->currentGoal = value;
+				this->increment = 0.0f;
+			}
+			else
+			{
+				this->lastGoal = value;
+				this->increment = calculateIncrementFunc(value, this->currentGoal, steps());
+			}
+		}
 
 		void get(float _lastGoal, float& _currentGoal, float& _increment)
 		{

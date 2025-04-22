@@ -408,6 +408,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\Tolerance.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\WeldJoint.h"
 					>
 				</File>

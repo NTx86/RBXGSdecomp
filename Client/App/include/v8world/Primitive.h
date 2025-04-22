@@ -112,8 +112,14 @@ namespace RBX
 		int getTraverseId() const;
 		void setTraverseId(int);
 		Assembly* getAssembly() const;
-		const Geometry* getGeometry() const;
-		Geometry* getGeometry();
+		const Geometry* getGeometry() const
+		{
+			return geometry;
+		}
+		Geometry* getGeometry()
+		{
+			return geometry;
+		}
 		void setPrimitiveType(Geometry::GeometryType);
 		Geometry::GeometryType getPrimitiveType() const;
 		const Body* getBody() const
@@ -156,7 +162,10 @@ namespace RBX
 		void setElasticity(float);
 		float getElasticity() const;
 		void setGridSize(const G3D::Vector3&);
-		const G3D::Vector3& getGridSize() const;
+		const G3D::Vector3& getGridSize() const
+		{
+			return geometry->getGridSize();
+		}
 		virtual float getRadius() const;
 		float getPlanarSize() const;
 		Extents getExtentsLocal() const;

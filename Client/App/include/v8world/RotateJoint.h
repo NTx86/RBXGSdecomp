@@ -52,14 +52,20 @@ namespace RBX
 	class RotateVJoint : public RotateJoint
 	{
 	private:
-		virtual Joint::JointType getJointType() const;
-		virtual bool canStepUi() const;
-		virtual void stepUi(int);
+		virtual Joint::JointType getJointType() const
+		{
+			return ROTATE_V_JOINT;
+		}
+		virtual bool canStepUi() const
+		{
+			return true;
+		}
+		virtual void stepUi(int uiStepId);
 	public:
 		//RotateVJoint(const RotateVJoint&);
-		RotateVJoint(Primitive*, Primitive*, const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
+		RotateVJoint(Primitive* axlePrim, Primitive* holePrim, const G3D::CoordinateFrame& c0, const G3D::CoordinateFrame& c1);
 		RotateVJoint();
-		virtual ~RotateVJoint();
+		virtual ~RotateVJoint() {}
 	public:
 		//RotateVJoint& operator=(const RotateVJoint&);
 	};
@@ -67,14 +73,20 @@ namespace RBX
 	class RotatePJoint : public RotateJoint
 	{
 	private:
-		virtual Joint::JointType getJointType() const;
-		virtual bool canStepUi() const;
-		virtual void stepUi(int);
+		virtual Joint::JointType getJointType() const
+		{
+			return ROTATE_P_JOINT;
+		}
+		virtual bool canStepUi() const
+		{
+			return true;
+		}
+		virtual void stepUi(int uiStepId);
 	public:
 		//RotatePJoint(const RotatePJoint&);
-		RotatePJoint(Primitive*, Primitive*, const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
+		RotatePJoint(Primitive* axlePrim, Primitive* holePrim, const G3D::CoordinateFrame& c0, const G3D::CoordinateFrame& c1);
 		RotatePJoint();
-		virtual ~RotatePJoint();
+		virtual ~RotatePJoint() {}
 	public:
 		//RotatePJoint& operator=(const RotatePJoint&);
 	};

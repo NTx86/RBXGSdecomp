@@ -20,5 +20,6 @@ namespace RBX
 	NormalId Vector3ToNormalId(const G3D::Vector3& v);
 	NormalId intToNormalId(int num);
 	const G3D::Vector3& normalIdToVector3(NormalId normalId);
+	const G3D::Matrix3& normalIdToMatrix3(NormalId normalId); // TODO: implement
 	NormalId Matrix3ToNormalId(const G3D::Matrix3& m); // TODO: implement
 }
