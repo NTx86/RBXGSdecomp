@@ -662,6 +662,79 @@ namespace RBX
 		}
 	}
 
+	// 82% match if MotorJoint::isMotorJoint and RigidJoint::isRigidJoint has __forceinline
+	// MotorJoint::isMotorJoint and RigidJoint::isRigidJoint aren't matching 100%, preventing this from being matched
+	void ClumpStage::removeFromAssemblyFast(Primitive* p)
+	{
+		Assembly* a = p->getAssembly();
+		RBXAssert(a);
+
+		Edge* e = p->getFirstEdge();
+
+		if (e)
+		{
+			for (; e != NULL; e = p->getNextEdge(e))
+			{
+				if (e->getEdgeType() == Edge::JOINT)
+				{
+					if (MotorJoint::isMotorJoint(e))
+						break;
+				}
+
+				if (e->getEdgeType() == Edge::CONTACT || RigidJoint::isRigidJoint(e))
+				{
+					if (a->containsExternalEdge(e))
+						removeExternalEdge(e);
+					else if (a->containsInternalEdge(e))
+						removeInternalEdge(e);
+				}
+			}
+
+			destroyAssembly(p->getAssembly());
+		}
+	}
+
+	// 100% match if removeFromBuffers and rigidOnesFind have __forceinline
+	void ClumpStage::removeFromClumpFast(Primitive* p, RigidJoint* toParent)
+	{
+		if (p->getAssembly())
+			removeFromAssemblyFast(p);
+
+		Clump* c = p->getClump();
+
+		for (RigidJoint* r = p->getFirstRigid(); r != NULL; r = p->getNextRigid(r))
+		{
+			if (c->containsInconsistent(r))
+			{
+				RBXAssert(!inBuffers(r));
+				c->removeInconsistent(r);
+				c->otherClump(r)->removeInconsistent(r);
+			}
+			else if (inBuffers(r))
+			{
+				removeFromBuffers(r);
+			}
+
+			rigidTwosInsert(r);
+		}
+
+		primitivesInsert(p);
+		c->removePrimitive(p);
+	}
+
+	void ClumpStage::removeSpanningTreeFast(Primitive* topPrim, RigidJoint* toParent)
+	{
+		for (RigidJoint* r = topPrim->getFirstRigid(); r != NULL; r = topPrim->getNextRigid(r))
+		{
+			if (SpanLink::isDownstreamSpanningJoint(topPrim, r))
+			{
+				removeSpanningTreeFast(r->otherPrimitive(topPrim), r);
+			}
+		}
+
+		removeFromClumpFast(topPrim, toParent);
+	}
+
 	void ClumpStage::removeMotor(MotorJoint* m)
 	{
 		if (!motorsFind(m))

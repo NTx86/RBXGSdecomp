@@ -34,6 +34,11 @@ namespace RBX
 		//MotorJoint& operator=(const MotorJoint&);
   
 	public:
-		static bool isMotorJoint(Edge* e);
+		// TODO: this is not a 100% match, please update!
+		// moved to the header as it is used by a function in ClumpStage
+		static bool isMotorJoint(Edge* e)
+		{
+			return Joint::getJointType(e) == MOTOR_JOINT;
+		}
 	};
 }
