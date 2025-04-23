@@ -304,6 +304,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\AssemblyStage.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\Ball.h"
 					>
 				</File>

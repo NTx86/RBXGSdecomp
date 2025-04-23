@@ -25,7 +25,10 @@ namespace RBX
 		IWorldStage(IStage*, IStage*, World*);
 	public:
 		IWorldStage* getUpstreamWS();
-		IWorldStage* getDownstreamWS();
+		IWorldStage* getDownstreamWS()
+		{
+			return rbx_static_cast<IWorldStage*>(getDownstream());
+		}
 		World* getWorld() { return world; }
 		virtual void onEdgeAdded(Edge*);
 		virtual void onEdgeRemoving(Edge*);

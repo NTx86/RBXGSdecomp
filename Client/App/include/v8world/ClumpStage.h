@@ -31,8 +31,14 @@ namespace RBX
 	public:
 		bool operator==(const PrimitiveSort&) const;
 		bool operator!=(const PrimitiveSort&) const;
-		bool operator<(const PrimitiveSort&) const;
-		bool operator>(const PrimitiveSort&) const;
+		bool operator<(const PrimitiveSort& other) const
+		{
+			return anchored != other.anchored && surfaceAreaJoints < other.surfaceAreaJoints;
+		}
+		bool operator>(const PrimitiveSort& other) const
+		{
+			return anchored != other.anchored && surfaceAreaJoints > other.surfaceAreaJoints;
+		}
 	  
 	private:
 		static bool isEqual(const PrimitiveSort&, const PrimitiveSort&);
@@ -57,7 +63,7 @@ namespace RBX
 		int size;
 
 	public:
-		AnchorEntry(Anchor*, int);
+		AnchorEntry(Anchor* anchor, int size);
 	};
 
 	class RigidEntry
@@ -92,7 +98,7 @@ namespace RBX
 	class ClumpStage : public IWorldStage
 	{
 	private:
-		RBX::World* world;
+		World* world;
 		std::map<Anchor*, int> anchorSizeMap;
 		std::map<Primitive*, PrimitiveSort> primitiveSizeMap;
 		std::map<RigidJoint*, PrimitiveSort> rigidJointPowerMap;
@@ -196,7 +202,10 @@ namespace RBX
 		ClumpStage(IStage*, World*);
 		virtual ~ClumpStage();
 	public:
-		virtual IStage::StageType getStageType();
+		virtual IStage::StageType getStageType()
+		{
+			return CLUMP_STAGE;
+		}
 		World* getWorld();
 		virtual void onEdgeAdded(Edge*);
 		virtual void onEdgeRemoving(Edge*);

@@ -17,4 +17,11 @@ namespace RBX {
 
 //#define RBXAssert(expr) if ( RBX::Debugable::assertAction == Debugable::CrashOnAssert && !(expr)) RBX::Debugable::doCrash()
 // copied from assert.h
-#define RBXAssert(expr) (void)( ( RBX::Debugable::assertAction != Debugable::CrashOnAssert || !!(expr) ) || (RBX::Debugable::doCrash(), 0) )
+#define RBXAssert(expr) (void)( ( RBX::Debugable::assertAction != RBX::Debugable::CrashOnAssert || !!(expr) ) || (RBX::Debugable::doCrash(), 0) )
+
+template <typename To, typename From>
+To rbx_static_cast(From u)
+{
+	RBXAssert(dynamic_cast<To>(u) == static_cast<To>(u));
+	return static_cast<To>(u);
+}

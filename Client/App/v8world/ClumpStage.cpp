@@ -1,1 +1,527 @@
 #include "v8world/ClumpStage.h"
+#include "v8world/Clump.h"
+#include "v8world/Primitive.h"
+#include "v8world/RigidJoint.h"
+#include "v8world/MotorJoint.h"
+#include "v8world/CollisionStage.h"
+#include "v8world/AssemblyStage.h"
+#include "v8world/Assembly.h"
+#include "v8world/Anchor.h"
+
+namespace RBX
+{
+	// TODO: check which of these belong in the headers
+
+	PrimitiveSort::PrimitiveSort()
+		: anchored(false),
+		  surfaceAreaJoints(0)
+	{
+	}
+
+	PrimitiveEntry::PrimitiveEntry(Primitive* primitive, PrimitiveSort power)
+		: primitive(primitive),
+		  power(power)
+	{
+	}
+
+	AnchorEntry::AnchorEntry(Anchor* anchor, int size)
+		: anchor(anchor),
+		  size(size)
+	{
+	}
+
+	RigidEntry::RigidEntry(RigidJoint* rigidJoint, PrimitiveSort power)
+		: rigidJoint(rigidJoint),
+		  power(power)
+	{
+	}
+
+	PrimitiveSort ClumpStage::getRigidPower(RigidJoint* r)
+	{
+		Clump* clump0 = r->getPrimitive(0)->getClump();
+		Clump* clump1 = r->getPrimitive(1)->getClump();
+		RBXAssert((clump0 == NULL) != (clump1 == NULL));
+		if (!clump0)
+			clump0 = clump1;
+		RBXAssert(clump0);
+		return PrimitiveSort(clump0->getRootPrimitive());
+	}
+
+	int ClumpStage::numClumps(RigidJoint* r)
+	{
+		int count = 0;
+		if (r->getPrimitive(0)->getClump())
+			++count;
+		if (r->getPrimitive(1)->getClump())
+			++count;
+		return count;
+	}
+
+	PrimitiveSort ClumpStage::getMotorPower(const MotorJoint* m)
+	{
+		Clump* clump0 = m->getPrimitive(0)->getClump();
+		Clump* clump1 = m->getPrimitive(1)->getClump();
+		RBXAssert(clump0 && clump1);
+
+		if (clump0 == clump1)
+		{
+			return PrimitiveSort();
+		}
+		else
+		{
+			Primitive* p1 = clump1->getRootPrimitive();
+			Primitive* p0 = clump0->getRootPrimitive();
+			PrimitiveSort ps1 = PrimitiveSort(p1);
+			PrimitiveSort ps0 = PrimitiveSort(p0);
+
+			if (ps1 < ps0)
+				return ps0;
+			else
+				return ps1;
+		}
+	}
+
+	void ClumpStage::onPrimitiveCanCollideChanged(Primitive* p)
+	{
+		IStage* collisionIStage = findStage(COLLISION_STAGE);
+		rbx_static_cast<CollisionStage*>(collisionIStage)->onPrimitiveCanCollideChanged(p);
+	}
+
+	int ClumpStage::getMetric(MetricType metricType)
+	{
+		if (metricType != MAX_TREE_DEPTH)
+			return IWorldStage::getMetric(metricType);
+
+		return 0;
+	}
+
+	bool ClumpStage::upToDate()
+	{
+		return 
+			anchors.empty() &&
+			rigidTwos.empty() &&
+			rigidOnes.empty() &&
+			rigidZeros.empty() &&
+			primitives.empty() &&
+			motors.empty() &&
+			anchoredClumps.empty() &&
+			freeClumps.empty() &&
+			assemblies.empty();
+	}
+
+	void ClumpStage::stepUi(int uiStepId)
+	{
+		RBXAssert(upToDate());
+		rbx_static_cast<AssemblyStage*>(getDownstreamWS())->stepUi(uiStepId);
+	}
+
+	bool ClumpStage::motorsFind(MotorJoint* m)
+	{
+		return std::find(motors.begin(), motors.end(), m) != motors.end();
+	}
+
+	__forceinline bool ClumpStage::edgesFind(Edge* e)
+	{
+		return edges.find(e) != edges.end();
+	}
+
+	void ClumpStage::motorsErase(MotorJoint* m)
+	{
+		RBXAssert(motorsFind(m));
+		motors.erase(std::find(motors.begin(), motors.end(), m));
+	}
+
+	void ClumpStage::processEdges()
+	{
+		while (!edges.empty())
+		{
+			Edge* e = *edges.begin();
+			edges.erase(edges.begin());
+
+			RBXAssert(e->inStage(this));
+
+			Assembly* a0 = e->getPrimitive(0)->getAssembly();
+			Assembly* a1 = e->getPrimitive(1)->getAssembly();
+
+			RBXAssert(a0 && a1);
+			RBXAssert(a0->downstreamOfStage(this) && a1->downstreamOfStage(this));
+
+			if (a0 == a1)
+			{
+				a0->addInternalEdge(e);
+			}
+			else
+			{
+				a0->addExternalEdge(e);
+				a1->addExternalEdge(e);
+
+				if (!a0->getAnchored() || !a1->getAnchored())
+				{
+					getDownstreamWS()->onEdgeAdded(e);
+				}
+			}
+		}
+	}
+
+	void ClumpStage::updateMotorJoint(MotorJoint* m)
+	{
+		RBXAssert(m->getPrimitive(0)->getAssembly());
+		RBXAssert(m->getPrimitive(1)->getAssembly());
+		RBXAssert(!motorsFind(m));
+
+		Primitive* p0 = m->getPrimitive(0);
+		Primitive* p1 = !p0->getClump()->getRootPrimitive()->getBody()->getParent() ? m->getPrimitive(1) : p0;
+		if (p1 == p0)
+			p0 = m->getPrimitive(1);
+
+		Primitive* p1Root = p1->getClump()->getRootPrimitive();
+		RBXAssert(p1Root->getBody()->getParent() == p0->getBody());
+
+		G3D::CoordinateFrame mChildInMParent = m->getMeInOther(p1);
+		if (p1 == p1Root)
+		{
+			p1Root->getBody()->setMeInParent(mChildInMParent);
+		}
+		else
+		{
+			G3D::CoordinateFrame mChildInCRoot = p1->getBody()->getMeInDescendant(p1Root->getBody());
+			G3D::CoordinateFrame cRootInMChild = mChildInCRoot.inverse();
+			G3D::CoordinateFrame cRootInMParent = mChildInMParent * cRootInMChild;
+			p1Root->getBody()->setMeInParent(cRootInMParent);
+		}
+	}
+
+	__forceinline float calculateAnchorSize2(const Vector3& size)
+	{
+		if (size.x >= size.y)
+		{
+			if (size.y < size.z)
+				return size.x * size.z;
+			else
+				return size.x * size.y;
+		}
+		else if (size.x < size.z)
+		{
+			return size.y * size.z;
+		}
+		else
+		{
+			return size.x * size.y;
+		}
+	}
+
+	__forceinline int calculateAnchorSize(const Vector3& size)
+	{
+		return G3D::iRound(floor(calculateAnchorSize2(size)));
+	}
+
+	void ClumpStage::anchorsInsert(Anchor* a)
+	{
+		int size = calculateAnchorSize(a->getPrimitive()->getGridSize());
+
+		bool inserted;
+		inserted = anchorSizeMap.insert(std::pair<Anchor*, int>(a, size)).second;
+		RBXAssert(inserted);
+
+		inserted = anchors.insert(AnchorEntry(a, size)).second;
+		RBXAssert(inserted);
+	}
+
+	void ClumpStage::rigidTwosInsert(RigidJoint* r)
+	{
+		RBXAssert(!r->getPrimitive(0)->getClump() || !r->getPrimitive(0)->getClump()->containsInconsistent(r));
+		RBXAssert(!r->getPrimitive(1)->getClump() || !r->getPrimitive(1)->getClump()->containsInconsistent(r));
+	
+		bool inserted = rigidTwos.insert(r).second;
+		RBXAssert(inserted);
+	}
+
+	void ClumpStage::rigidOnesInsert(RigidJoint* r)
+	{
+		PrimitiveSort sort;
+		{
+			// WTF? why does this result in a better match???
+			PrimitiveSort sortTemp = getRigidPower(r);
+			sort = sortTemp;
+		}
+
+		bool inserted;
+		inserted = rigidJointPowerMap.insert(std::pair<RigidJoint*, PrimitiveSort>(r, sort)).second;
+		RBXAssert(inserted);
+
+		inserted = rigidOnes.insert(RigidEntry(r, sort)).second;
+		RBXAssert(inserted);
+	}
+
+	void ClumpStage::primitivesInsert(Primitive* p)
+	{
+		//PrimitiveSort sort(p);
+		PrimitiveSort sort;
+		{
+			// WTF? why does this result in a better match???
+			PrimitiveSort sortTemp(p);
+			sort = sortTemp;
+		}
+
+		bool inserted;
+		inserted = primitiveSizeMap.insert(std::pair<Primitive*, PrimitiveSort>(p, sort)).second;
+		RBXAssert(inserted);
+
+		inserted = primitives.insert(PrimitiveEntry(p, sort)).second;
+		RBXAssert(inserted);
+	}
+
+	bool ClumpStage::rigidTwosFind(RigidJoint* r)
+	{
+		return rigidTwos.find(r) != rigidTwos.end();
+	}
+
+	bool ClumpStage::rigidOnesFind(RigidJoint* r)
+	{
+		return rigidJointPowerMap.find(r) != rigidJointPowerMap.end();
+	}
+
+	bool ClumpStage::rigidZerosFind(RigidJoint* r)
+	{
+		return rigidZeros.find(r) != rigidZeros.end();
+	}
+
+	bool ClumpStage::motorAnglesFind(MotorJoint* m)
+	{
+		return motorAngles.find(m) != motorAngles.end();
+	}
+
+	void ClumpStage::motorAnglesInsert(MotorJoint* m)
+	{
+		bool inserted = motorAngles.insert(m).second;
+		RBXAssert(inserted);
+	}
+
+	void ClumpStage::edgesInsert(Edge* e)
+	{
+		bool inserted = edges.insert(e).second;
+		RBXAssert(inserted);
+	}
+
+	void ClumpStage::addEdge(Edge* e)
+	{
+		edgesInsert(e);
+	}
+
+	void ClumpStage::removeEdge(Edge* e)
+	{
+		Assembly* a0 = e->getPrimitive(0)->getAssembly();
+		Assembly* a1 = e->getPrimitive(1)->getAssembly();
+
+		if (e->downstreamOfStage(this))
+		{
+			getDownstreamWS()->onEdgeRemoving(e);
+
+			RBXAssert(a0 && a1 && a0 != a1);
+			a0->removeExternalEdge(e);
+			a1->removeExternalEdge(e);
+
+			RBXAssert(edges.find(e) == edges.end());
+		}
+		else
+		{
+			size_t removed = edges.erase(e);
+			if (removed != 1)
+			{
+				RBXAssert(a0 && a1);
+				if (a0 == a1)
+				{
+					a0->removeInternalEdge(e);
+				}
+				else
+				{
+					RBXAssert(a0->getAnchored() && a1->getAnchored());
+
+					a0->removeExternalEdge(e);
+					a1->removeExternalEdge(e);
+				}
+			}
+		}
+
+		RBXAssert(e->inStage(this));
+	}
+
+	// 100% match if downstreamOfStage in RBXAssert has __forceinline
+	void ClumpStage::removeExternalEdge(Edge* e)
+	{
+		Assembly* a0 = e->getPrimitive(0)->getAssembly();
+		Assembly* a1 = e->getPrimitive(1)->getAssembly();
+
+		RBXAssert(e->downstreamOfStage(this) != (a0->getAnchored() && a1->getAnchored()));
+		RBXAssert(!edgesFind(e));
+
+		a0->removeExternalEdge(e);
+		a1->removeExternalEdge(e);
+		if (e->downstreamOfStage(this))
+			getDownstreamWS()->onEdgeRemoving(e);
+
+		edgesInsert(e);
+	}
+
+	void ClumpStage::removeInternalEdge(Edge* e)
+	{
+		RBXAssert(e->inStage(this));
+		RBXAssert(!edgesFind(e));
+		RBXAssert(e->getPrimitive(0)->getAssembly() == e->getPrimitive(1)->getAssembly());
+
+		e->getPrimitive(0)->getAssembly()->removeInternalEdge(e);
+		edgesInsert(e);
+	}
+
+	void ClumpStage::removeAssemblyEdges(Assembly* a)
+	{
+		while (!a->getExternalEdges().empty())
+		{
+			removeExternalEdge(*a->getExternalEdges().begin());
+		}
+
+		while (!a->getInternalEdges().empty())
+		{
+			removeInternalEdge(*a->getInternalEdges().begin());
+		}
+	}
+
+	void ClumpStage::onPrimitiveAdded(Primitive* p)
+	{
+		RBXAssert(!p->getFirstEdge());
+		p->putInStage(this);
+		primitivesInsert(p);
+		if (p->getAnchorObject())
+			anchorsInsert(p->getAnchorObject());
+	}
+
+	void ClumpStage::onPrimitiveAddedAnchor(Primitive* p)
+	{
+		anchorsInsert(p->getAnchorObject());
+	}
+
+	void ClumpStage::onMotorAngleChanged(MotorJoint* m)
+	{
+		RBXAssert(motorsFind(m) || (m->getPrimitive(0)->getAssembly() && m->getPrimitive(1)->getAssembly()));
+
+		if (!motorAnglesFind(m))
+			motorAnglesInsert(m);
+	}
+
+	bool ClumpStage::inBuffers(RigidJoint* r)
+	{
+		return rigidTwosFind(r) || rigidZerosFind(r) || rigidOnesFind(r);
+	}
+
+	void ClumpStage::anchorsErase(Anchor* a)
+	{
+		typedef std::map<Anchor*, int>::iterator Iterator;
+
+		Iterator it = anchorSizeMap.find(a);
+
+		std::pair<Anchor*, int> pair = *it;
+		AnchorEntry entry(a, pair.second); 
+
+		size_t removed = anchors.erase(entry);
+		RBXAssert(removed == 1);
+
+		anchorSizeMap.erase(it);
+	}
+
+	void ClumpStage::rigidZerosErase(RigidJoint* r)
+	{
+		size_t removed = rigidZeros.erase(r);
+		RBXAssert(removed == 1);
+	}
+
+	void ClumpStage::rigidOnesErase(RigidJoint* r)
+	{
+		typedef std::map<RigidJoint*, PrimitiveSort>::iterator Iterator;
+
+		Iterator it = rigidJointPowerMap.find(r);
+
+		std::pair<RigidJoint*, PrimitiveSort> pair = *it;
+		RigidEntry entry(r, pair.second); 
+
+		size_t removed = rigidOnes.erase(entry);
+		RBXAssert(removed == 1);
+
+		rigidJointPowerMap.erase(it);
+	}
+
+	void ClumpStage::primitivesErase(Primitive* p)
+	{
+		typedef std::map<Primitive*, PrimitiveSort>::iterator Iterator;
+
+		Iterator it = primitiveSizeMap.find(p);
+
+		std::pair<Primitive*, PrimitiveSort> pair = *it;
+		PrimitiveEntry entry(p, pair.second); 
+
+		size_t removed = primitives.erase(entry);
+		RBXAssert(removed == 1);
+
+		primitiveSizeMap.erase(it);
+	}
+
+	ClumpStage::~ClumpStage()
+	{
+	}
+
+	// impossible to match: cant get the specific std::set functions at the rigidjoint section to inline
+	bool ClumpStage::processPrimitives()
+	{
+		typedef std::set<PrimitiveEntry, PrimitiveSortCriterion>::const_iterator Iterator;
+
+		while (!primitives.empty())
+		{
+			Iterator it = primitives.begin();
+			it--;
+
+			Primitive* p = (*it).primitive;
+			primitivesErase(p);
+
+			RBXAssert(!p->getClump());
+			Clump* c = new Clump(p);
+			freeClumps.insert(c);
+
+			RigidJoint* r = p->getFirstRigid();
+			if (r)
+			{
+				for (; r != NULL; r = p->getNextRigid(r))
+				{
+					rigidZerosErase(r);
+					rigidOnesInsert(r);
+				}
+
+				return false;
+			}
+		}
+
+		RBXAssert(rigidZeros.empty());
+		return true;
+	}
+
+	void ClumpStage::processAssemblies()
+	{
+		while (!assemblies.empty())
+		{
+			Assembly* a = *assemblies.begin();
+			size_t removed = assemblies.erase(a);
+			RBXAssert(removed == 1);
+			a->putInPipeline(this);
+			rbx_static_cast<AssemblyStage*>(getDownstreamWS())->onAssemblyAdded(a);
+		}
+	}
+
+	void ClumpStage::processMotorAngles()
+	{
+		while (!motorAngles.empty())
+		{
+			MotorJoint* j = *motorAngles.begin();
+			updateMotorJoint(j);
+			size_t removed = motorAngles.erase(j);
+			RBXAssert(removed == 1);
+		}
+	}
+}

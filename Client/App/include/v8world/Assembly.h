@@ -120,13 +120,22 @@ namespace RBX
 		bool forceNeighborAwake();
 		void setSleepStatus(Sim::AssemblyState _set);
 		void onPrimitiveCanSleepChanged(Primitive* p);
-		std::set<Edge*>& getExternalEdges();
+		std::set<Edge*>& getExternalEdges()
+		{
+			return externalEdges;
+		}
 		PrimIterator assemblyPrimBegin() const;
 		PrimIterator assemblyPrimEnd() const;
 		std::set<Edge*>::const_iterator externalEdgeBegin() const;
 		std::set<Edge*>::const_iterator externalEdgeEnd() const;
-		const std::set<Edge*>& getInternalEdges() const;
-		std::set<Edge*>& getInternalEdges();
+		const std::set<Edge*>& getInternalEdges() const
+		{
+			return internalEdges;
+		}
+		std::set<Edge*>& getInternalEdges()
+		{
+			return internalEdges;
+		}
 		std::vector<MotorJoint*>& getMotors();
 		std::set<MotorJoint*>& getInconsistentMotors();
 		void addExternalEdge(Edge* e);

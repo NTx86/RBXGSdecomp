@@ -18,7 +18,7 @@ namespace RBX
 		void removeFromStage(IStage::StageType);
 		IStage* getStage(IStage::StageType stageType) const;
 	public:
-		//IPipelined(const RBX::IPipelined&);
+		//IPipelined(const IPipelined&);
 		IPipelined() : currentStage(NULL) {}
 		virtual ~IPipelined()
 		{
