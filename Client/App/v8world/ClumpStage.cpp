@@ -131,6 +131,12 @@ namespace RBX
 		motors.erase(std::find(motors.begin(), motors.end(), m));
 	}
 
+	void ClumpStage::motorAnglesErase(MotorJoint* m)
+	{
+		size_t removed = motorAngles.erase(m);
+		RBXAssert(removed == 1);
+	}
+
 	void ClumpStage::processEdges()
 	{
 		while (!edges.empty())
@@ -295,6 +301,12 @@ namespace RBX
 	bool ClumpStage::motorAnglesFind(MotorJoint* m)
 	{
 		return motorAngles.find(m) != motorAngles.end();
+	}
+
+	void ClumpStage::motorsInsert(MotorJoint* m)
+	{
+		RBXAssert(!motorsFind(m));
+		motors.push_back(m);
 	}
 
 	void ClumpStage::motorAnglesInsert(MotorJoint* m)
@@ -620,5 +632,47 @@ namespace RBX
 			else
 				rigidZerosInsert(r);
 		}
+	}
+
+	void ClumpStage::addMotor(MotorJoint* m)
+	{
+		motorsInsert(m);
+		motorAnglesInsert(m);
+	}
+
+	// 100% match if inOrDownstreamOfStage has __forceinline
+	void ClumpStage::onEdgeAdded(Edge* e)
+	{
+		RBXAssert(e->getPrimitive(0)->inOrDownstreamOfStage(this));
+		RBXAssert(e->getPrimitive(1)->inOrDownstreamOfStage(this));
+
+		Primitive::insertEdge(e);
+		e->putInStage(this);
+		if (RigidJoint::isRigidJoint(e))
+		{
+			rigidTwosInsert(rbx_static_cast<RigidJoint*>(e));
+		}
+		else if (MotorJoint::isMotorJoint(e))
+		{
+			addMotor(rbx_static_cast<MotorJoint*>(e));
+		}
+		else
+		{
+			addEdge(e);
+		}
+	}
+
+	void ClumpStage::removeMotor(MotorJoint* m)
+	{
+		if (!motorsFind(m))
+		{
+			Assembly* a = m->getPrimitive(0)->getAssembly();
+			RBXAssert(a == m->getPrimitive(1)->getAssembly());
+			destroyAssembly(a);
+		}
+
+		motorsErase(m);
+		if (motorAnglesFind(m))
+			motorAnglesErase(m);
 	}
 }
