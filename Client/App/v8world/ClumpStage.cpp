@@ -253,6 +253,12 @@ namespace RBX
 		RBXAssert(inserted);
 	}
 
+	void ClumpStage::rigidZerosInsert(RigidJoint* r)
+	{
+		bool inserted = rigidZeros.insert(r).second;
+		RBXAssert(inserted);
+	}
+
 	void ClumpStage::primitivesInsert(Primitive* p)
 	{
 		//PrimitiveSort sort(p);
@@ -522,6 +528,97 @@ namespace RBX
 			updateMotorJoint(j);
 			size_t removed = motorAngles.erase(j);
 			RBXAssert(removed == 1);
+		}
+	}
+
+	bool ClumpStage::removeFromBuffers(RigidJoint* r)
+	{
+		if (rigidTwos.erase(r) != 0 || rigidZeros.erase(r) != 0)
+			return true;
+
+		if (rigidOnesFind(r))
+		{
+			rigidOnesErase(r);
+			return true;
+		}
+
+		return false;
+	}
+
+#pragma warning (push)
+#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
+	ClumpStage::ClumpStage(IStage* upstream, World* world)
+		: IWorldStage(upstream, new AssemblyStage(this, world), world)
+	{
+	}
+#pragma warning (pop)
+
+	// 71% match if the numClumps inside of the RBXAssert has __declspec(noinline)
+	void ClumpStage::destroyClumpGuts(Clump* c)
+	{
+		typedef std::set<Primitive*>::const_iterator PrimIterator;
+
+		for (PrimIterator it = c->clumpPrimBegin(); it != c->clumpPrimEnd(); it++)
+		{
+			Primitive* p = *it;
+			primitivesInsert(p);
+		}
+
+		if (c->getAnchored())
+		{
+			Anchor* anchor = c->removeAnchor();
+			anchorsInsert(anchor);
+		}
+
+		while (!c->getInconsistents().empty())
+		{
+			RigidJoint* r = *c->getInconsistents().begin();
+
+			Clump* otherClump = c->otherClump(r);
+			RBXAssert(otherClump == c);
+
+			otherClump->removeInconsistent(r);
+			c->removeInconsistent(r);
+			rigidTwosInsert(r);
+		}
+
+		std::set<RigidJoint*> internalRs;
+		std::set<RigidJoint*> externalRs;
+		c->getRigidJoints(internalRs, externalRs);
+
+		typedef std::set<RigidJoint*>::const_iterator RigidIterator;
+
+		for (RigidIterator it = internalRs.begin(); it != internalRs.end(); it++)
+		{
+			RigidJoint* r = *it;
+			RBXAssert(r->getPrimitive(0)->getClump() == r->getPrimitive(1)->getClump());
+			if (!inBuffers(r))
+				rigidTwosInsert(r);
+		}
+
+		c->removeAllPrimitives();
+
+		for (RigidIterator it = externalRs.begin(); it != externalRs.end(); it++)
+		{
+			RigidJoint* r = *it;
+
+			size_t removed = rigidTwos.erase(r);
+			if (removed == 0)
+			{
+				removed = rigidZeros.erase(r);
+				if (removed == 0)
+				{
+					if (rigidOnesFind(r))
+						rigidOnesErase(r);
+				}
+			}
+
+			RBXAssert(numClumps(r) < 2);
+			int count = numClumps(r);
+			if (count != 1)
+				rigidOnesInsert(r);
+			else
+				rigidZerosInsert(r);
 		}
 	}
 }

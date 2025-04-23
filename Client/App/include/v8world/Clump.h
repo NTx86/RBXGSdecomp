@@ -117,7 +117,10 @@ namespace RBX
 		bool calcShouldSleep();
 		bool okNeighborSleep();
 		bool forceNeighborAwake();
-		std::set<RigidJoint*>& getInconsistents();
+		std::set<RigidJoint*>& getInconsistents()
+		{
+			return inconsistentJoints;
+		}
 		void addInconsistent(RigidJoint* r);
 		void removeInconsistent(RigidJoint* r);
 		bool containsInconsistent(RigidJoint* r);
