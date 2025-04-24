@@ -93,7 +93,10 @@ namespace RBX
 		Primitive* getMainPrimitive() const;
 		Primitive* getAssemblyPrimitive() const;
 		const Primitive* getAssemblyPrimitiveConst() const;
-		Clump* getRootClump();
+		Clump* getRootClump()
+		{
+			return rootClump;
+		}
 		const std::set<Clump*>& getClumps() const
 		{
 			return clumps;

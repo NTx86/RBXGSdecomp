@@ -69,6 +69,7 @@ namespace RBX
 		}
 		else
 		{
+			// NOTE: if you get this matching, you will also be able to match processMotors
 			Primitive* p1 = clump1->getRootPrimitive();
 			Primitive* p0 = clump0->getRootPrimitive();
 			PrimitiveSort ps1 = PrimitiveSort(p1);
@@ -733,6 +734,143 @@ namespace RBX
 		}
 
 		removeFromClumpFast(topPrim, toParent);
+	}
+
+	void ClumpStage::anchoredClumpsErase(Clump* c)
+	{
+		size_t removed = anchoredClumps.erase(c);
+		RBXAssert(removed == 1);
+	}
+
+	void ClumpStage::assembliesInsert(Assembly* a)
+	{
+		bool inserted = assemblies.insert(a).second;
+		RBXAssert(inserted);
+	}
+
+	void ClumpStage::freeClumpsErase(Clump* c)
+	{
+		size_t removed = freeClumps.erase(c);
+		RBXAssert(removed == 1);
+	}
+	
+	bool lessMotor(const MotorJoint* m0, const MotorJoint* m1)
+	{
+		return false; // TODO
+	}
+
+	void ClumpStage::processMotors()
+	{
+		while (!anchoredClumps.empty())
+		{
+			Clump* c = *anchoredClumps.begin();
+			anchoredClumpsErase(c);
+
+			Assembly* a = new Assembly(c);
+			assembliesInsert(a);
+		}
+
+		typedef std::vector<MotorJoint*>::const_iterator MotorIterator;
+		std::sort(motors.begin(), motors.end(), lessMotor);
+		std::set<Assembly*> assembliesToDestroy;
+
+		for (MotorIterator it = motors.begin(); it != motors.end(); it++)
+		{
+			MotorJoint* m = *it;
+			for (int i = 0; i < 2; i++)
+			{
+				Primitive* p = m->getPrimitive(i);
+				RBXAssert(p);
+				RBXAssert(p->inStage(this));
+
+				Assembly* a = p->getAssembly();
+				if (a && !a->getRootClump()->getAnchored())
+				{
+					assembliesToDestroy.insert(a);
+				}
+			}
+		}
+
+		typedef std::set<Assembly*>::const_iterator AssemblyIterator;
+
+		for (AssemblyIterator aIt = assembliesToDestroy.begin(); aIt != assembliesToDestroy.end(); aIt++)
+		{
+			destroyAssembly(*aIt);
+		}
+
+		while (!motors.empty())
+		{
+			MotorJoint* m = motors.back();
+			motors.pop_back();
+
+			Assembly* a0 = m->getPrimitive(0)->getAssembly();
+			Assembly* a1 = m->getPrimitive(1)->getAssembly();
+
+			Clump* c0 = m->getPrimitive(0)->getClump();
+			Clump* c1 = m->getPrimitive(1)->getClump(); // setting this to 0 instead of 1 results in better match LUL
+
+			if (a0)
+			{
+				if (a1)
+				{
+					a0->addInconsistentMotor(m);
+					if (a0 != a1)
+						a1->addInconsistentMotor(m);
+				}
+				else
+				{
+					freeClumpsErase(c1);
+					a0->addClump(c1, m);
+				}
+			}
+			else if (a1)
+			{
+				freeClumpsErase(c0);
+				a1->addClump(c0, m);
+			}
+			else if (c0 == c1)
+			{
+				freeClumpsErase(c0);
+				Assembly* a = new Assembly(c0);
+				a->addInconsistentMotor(m);
+				assembliesInsert(a);
+			}
+			else
+			{
+				// NOTE: if you get this matching, you will also be able to match getMotorPower
+				const Primitive* p1 = c1->getRootPrimitive();
+				const Primitive* p0 = c0->getRootPrimitive();
+				PrimitiveSort ps1 = PrimitiveSort(p1);
+				PrimitiveSort ps0 = PrimitiveSort(p0);
+
+				Clump* root;
+				Clump* child;
+				if (ps0 < ps1)
+				{
+					root = c1;
+					child = c0;
+				}
+				else
+				{
+					root = c0;
+					child = c1;
+				}
+
+				freeClumpsErase(root);
+				freeClumpsErase(child);
+				Assembly* a = new Assembly(root);
+				a->addClump(child, m);
+				assembliesInsert(a);
+			}
+		}
+
+		while (!freeClumps.empty())
+		{
+			Clump* c = *freeClumps.begin();
+			freeClumpsErase(c);
+			Assembly* a = new Assembly(c);
+			assembliesInsert(a);
+		}
 	}
 
 	void ClumpStage::removeMotor(MotorJoint* m)
