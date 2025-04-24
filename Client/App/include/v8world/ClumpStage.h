@@ -125,41 +125,41 @@ namespace RBX
 		RigidJoint* getBiggestRigidOne();
 		Primitive* getBiggestPrimitive();
 
-		void anchorsInsert(Anchor*);
-		void rigidTwosInsert(RigidJoint*);
-		void rigidOnesInsert(RigidJoint*);
-		void rigidZerosInsert(RigidJoint*);
-		void primitivesInsert(Primitive*);
-		void motorsInsert(MotorJoint*);
-		void anchoredClumpsInsert(Clump*);
-		void freeClumpsInsert(Clump*);
-		void assembliesInsert(Assembly*);
-		void edgesInsert(Edge*);
-		void motorAnglesInsert(MotorJoint*);
+		void anchorsInsert(Anchor* a);
+		void rigidTwosInsert(RigidJoint* r);
+		void rigidOnesInsert(RigidJoint* r);
+		void rigidZerosInsert(RigidJoint* r);
+		void primitivesInsert(Primitive* p);
+		void motorsInsert(MotorJoint* m);
+		void anchoredClumpsInsert(Clump* c);
+		void freeClumpsInsert(Clump* c);
+		void assembliesInsert(Assembly* a);
+		void edgesInsert(Edge* e);
+		void motorAnglesInsert(MotorJoint* m);
 
-		bool anchorsFind(Anchor*);
-		bool rigidTwosFind(RigidJoint*);
-		bool rigidOnesFind(RigidJoint*);
-		bool rigidZerosFind(RigidJoint*);
-		bool primitivesFind(Primitive*);
-		bool motorsFind(MotorJoint*);
-		bool anchoredClumpsFind(Clump*);
-		bool freeClumpsFind(Clump*);
-		bool assembliesFind(Assembly*);
-		bool edgesFind(Edge*);
-		bool motorAnglesFind(MotorJoint*);
+		bool anchorsFind(Anchor* a);
+		bool rigidTwosFind(RigidJoint* r);
+		bool rigidOnesFind(RigidJoint* r);
+		bool rigidZerosFind(RigidJoint* r);
+		bool primitivesFind(Primitive* p);
+		bool motorsFind(MotorJoint* m);
+		bool anchoredClumpsFind(Clump* c);
+		bool freeClumpsFind(Clump* c);
+		bool assembliesFind(Assembly* a);
+		bool edgesFind(Edge* e);
+		bool motorAnglesFind(MotorJoint* m);
 
-		void anchorsErase(Anchor*);
-		void rigidTwosErase(RigidJoint*);
-		void rigidOnesErase(RigidJoint*);
-		void rigidZerosErase(RigidJoint*);
-		void primitivesErase(Primitive*);
-		void motorsErase(MotorJoint*);
-		void anchoredClumpsErase(Clump*);
-		void freeClumpsErase(Clump*);
-		void assembliesErase(Assembly*);
-		void edgesErase(Edge*);
-		void motorAnglesErase(MotorJoint*);
+		void anchorsErase(Anchor* a);
+		void rigidTwosErase(RigidJoint* r);
+		void rigidOnesErase(RigidJoint* r);
+		void rigidZerosErase(RigidJoint* r);
+		void primitivesErase(Primitive* p);
+		void motorsErase(MotorJoint* m);
+		void anchoredClumpsErase(Clump* c);
+		void freeClumpsErase(Clump* c);
+		void assembliesErase(Assembly* a);
+		void edgesErase(Edge* e);
+		void motorAnglesErase(MotorJoint* m);
 
 		void processAnchors();
 		bool processRigidTwos();
@@ -172,42 +172,42 @@ namespace RBX
 		void processMotorAngles();
 
 		void addRigid(RigidJoint*);
-		void removeRigid(RigidJoint*);
+		void removeRigid(RigidJoint* r);
 
-		void addMotor(MotorJoint*);
-		void removeMotor(MotorJoint*);
+		void addMotor(MotorJoint* m);
+		void removeMotor(MotorJoint* m);
 
-		void addEdge(Edge*);
-		void removeEdge(Edge*);
+		void addEdge(Edge* e);
+		void removeEdge(Edge* e);
 
 		void addAnchor(Anchor*);
-		void removeAnchor(Anchor*);
+		void removeAnchor(Anchor* a);
 
 		void addPrimitive(Primitive*);
-		void removePrimitive(Primitive*);
+		void removePrimitive(Primitive* p);
 
-		void destroyClumpGuts(Clump*);
-		void destroyClump(Clump*);
+		void destroyClumpGuts(Clump* c);
+		void destroyClump(Clump* c);
 
-		void destroyAssembly(Assembly*);
+		void destroyAssembly(Assembly* a);
 		void destroyInfluence(Influence*);
 
 		void addAssemblyEdges(Assembly*);
 
-		void removeExternalEdge(Edge*);
-		void removeInternalEdge(Edge*);
-		void removeAssemblyEdges(Assembly*);
+		void removeExternalEdge(Edge* e);
+		void removeInternalEdge(Edge* e);
+		void removeAssemblyEdges(Assembly* a);
 
 		bool inClump(Primitive*);
-		bool inBuffers(RigidJoint*);
+		bool inBuffers(RigidJoint* r);
 
-		bool removeFromBuffers(RigidJoint*);
-		void removeFromClump(Clump*, RigidJoint*);
-		void removeSpanningTreeFast(Primitive*, RigidJoint*);
-		void removeFromClumpFast(Primitive*, RigidJoint*);
-		void removeFromAssemblyFast(Primitive*);
+		bool removeFromBuffers(RigidJoint* r);
+		void removeFromClump(Clump* c, RigidJoint* r);
+		void removeSpanningTreeFast(Primitive* topPrim, RigidJoint* toParent);
+		void removeFromClumpFast(Primitive* p, RigidJoint* toParent);
+		void removeFromAssemblyFast(Primitive* p);
 
-		void updateMotorJoint(MotorJoint*);
+		void updateMotorJoint(MotorJoint* m);
 
 		bool validateAll();
 		bool validateEdge(Edge*);
@@ -223,7 +223,7 @@ namespace RBX
 		bool upToDate();
 	public:
 		//ClumpStage(const ClumpStage&);
-		ClumpStage(IStage*, World*);
+		ClumpStage(IStage* upstream, World* world);
 		virtual ~ClumpStage();
 	public:
 		virtual IStage::StageType getStageType()
@@ -231,19 +231,19 @@ namespace RBX
 			return CLUMP_STAGE;
 		}
 		World* getWorld();
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		virtual int getMetric(IWorldStage::MetricType);
-		void onPrimitiveAdded(Primitive*);
-		void onPrimitiveRemoving(Primitive*);
-		virtual void stepWorld(int, int, bool);
-		void stepUi(int);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		virtual int getMetric(MetricType metricType);
+		void onPrimitiveAdded(Primitive* p);
+		void onPrimitiveRemoving(Primitive* p);
+		virtual void stepWorld(int worldStepId, int uiStepId, bool throttling);
+		void stepUi(int uiStepId);
 		void process();
-		void onPrimitiveAddedAnchor(Primitive*);
-		void onPrimitiveRemovingAnchor(Primitive*);
-		void onPrimitiveCanSleepChanged(Primitive*);
-		void onPrimitiveCanCollideChanged(Primitive*);
-		void onMotorAngleChanged(MotorJoint*);
+		void onPrimitiveAddedAnchor(Primitive* p);
+		void onPrimitiveRemovingAnchor(Primitive* p);
+		void onPrimitiveCanSleepChanged(Primitive* p);
+		void onPrimitiveCanCollideChanged(Primitive* p);
+		void onMotorAngleChanged(MotorJoint* m);
 		//ClumpStage& operator=(const ClumpStage&);
   
 	private:
