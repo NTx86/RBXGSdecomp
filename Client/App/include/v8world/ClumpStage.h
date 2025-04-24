@@ -29,8 +29,14 @@ namespace RBX
 		PrimitiveSort(const Primitive*);
 		PrimitiveSort();
 	public:
-		bool operator==(const PrimitiveSort&) const;
-		bool operator!=(const PrimitiveSort&) const;
+		bool operator==(const PrimitiveSort& other) const
+		{
+			return anchored == other.anchored && surfaceAreaJoints == other.surfaceAreaJoints;
+		}
+		bool operator!=(const PrimitiveSort& other) const
+		{
+			return anchored != other.anchored && surfaceAreaJoints != other.surfaceAreaJoints;
+		}
 		bool operator<(const PrimitiveSort& other) const
 		{
 			return anchored != other.anchored && surfaceAreaJoints < other.surfaceAreaJoints;

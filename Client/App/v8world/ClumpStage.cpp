@@ -207,6 +207,12 @@ namespace RBX
 		anchorSizeMap.erase(it);
 	}
 
+	void ClumpStage::rigidTwosErase(RigidJoint* r)
+	{
+		size_t removed = rigidTwos.erase(r);
+		RBXAssert(removed == 1);
+	}
+
 	void ClumpStage::rigidOnesErase(RigidJoint* r)
 	{
 		typedef std::map<RigidJoint*, PrimitiveSort>::iterator Iterator;
@@ -265,6 +271,11 @@ namespace RBX
 	{
 		size_t removed = motorAngles.erase(m);
 		RBXAssert(removed == 1);
+	}
+
+	__declspec(noinline) bool lessClump(const Clump& c0, const Clump& c1)
+	{
+		return false; // TODO
 	}
 
 	bool lessMotor(const MotorJoint* m0, const MotorJoint* m1)
@@ -393,6 +404,106 @@ namespace RBX
 				}
 			}
 		}
+	}
+
+	// TODO: match this better... this function sucks
+	bool ClumpStage::processRigidTwos()
+	{
+		while (!rigidTwos.empty())
+		{
+			RBXAssert(!anchors.empty());
+			RigidJoint* r = *rigidTwos.end();
+
+			Clump* c0 = r->getPrimitive(0)->getClump();
+			Clump* c1 = r->getPrimitive(1)->getClump();
+
+			RBXAssert(!c0 || !c0->containsInconsistent(r));
+			RBXAssert(!c1 || !c1->containsInconsistent(r));
+
+			if (c0 && c0->getAssembly())
+				destroyAssembly(c0->getAssembly());
+			if (c1 && c1->getAssembly())
+				destroyAssembly(c1->getAssembly());
+
+			RBXAssert(!c0 || !c0->containsInconsistent(r));
+			RBXAssert(!c1 || !c1->containsInconsistent(r));
+
+			if (c0 || c1)
+			{
+				if ((c0 && !c1) || (!c0 && c1))
+				{
+					rigidOnesInsert(r);
+					rigidTwosErase(r);
+					//RBXAssert(!anchors.empty());
+				}
+				else if (c0 == c1)
+				{
+					rigidTwosErase(r);	
+					//RBXAssert(!anchors.empty());
+				}
+				else
+				{
+					Clump* bc;
+					if (c0->getAnchored())
+						bc = c1;
+					else if (c1->getAnchored())
+						bc = c0;
+					else if (lessClump(*c0, *c1))
+						bc = c0;
+					else
+						bc = c1;
+
+					if (!bc->getAnchored())
+					{
+						destroyClump(bc);
+						RBXAssert(!anchors.empty());
+					}
+					else
+					{
+						RBXAssert(!c0->containsInconsistent(r));
+						RBXAssert(!c1->containsInconsistent(r));
+
+						PrimitiveSort power0(c0->getRootPrimitive());
+						PrimitiveSort power1(c1->getRootPrimitive());
+
+						if (power0 == power1)
+						{
+							rigidTwosErase(r);
+							c0->addInconsistent(r);
+							c1->addInconsistent(r);
+						}
+						else
+						{
+							bool bruh = power0 < power1;
+							Clump* bruhClump = bruh ? c0 : c1;
+
+							if (bruhClump->size() > 1)
+							{
+								destroyClump(bruhClump);
+								RBXAssert(!rigidOnesFind(r));
+
+								return false;
+							}
+							else
+							{
+								rigidTwosErase(r);
+								c0->addInconsistent(r);
+								c1->addInconsistent(r);
+							}
+						}
+					}
+				}
+
+				RBXAssert(!anchors.empty());
+			}
+			else
+			{
+				rigidZerosInsert(r);
+				rigidTwosErase(r);
+			}
+		}
+
+		return true;
 	}
 
 	// impossible to match: cant get the specific std::set functions at the rigidjoint section to inline

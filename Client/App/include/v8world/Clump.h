@@ -131,7 +131,10 @@ namespace RBX
 		void setSleepStatus(Sim::AssemblyState _set);
 		void onPrimitiveCanSleepChanged(Primitive* p);
 		Clump* otherClump(Edge* e) const;
-		int size();
+		int size()
+		{
+			return (int)primitives.size(); // guess
+		}
 		std::set<Primitive*>::const_iterator clumpPrimBegin() const
 		{
 			return primitives.begin();
