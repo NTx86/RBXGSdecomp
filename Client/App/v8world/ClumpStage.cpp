@@ -342,6 +342,15 @@ namespace RBX
 		rbx_static_cast<AssemblyStage*>(getDownstreamWS())->stepUi(uiStepId);
 	}
 
+	void ClumpStage::stepWorld(int worldStepId, int uiStepId, bool throttling)
+	{
+		RBXAssert(upToDate());
+		process();
+
+		AssemblyStage* assemblyStage = rbx_static_cast<AssemblyStage*>(getDownstreamWS());
+		assemblyStage->stepWorld(worldStepId, uiStepId, throttling);
+	}
+
 	bool ClumpStage::upToDate()
 	{
 		return 
@@ -354,6 +363,31 @@ namespace RBX
 			anchoredClumps.empty() &&
 			freeClumps.empty() &&
 			assemblies.empty();
+	}
+
+	void ClumpStage::process()
+	{
+		do
+		{
+			do
+			{
+				do
+				{
+					processAnchors();
+				}
+				while (!processRigidTwos());
+			}
+			while (!processRigidOnes());
+
+			RBXAssert(anchors.empty());
+			RBXAssert(rigidTwos.empty());
+			RBXAssert(rigidOnes.empty());
+		}
+		while (!processPrimitives());
+		processMotors();
+		processAssemblies();
+		processEdges();
+		processMotorAngles();
 	}
 
 	void ClumpStage::processAnchors()
