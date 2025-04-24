@@ -600,6 +600,20 @@ namespace RBX
 		RBXAssert(e->inStage(this));
 	}
 
+	void ClumpStage::destroyClump(Clump* c)
+	{
+		if (c->getAssembly())
+			destroyAssembly(c->getAssembly());
+
+		if (c->getAnchored())
+			anchoredClumpsErase(c);
+		else
+			freeClumpsErase(c);
+
+		destroyClumpGuts(c);
+		delete c;
+	}
+
 	// 71% match if the numClumps inside of the RBXAssert has __declspec(noinline)
 	void ClumpStage::destroyClumpGuts(Clump* c)
 	{

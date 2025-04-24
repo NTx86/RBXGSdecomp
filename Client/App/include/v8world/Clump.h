@@ -88,7 +88,10 @@ namespace RBX
 		}
 		const Assembly* getRootAssembly() const;
 		Assembly* getRootAssembly();
-		Assembly* getAssembly() const;
+		Assembly* getAssembly() const
+		{
+			return assembly;
+		}
 		void setAssembly(Assembly* a)
 		{
 			assembly = a;
