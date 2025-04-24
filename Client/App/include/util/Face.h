@@ -29,12 +29,15 @@ namespace RBX
 		G3D::Vector3 getV() const;
 		G3D::Vector3 getNormal() const;
 		G3D::Vector2 size() const;
-		G3D::Vector3 center() const;
+		G3D::Vector3 center() const
+		{
+			return (c2 + c0) * 0.5f;
+		}
 		Face toWorldSpace(const G3D::CoordinateFrame&) const;
 		Face toObjectSpace(const G3D::CoordinateFrame&) const;
 		Face projectOverlapOnMe(const Face&) const;
 		bool fuzzyContainsInExtrusion(const G3D::Vector3&, float) const;
-		Face& operator=(const Face&);
+		//Face& operator=(const Face&);
 
 	public:
 		static Face fromExtentsSide(const Extents&, NormalId);

@@ -17,7 +17,7 @@ namespace RBX
 	protected:
 		virtual void onSetSize() {}
 	public:
-		Geometry(const Geometry& other);
+		//Geometry(const Geometry& other);
 		Geometry() : gridSize() {}
 		virtual ~Geometry() {}
 
@@ -62,7 +62,7 @@ namespace RBX
 			return false;
 		}
 
-		Geometry& operator=(const RBX::Geometry& other);
+		//Geometry& operator=(const RBX::Geometry& other);
 		
 		static Geometry* nullGeometry()
 		{
