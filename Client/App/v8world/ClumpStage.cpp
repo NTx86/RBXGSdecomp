@@ -171,6 +171,12 @@ namespace RBX
 		return rigidZeros.find(r) != rigidZeros.end();
 	}
 
+	bool ClumpStage::primitivesFind(Primitive* p)
+	{
+		return primitiveSizeMap.find(p) != primitiveSizeMap.end();
+	}
+
+
 	bool ClumpStage::motorsFind(MotorJoint* m)
 	{
 		return std::find(motors.begin(), motors.end(), m) != motors.end();
@@ -332,6 +338,61 @@ namespace RBX
 			anchoredClumps.empty() &&
 			freeClumps.empty() &&
 			assemblies.empty();
+	}
+
+	void ClumpStage::processAnchors()
+	{
+		typedef std::set<AnchorEntry, AnchorSortCriterion>::const_iterator Iterator;
+
+		while (!anchors.empty())
+		{
+			Iterator it = anchors.end();
+			it--;
+
+			Anchor* a = (*it).anchor;
+			Primitive* p = a->getPrimitive();
+			bool hasClump = p->getClump() != NULL;
+
+			RBXAssert(hasClump != primitivesFind(p));
+
+			if (hasClump)
+			{
+				Clump* c = p->getClump();
+				if (p != c->getRootPrimitive() || c->getAssembly())
+				{
+					destroyClump(c);
+				}
+				else
+				{
+					anchorsErase(a);
+					c->addAnchor(a);
+				}
+			}
+			else
+			{
+				Clump* c = new Clump(p);
+				c->addAnchor(a);
+				anchoredClumpsInsert(c);
+				anchorsErase(a);
+				primitivesErase(p);
+
+				for (RigidJoint* r = p->getFirstRigid(); r != NULL; r = p->getNextRigid(r))
+				{
+					RBXAssert(inBuffers(r));
+					removeFromBuffers(r);
+
+					if (c->otherClump(r))
+					{
+						//rigidTwosInsert(r);
+						rigidTwos.insert(r);
+					}
+					else
+					{
+						rigidOnesInsert(r);
+					}
+				}
+			}
+		}
 	}
 
 	// impossible to match: cant get the specific std::set functions at the rigidjoint section to inline
