@@ -607,7 +607,7 @@ namespace RBX
 
 		while (!primitives.empty())
 		{
-			Iterator it = primitives.begin();
+			Iterator it = primitives.end();
 			it--;
 
 			Primitive* p = (*it).primitive;
