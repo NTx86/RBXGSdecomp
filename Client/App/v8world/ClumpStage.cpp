@@ -3,6 +3,7 @@
 #include "v8world/Primitive.h"
 #include "v8world/RigidJoint.h"
 #include "v8world/MotorJoint.h"
+#include "v8world/SleepStage.h"
 #include "v8world/CollisionStage.h"
 #include "v8world/AssemblyStage.h"
 #include "v8world/Assembly.h"
@@ -1119,9 +1120,22 @@ namespace RBX
 			anchorsInsert(p->getAnchorObject());
 	}
 
+	void ClumpStage::onPrimitiveRemoving(Primitive* p)
+	{
+		if (p->getAnchorObject())
+			removeAnchor(p->getAnchorObject());
+		removePrimitive(p);
+		p->removeFromStage(this);
+	}
+
 	void ClumpStage::onPrimitiveAddedAnchor(Primitive* p)
 	{
 		anchorsInsert(p->getAnchorObject());
+	}
+
+	void ClumpStage::onPrimitiveRemovingAnchor(Primitive* p)
+	{
+		removeAnchor(p->getAnchorObject());
 	}
 
 	// 100% match if inOrDownstreamOfStage has __forceinline
@@ -1143,6 +1157,46 @@ namespace RBX
 		else
 		{
 			addEdge(e);
+		}
+	}
+
+	// 100% match if inOrDownstreamOfStage has __forceinline
+	void ClumpStage::onEdgeRemoving(Edge* e)
+	{
+		RBXAssert(e->getPrimitive(0)->inOrDownstreamOfStage(this));
+		RBXAssert(e->getPrimitive(1)->inOrDownstreamOfStage(this));
+
+		if (RigidJoint::isRigidJoint(e))
+		{
+			removeRigid(rbx_static_cast<RigidJoint*>(e));
+		}
+		else if (MotorJoint::isMotorJoint(e))
+		{
+			removeMotor(rbx_static_cast<MotorJoint*>(e));
+		}
+		else
+		{
+			removeEdge(e);
+		}
+		e->removeFromStage(this);
+		Primitive::removeEdge(e);
+	}
+
+	void ClumpStage::onPrimitiveCanSleepChanged(Primitive* p)
+	{
+		process();
+
+		Assembly* a = p->getAssembly();
+		RBXAssert(a);
+
+		bool canSleep = a->getCanSleep();
+		a->onPrimitiveCanSleepChanged(p);
+
+		if (canSleep != a->getCanSleep() && a->getSleepStatus() != Sim::AWAKE)
+		{
+			IStage* stage = findStage(SLEEP_STAGE);
+			SleepStage* sleepStage = rbx_static_cast<SleepStage*>(stage);
+			sleepStage->onWakeUpRequest(a);
 		}
 	}
 
