@@ -156,6 +156,11 @@ namespace RBX
 		RBXAssert(inserted);
 	}
 
+	bool ClumpStage::anchorsFind(Anchor* a)
+	{
+		return anchorSizeMap.find(a) != anchorSizeMap.end();
+	}
+
 	bool ClumpStage::rigidTwosFind(RigidJoint* r)
 	{
 		return rigidTwos.find(r) != rigidTwos.end();
@@ -175,7 +180,6 @@ namespace RBX
 	{
 		return primitiveSizeMap.find(p) != primitiveSizeMap.end();
 	}
-
 
 	bool ClumpStage::motorsFind(MotorJoint* m)
 	{
@@ -814,6 +818,38 @@ namespace RBX
 		edgesInsert(e);
 	}
 
+	void ClumpStage::removeRigid(RigidJoint* r)
+	{
+		if (removeFromBuffers(r))
+			return;
+
+		Clump* c0 = r->getPrimitive(0)->getClump();
+		if (c0)
+		{
+			Clump* c1 = r->getPrimitive(1)->getClump(); 
+			if (c0 == r->getPrimitive(1)->getClump())
+			{
+				removeFromClump(c0, r);
+			}
+			else
+			{
+				destroyClump(c0);
+				Clump* c1 = r->getPrimitive(1)->getClump(); 
+				if (c1)
+					destroyClump(c1);
+			}
+		}
+		else
+		{
+			Clump* c1 = r->getPrimitive(1)->getClump(); 
+			if (c1)
+				destroyClump(c1);
+		}
+
+		bool removed = removeFromBuffers(r);
+		RBXAssert(removed);
+	}
+
 	void ClumpStage::removeMotor(MotorJoint* m)
 	{
 		if (!motorsFind(m))
@@ -864,6 +900,35 @@ namespace RBX
 		}
 
 		RBXAssert(e->inStage(this));
+	}
+
+	// 100% match if primitivesFind has __forceinline
+	void ClumpStage::removeAnchor(Anchor* a)
+	{
+		if (!anchorsFind(a))
+		{
+			if (a->getPrimitive()->getClump())
+			{
+				destroyClump(a->getPrimitive()->getClump());
+			}
+			else
+			{
+				RBXAssert(primitivesFind(a->getPrimitive()));
+			}
+		}
+
+		anchorsErase(a);
+	}
+
+	void ClumpStage::removePrimitive(Primitive* p)
+	{
+		if (!primitivesFind(p))
+		{
+			if (p->getClump())
+				destroyClump(p->getClump());
+		}
+
+		primitivesErase(p);
 	}
 
 	void ClumpStage::destroyClump(Clump* c)
