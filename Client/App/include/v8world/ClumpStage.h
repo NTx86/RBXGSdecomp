@@ -118,6 +118,7 @@ namespace RBX
 		Anchor* getBiggestAnchor();
 		RigidJoint* getBiggestRigidOne();
 		Primitive* getBiggestPrimitive();
+
 		void anchorsInsert(Anchor*);
 		void rigidTwosInsert(RigidJoint*);
 		void rigidOnesInsert(RigidJoint*);
@@ -129,6 +130,7 @@ namespace RBX
 		void assembliesInsert(Assembly*);
 		void edgesInsert(Edge*);
 		void motorAnglesInsert(MotorJoint*);
+
 		bool anchorsFind(Anchor*);
 		bool rigidTwosFind(RigidJoint*);
 		bool rigidOnesFind(RigidJoint*);
@@ -140,6 +142,7 @@ namespace RBX
 		bool assembliesFind(Assembly*);
 		bool edgesFind(Edge*);
 		bool motorAnglesFind(MotorJoint*);
+
 		void anchorsErase(Anchor*);
 		void rigidTwosErase(RigidJoint*);
 		void rigidOnesErase(RigidJoint*);
@@ -151,6 +154,7 @@ namespace RBX
 		void assembliesErase(Assembly*);
 		void edgesErase(Edge*);
 		void motorAnglesErase(MotorJoint*);
+
 		void processAnchors();
 		bool processRigidTwos();
 		bool processRigidOnes();
@@ -160,32 +164,45 @@ namespace RBX
 		void processAssemblies();
 		void processEdges();
 		void processMotorAngles();
+
 		void addRigid(RigidJoint*);
 		void removeRigid(RigidJoint*);
+
 		void addMotor(MotorJoint*);
 		void removeMotor(MotorJoint*);
+
 		void addEdge(Edge*);
 		void removeEdge(Edge*);
+
 		void addAnchor(Anchor*);
 		void removeAnchor(Anchor*);
+
 		void addPrimitive(Primitive*);
 		void removePrimitive(Primitive*);
+
 		void destroyClumpGuts(Clump*);
 		void destroyClump(Clump*);
+
 		void destroyAssembly(Assembly*);
 		void destroyInfluence(Influence*);
+
 		void addAssemblyEdges(Assembly*);
+
 		void removeExternalEdge(Edge*);
 		void removeInternalEdge(Edge*);
 		void removeAssemblyEdges(Assembly*);
+
 		bool inClump(Primitive*);
 		bool inBuffers(RigidJoint*);
+
 		bool removeFromBuffers(RigidJoint*);
 		void removeFromClump(Clump*, RigidJoint*);
 		void removeSpanningTreeFast(Primitive*, RigidJoint*);
 		void removeFromClumpFast(Primitive*, RigidJoint*);
 		void removeFromAssemblyFast(Primitive*);
+
 		void updateMotorJoint(MotorJoint*);
+
 		bool validateAll();
 		bool validateEdge(Edge*);
 		bool validateRigid(RigidJoint*);
@@ -196,6 +213,7 @@ namespace RBX
 		bool validateClump(Clump*);
 		bool validateAssembly(Assembly*);
 		bool validateInfluence(Influence*);
+
 		bool upToDate();
 	public:
 		//ClumpStage(const ClumpStage&);
