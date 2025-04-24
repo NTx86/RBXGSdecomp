@@ -506,6 +506,100 @@ namespace RBX
 		return true;
 	}
 
+	// 30% match if numClumps has __declspec(noinline)
+	// difficult to match as the std::set::erase inside of rigidZerosErase isnt inlining right
+	bool ClumpStage::processRigidOnes()
+	{
+		typedef std::set<RigidEntry, RigidSortCriterion>::const_iterator Iterator;
+
+		while (!rigidOnes.empty())
+		{
+			Iterator it = rigidOnes.end();
+			it--;
+
+			RigidJoint* r = (*it).rigidJoint;
+			Clump* c0 = r->getPrimitive(0)->getClump();
+			Clump* c1 = r->getPrimitive(1)->getClump();
+
+			RBXAssert(numClumps(r) == 1);
+
+			Clump* c;
+			if (c0)
+			{
+				c = c0;
+			}
+			else
+			{
+				c = c1;
+				c0 = c1;
+			}
+
+			if (c0->getAssembly())
+				destroyAssembly(c0->getAssembly());
+
+			Primitive* p0 = r->getPrimitive(0);
+			Primitive* p1;
+			if (r->getPrimitive(0)->getClump() == c0)
+			{
+				p1 = r->getPrimitive(1);
+			}
+			else
+			{
+				p1 = r->getPrimitive(0);
+			}
+
+			Primitive* base = r->getPrimitive(p1 == p0 ? 1 : 0);
+			PrimitiveSort power0(c0->getRootPrimitive());
+			PrimitiveSort power1(c0->getRootPrimitive());
+			// TODO: THIS IS NOT RIGHT. WHY ARE NONE OF PRIMITIVESORT THINGS RIGHT?
+			if (power0 < power1)
+			{
+				primitivesInsert(p1);
+				destroyClump(c);
+				return false;
+			}
+
+			c->addPrimitive(p1, base, r);
+
+			bool ok = true;
+			for (RigidJoint* p1R = p1->getFirstRigid(); p1R != NULL; p1R = p1->getNextRigid(p1R))
+			{
+				Primitive* other = p1R->otherPrimitive(p1);
+				if (other == base)
+				{
+					rigidOnesErase(p1R);
+					RBXAssert(p1R == r);
+				}
+				else
+				{
+					Clump* otherC = other->getClump();
+					if (otherC)
+					{
+						if (otherC == c)
+						{
+							rigidOnesErase(p1R);
+						}
+						else
+						{
+							rigidOnesErase(p1R);
+							rigidTwosInsert(p1R);
+							ok = false;
+						}
+					}
+					else
+					{
+						rigidZerosErase(p1R);
+						rigidOnesInsert(p1R);
+					}
+				}
+			}
+			if (!ok)
+				return false;
+		}
+
+		return true;
+	}
+
 	// impossible to match: cant get the specific std::set functions at the rigidjoint section to inline
 	bool ClumpStage::processPrimitives()
 	{
