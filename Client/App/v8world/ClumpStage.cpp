@@ -641,6 +641,62 @@ namespace RBX
 		motorAnglesInsert(m);
 	}
 
+	// 53% match if downstreamOfStage has __forceinline
+	// TODO: std::vector::empty is inlining here when it shouldnt, matching this will be difficult
+	void ClumpStage::destroyAssembly(Assembly* a)
+	{
+		size_t removed = assemblies.erase(a);
+		if (removed == 0)
+		{
+			RBXAssert(a->downstreamOfStage(this));
+			removeAssemblyEdges(a);
+
+			AssemblyStage* assemblyStage = rbx_static_cast<AssemblyStage*>(getDownstreamWS());
+			assemblyStage->onAssemblyRemoving(a);
+		}
+		else
+		{
+			RBXAssert(a->inStage(this));
+		}
+
+		while (!a->getMotors().empty())
+		{
+			MotorJoint* m = a->getMotors().front();
+			a->removeMotor(m);
+
+			motorsInsert(m);
+			if (!motorAnglesFind(m))
+				motorAnglesInsert(m);
+		}
+
+		while (!a->getInconsistentMotors().empty())
+		{
+			MotorJoint* m = *a->getInconsistentMotors().begin();
+
+			a->removeInconsistentMotor(m);
+			Assembly* a1 = a->otherAssembly(m);
+			if (a1 != a)
+				a1->removeInconsistentMotor(m);
+
+			motorsInsert(m);
+		}
+
+		while (!a->getClumps().empty())
+		{
+			Clump* c = *a->getClumps().begin();
+			a->removeClump(c);
+
+			if (c->getAnchored())
+				anchoredClumpsInsert(c);
+			else
+				freeClumpsInsert(c);
+		}
+
+		RBXAssert(a->inStage(this));
+		a->removeFromPipeline(this);
+		delete a;
+	}
+
 	// 100% match if inOrDownstreamOfStage has __forceinline
 	void ClumpStage::onEdgeAdded(Edge* e)
 	{
@@ -748,10 +804,22 @@ namespace RBX
 		RBXAssert(inserted);
 	}
 
+	void ClumpStage::freeClumpsInsert(Clump* c)
+	{
+		bool inserted = freeClumps.insert(c).second;
+		RBXAssert(inserted);
+	}
+
 	void ClumpStage::freeClumpsErase(Clump* c)
 	{
 		size_t removed = freeClumps.erase(c);
 		RBXAssert(removed == 1);
+	}
+
+	void ClumpStage::anchoredClumpsInsert(Clump* c)
+	{
+		bool inserted = anchoredClumps.insert(c).second;
+		RBXAssert(inserted);
 	}
 	
 	bool lessMotor(const MotorJoint* m0, const MotorJoint* m1)

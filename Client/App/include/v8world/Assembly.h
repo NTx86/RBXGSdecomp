@@ -139,8 +139,14 @@ namespace RBX
 		{
 			return internalEdges;
 		}
-		std::vector<MotorJoint*>& getMotors();
-		std::set<MotorJoint*>& getInconsistentMotors();
+		std::vector<MotorJoint*>& getMotors()
+		{
+			return motors;
+		}
+		std::set<MotorJoint*>& getInconsistentMotors()
+		{
+			return inconsistentMotors;
+		}
 		void addExternalEdge(Edge* e);
 		void removeInternalEdge(Edge* e);
 		bool containsInternalEdge(Edge* e);
