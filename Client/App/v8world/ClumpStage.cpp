@@ -857,6 +857,16 @@ namespace RBX
 		}
 	}
 
+	void ClumpStage::removeFromClump(Clump* c, RigidJoint* r)
+	{
+		Primitive* p0 = SpanLink::isSpanningJoint(r);
+		Primitive* p1 = p0 ? r->otherPrimitive(p0) : NULL;
+		if (!p0 || p1->getClump()->spanningTreeAdjust(r))
+			rigidTwosInsert(r);
+		else
+			removeSpanningTreeFast(p1, r);
+	}
+
 	// 82% match if MotorJoint::isMotorJoint and RigidJoint::isRigidJoint has __forceinline
 	// MotorJoint::isMotorJoint and RigidJoint::isRigidJoint aren't matching 100%, preventing this from being matched
 	void ClumpStage::removeFromAssemblyFast(Primitive* p)
