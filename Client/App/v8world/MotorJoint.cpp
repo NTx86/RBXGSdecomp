@@ -6,6 +6,8 @@
 
 namespace RBX
 {
+	// TODO: check which of these belong in the header file
+
 	MotorJoint::MotorJoint()
 		: currentAngle(0.0f),
 		  link(new RevoluteLink()),
@@ -112,10 +114,5 @@ namespace RBX
 			else
 				setCurrentAngle(currentAngle - fabs(maxVelocity));
 		}
-	}
-
-	bool MotorJoint::isMotorJoint(Edge* e)
-	{
-		return Joint::getJointType(e) == MOTOR_JOINT;
 	}
 }

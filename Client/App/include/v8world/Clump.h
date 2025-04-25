@@ -88,7 +88,10 @@ namespace RBX
 		}
 		const Assembly* getRootAssembly() const;
 		Assembly* getRootAssembly();
-		Assembly* getAssembly() const;
+		Assembly* getAssembly() const
+		{
+			return assembly;
+		}
 		void setAssembly(Assembly* a)
 		{
 			assembly = a;
@@ -117,7 +120,10 @@ namespace RBX
 		bool calcShouldSleep();
 		bool okNeighborSleep();
 		bool forceNeighborAwake();
-		std::set<RigidJoint*>& getInconsistents();
+		std::set<RigidJoint*>& getInconsistents()
+		{
+			return inconsistentJoints;
+		}
 		void addInconsistent(RigidJoint* r);
 		void removeInconsistent(RigidJoint* r);
 		bool containsInconsistent(RigidJoint* r);
@@ -125,7 +131,10 @@ namespace RBX
 		void setSleepStatus(Sim::AssemblyState _set);
 		void onPrimitiveCanSleepChanged(Primitive* p);
 		Clump* otherClump(Edge* e) const;
-		int size();
+		int size()
+		{
+			return (int)primitives.size(); // guess
+		}
 		std::set<Primitive*>::const_iterator clumpPrimBegin() const
 		{
 			return primitives.begin();

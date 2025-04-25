@@ -22,10 +22,17 @@ namespace RBX
   
 	public:
 		//IWorldStage(const IWorldStage&);
-		IWorldStage(IStage*, IStage*, World*);
+		IWorldStage(IStage* upstream, IStage* downstream, World* world)
+			: IStage(upstream, downstream),
+			  world(world)
+		{
+		}
 	public:
 		IWorldStage* getUpstreamWS();
-		IWorldStage* getDownstreamWS();
+		IWorldStage* getDownstreamWS()
+		{
+			return rbx_static_cast<IWorldStage*>(getDownstream());
+		}
 		World* getWorld() { return world; }
 		virtual void onEdgeAdded(Edge*);
 		virtual void onEdgeRemoving(Edge*);

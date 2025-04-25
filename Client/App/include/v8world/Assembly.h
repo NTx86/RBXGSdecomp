@@ -93,7 +93,10 @@ namespace RBX
 		Primitive* getMainPrimitive() const;
 		Primitive* getAssemblyPrimitive() const;
 		const Primitive* getAssemblyPrimitiveConst() const;
-		Clump* getRootClump();
+		Clump* getRootClump()
+		{
+			return rootClump;
+		}
 		const std::set<Clump*>& getClumps() const
 		{
 			return clumps;
@@ -120,15 +123,30 @@ namespace RBX
 		bool forceNeighborAwake();
 		void setSleepStatus(Sim::AssemblyState _set);
 		void onPrimitiveCanSleepChanged(Primitive* p);
-		std::set<Edge*>& getExternalEdges();
+		std::set<Edge*>& getExternalEdges()
+		{
+			return externalEdges;
+		}
 		PrimIterator assemblyPrimBegin() const;
 		PrimIterator assemblyPrimEnd() const;
 		std::set<Edge*>::const_iterator externalEdgeBegin() const;
 		std::set<Edge*>::const_iterator externalEdgeEnd() const;
-		const std::set<Edge*>& getInternalEdges() const;
-		std::set<Edge*>& getInternalEdges();
-		std::vector<MotorJoint*>& getMotors();
-		std::set<MotorJoint*>& getInconsistentMotors();
+		const std::set<Edge*>& getInternalEdges() const
+		{
+			return internalEdges;
+		}
+		std::set<Edge*>& getInternalEdges()
+		{
+			return internalEdges;
+		}
+		std::vector<MotorJoint*>& getMotors()
+		{
+			return motors;
+		}
+		std::set<MotorJoint*>& getInconsistentMotors()
+		{
+			return inconsistentMotors;
+		}
 		void addExternalEdge(Edge* e);
 		void removeInternalEdge(Edge* e);
 		bool containsInternalEdge(Edge* e);

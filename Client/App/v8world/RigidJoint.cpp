@@ -4,13 +4,7 @@
 
 namespace RBX
 {
-	// TODO: this is meant to be in the header
-	// move once 100% match
-	bool RigidJoint::isRigidJoint(Edge* e)
-	{
-		JointType type = Joint::getJointType(e);
-		return type == WELD_JOINT || type == SNAP_JOINT;
-	}
+	// TODO: check which of these belong to the header
 
 	bool RigidJoint::isAligned()
 	{
