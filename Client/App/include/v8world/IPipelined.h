@@ -76,9 +76,7 @@ namespace RBX
 			else
 				upstream = currentStage->getUpstream();
 
-			RBXAssert(dynamic_cast<IWorldStage*>(upstream) == upstream);
-			IWorldStage* ws = (IWorldStage*)upstream;
-			return ws->getWorld();
+			return rbx_static_cast<IWorldStage*>(upstream)->getWorld();
 		}
 		//IPipelined& operator=(const IPipelined&);
 	};
