@@ -68,14 +68,15 @@ namespace RBX
 
 		class CodeProfiler : public Profiler
 		{
+			friend class Mark;
+
 		public:
 			CodeProfiler *parent;
 
 		public:
 			//CodeProfiler(const CodeProfiler&);
 			CodeProfiler(const char* name);
-		//private:
-		public: // this is meant to be private but that causes problems with Mark's dtor
+		private:
 			void log(G3D::int64 kern, G3D::int64 user, bool frameTick);
 		public:
 			~CodeProfiler();
