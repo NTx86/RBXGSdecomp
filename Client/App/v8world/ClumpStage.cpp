@@ -661,7 +661,7 @@ namespace RBX
 			{
 				for (; r != NULL; r = p->getNextRigid(r))
 				{
-					rigidZerosErase(r);
+					SCOPED(rigidZerosErase(r));
 					rigidOnesInsert(r);
 				}
 
