@@ -3,6 +3,7 @@
 #include <set>
 #include <list>
 #include <vector>
+#include "util/Debug.h"
 
 namespace RBX
 {
@@ -17,42 +18,31 @@ namespace RBX
 		std::vector<MechanismTracker*> trackers;
 	public:
 		std::list<Mechanism*>::iterator myIt;
-  
-	public:
-		~Mechanism();
-	public:
-		const std::set<Assembly*>& getAssemblies() const;
-		std::set<Assembly*>& getAssemblies();
+		Mechanism::~Mechanism() { RBXAssert(this->trackers.size() == 0); }
+		const std::set<Assembly*>& getAssemblies() const {return assemblies;}
+		std::set<Assembly*>& getAssemblies() {return assemblies;}
 		void notifyMovingPrimitives();
-		void insertAssembly(Assembly*);
-		void removeAssembly(Assembly*);
-		void absorb(Mechanism*);
-	public:
-		//Mechanism(const Mechanism&);
-		Mechanism();
-	public:
-		//Mechanism& operator=(const Mechanism&);
-  
-	public:
-		static Mechanism* getMechanismFromPrimitive(const Primitive*);
+		void insertAssembly(Assembly* a);
+		void removeAssembly(Assembly* a);
+		void absorb(Mechanism* smaller);
+		Mechanism::Mechanism() {}
+		static Mechanism* getMechanismFromPrimitive(const Primitive* primitive);
+
+		friend class MechanismTracker;
 	};
 
 	class MechanismTracker
 	{
 	private:
 		Mechanism* mechanism;
-  
-	private:
 		bool containedBy(Mechanism*);
 		void stopTracking();
 	public:
-		MechanismTracker();
-		~MechanismTracker();
+		//MechanismTracker();
+		~MechanismTracker() {this->stopTracking();}
 		bool tracking();
 		void setMechanism(Mechanism*);
 		Mechanism* getMechanism();
-  
-	public:
 		static void transferTrackers(Mechanism*, Mechanism*);
 	};
 }

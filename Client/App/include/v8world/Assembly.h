@@ -115,7 +115,7 @@ namespace RBX
 		void incrementSleepCount();
 		virtual void putInKernel(Kernel* _kernel);
 		virtual void removeFromKernel();
-		void setMechanism(Mechanism*);
+		void setMechanism(Mechanism* m) {this->mechanism = m;}
 		Mechanism* getMechanism();
 		void stepUi(int uiStepId);
 		bool calcShouldSleep();
