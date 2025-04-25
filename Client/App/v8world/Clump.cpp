@@ -144,8 +144,7 @@ namespace RBX
 		p->setClumpDepth(newParent->getClumpDepth() + 1);
 
 		Joint* j = Primitive::getJoint(p, newParent);
-		RBXAssert(dynamic_cast<RigidJoint*>(j) == j);
-		RigidJoint* r = (RigidJoint*)j;
+		RigidJoint* r = rbx_static_cast<RigidJoint*>(j);
 
 		p->getBody()->setParent(newParent->getBody());
 		p->getBody()->setMeInParent(r->getChildInParent(newParent, p));

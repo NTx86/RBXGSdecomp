@@ -108,9 +108,7 @@ namespace RBX
 		{
 			if (e->getEdgeType() == Edge::JOINT)
 			{
-				RBXAssert(dynamic_cast<Joint*>(e) == e);
-				Joint* j = (Joint*)e;
-				return j->getJointType();
+				return rbx_static_cast<Joint*>(e)->getJointType();
 			}
 			else
 			{

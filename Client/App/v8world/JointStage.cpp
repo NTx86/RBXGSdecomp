@@ -27,9 +27,7 @@ namespace RBX
 		RBXAssert(edgeHasPrimitivesDownstream(e));
 
 		IStage* downstream = getDownstream();
-		RBXAssert(dynamic_cast<ClumpStage*>(downstream) == downstream);
-
-		ClumpStage* clumpStage = (ClumpStage*)downstream;
+		ClumpStage* clumpStage = rbx_static_cast<ClumpStage*>(downstream);
 		clumpStage->onEdgeAdded(e);
 	}
 
@@ -38,9 +36,7 @@ namespace RBX
 		RBXAssert(edgeHasPrimitivesDownstream(e));
 
 		IStage* downstream = getDownstream();
-		RBXAssert(dynamic_cast<ClumpStage*>(downstream) == downstream);
-
-		ClumpStage* clumpStage = (ClumpStage*)downstream;
+		ClumpStage* clumpStage = rbx_static_cast<ClumpStage*>(downstream);
 		clumpStage->onEdgeRemoving(e);
 	}
 

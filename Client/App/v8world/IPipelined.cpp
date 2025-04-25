@@ -60,9 +60,7 @@ namespace RBX
 		RBXAssert(this->inKernel());
 
 		IStage* stage = this->getStage(IStage::KERNEL_STAGE);
-		RBXAssert(dynamic_cast<Kernel*>(stage) == (Kernel*)stage);
-
-		return (Kernel*)stage;
+		return rbx_static_cast<Kernel*>(stage);
 	}
 
 	void IPipelined::putInKernel(Kernel* kernel)
