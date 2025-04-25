@@ -28,17 +28,20 @@ namespace RBX
 		{
 		}
 	public:
-		IWorldStage* getUpstreamWS();
+		IWorldStage* getUpstreamWS()
+		{
+			return rbx_static_cast<IWorldStage*>(getUpstream());
+		}
 		IWorldStage* getDownstreamWS()
 		{
 			return rbx_static_cast<IWorldStage*>(getDownstream());
 		}
 		World* getWorld() { return world; }
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		virtual int getMetric(MetricType);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		virtual int getMetric(MetricType metricType);
 	public:
-		virtual ~IWorldStage();
+		virtual ~IWorldStage() {}
 	public:
 		//IWorldStage& operator=(const IWorldStage&);
 	};
