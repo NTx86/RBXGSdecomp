@@ -2,97 +2,147 @@
 #include <windows.h>
 #include <boost/noncopyable.hpp>
 #include <string>
+#include <g3d/g3dmath.h>
 
 namespace RBX
 {
 	namespace Profiling
 	{
-		class Bucket
+		void init(bool enabled);
+
+		struct Bucket
 		{
-			public:
-				long double sampleTimeSpan;
-				__int64 kernTimeSpan;
-				__int64 userTimeSpan;
-				int frames;
+		public:
+			double sampleTimeSpan;
+			G3D::int64 kernTimeSpan;
+			G3D::int64 userTimeSpan;
+			int frames;
+
+		public:
+			double getActualFPS() const;
+			double getNominalFPS() const;
+			double getFrameTime() const;
+			double getTotalTime() const;
+		public:
+			Bucket();
+		public:
+			Bucket& operator+=(const Bucket&);
 		};
 
-		class Profiler : boost::noncopyable
+		class Profiler : public boost::noncopyable
 		{
-			public:
-				const long double bucketTimeSpan;
-				int currentBucket;
-				RBX::Profiling::Bucket buckets[4096];
-				long double lastSampleTime;
-				std::string name;
-				Profiler::Profiler(const char *name);
+		protected:
+			const double bucketTimeSpan;
+			int currentBucket;
+			Bucket buckets[4096];
+			double lastSampleTime;
+		public:
+			const std::string name;
+
+		public:
+			//Profiler(const Profiler&)
+			Profiler(const char* name);
+		public:
+			Bucket getData(double window) const;
+		public:
+			~Profiler() {}
+		public:
+			//Profiler& operator=(const Profiler&);
 		};
 
-
-
-		class CodeProfiler : RBX::Profiling::Profiler
+		class ThreadProfiler : public Profiler
 		{
-			public:
-				Profiling::CodeProfiler *parent;
-				CodeProfiler::CodeProfiler(const char *name);
-				void Profiling::CodeProfiler::Log(__int64 kern, __int64 user, bool frameTick);
+		private:
+			bool initialized;
+		  
+		public:
+			//ThreadProfiler(const ThreadProfiler&);
+			ThreadProfiler(const char* name);
+		public:
+			void sample(void* thread);
+		public:
+			~ThreadProfiler() {}
+		public:
+			//ThreadProfiler& operator=(const ThreadProfiler&);
+		};
+
+		class CodeProfiler : public Profiler
+		{
+		public:
+			CodeProfiler *parent;
+
+		public:
+			//CodeProfiler(const CodeProfiler&);
+			CodeProfiler(const char* name);
+		//private:
+		public: // this is meant to be private but that causes problems with Mark's dtor
+			void log(G3D::int64 kern, G3D::int64 user, bool frameTick);
+		public:
+			~CodeProfiler();
+		public:
+			//CodeProfiler& operator=(const CodeProfiler&);
 		};
 
 		class Mark
 		{
-			private:
-				Profiling::CodeProfiler& section;
-				Profiling::CodeProfiler* enclosingSection;
-				FILETIME creationTime;
-				FILETIME exitTime;
-				FILETIME kernelTime;
-				FILETIME userTime;
-				bool frameTick;
-			public: 
-				static unsigned long markTlsIndex;
-				Mark(Profiling::CodeProfiler& sectionSet, bool frameTickSet) : section(sectionSet), frameTick(frameTickSet)
+		private:
+			CodeProfiler& section;
+			CodeProfiler* enclosingSection;
+			FILETIME creationTime;
+			FILETIME exitTime;
+			FILETIME kernelTime;
+			FILETIME userTime;
+			bool frameTick;
+
+		public: 
+			static DWORD markTlsIndex;
+
+			Mark(CodeProfiler& sectionSet, bool frameTickSet)
+				: section(sectionSet),
+				  frameTick(frameTickSet)
+			{
+				if (markTlsIndex)
 				{
-					if ( RBX::Profiling::Mark::markTlsIndex )
-					{
-						enclosingSection = (Profiling::CodeProfiler*)TlsGetValue(RBX::Profiling::Mark::markTlsIndex);
-						GetThreadTimes(GetCurrentThread(), &creationTime, &exitTime, &kernelTime, &userTime);
-						TlsSetValue(RBX::Profiling::Mark::markTlsIndex, (void*)&sectionSet);
-					}
+					enclosingSection = (CodeProfiler*)TlsGetValue(markTlsIndex);
+					GetThreadTimes(GetCurrentThread(), &creationTime, &exitTime, &kernelTime, &userTime);
+					TlsSetValue(markTlsIndex, (void*)&sectionSet);
 				}
+			}
 
-				~Mark(void)
+			~Mark()
+			{
+				FILETIME currUserTime;
+				FILETIME currKernelTime;
+				if (markTlsIndex)
 				{
-					FILETIME currUserTime;
-					FILETIME currKernelTime;
-					if ( RBX::Profiling::Mark::markTlsIndex )
-					{
-						ULARGE_INTEGER currKernelTime64, currUserTime64, kernelTime64, userTime64;
-						__int64 kernelTimeDelta, userTimeDelta;
+					ULARGE_INTEGER currKernelTime64, currUserTime64, kernelTime64, userTime64;
+					G3D::int64 kernelTimeDelta, userTimeDelta;
 
-						TlsSetValue(RBX::Profiling::Mark::markTlsIndex, enclosingSection);
+					TlsSetValue(markTlsIndex, enclosingSection);
 						
-						GetThreadTimes(GetCurrentThread(), &creationTime, &exitTime, &currKernelTime, &currUserTime);
+					GetThreadTimes(GetCurrentThread(), &creationTime, &exitTime, &currKernelTime, &currUserTime);
 
-						kernelTime64.LowPart = kernelTime.dwLowDateTime;
-						kernelTime64.HighPart = kernelTime.dwHighDateTime;
-						userTime64.LowPart = userTime.dwLowDateTime;
-						userTime64.HighPart = userTime.dwHighDateTime;
+					kernelTime64.LowPart = kernelTime.dwLowDateTime;
+					kernelTime64.HighPart = kernelTime.dwHighDateTime;
+					userTime64.LowPart = userTime.dwLowDateTime;
+					userTime64.HighPart = userTime.dwHighDateTime;
 
-						currKernelTime64.LowPart = currKernelTime.dwLowDateTime;
-						currKernelTime64.HighPart = currKernelTime.dwHighDateTime;
-						currUserTime64.LowPart = currUserTime.dwLowDateTime;
-						currUserTime64.HighPart = currUserTime.dwHighDateTime;
+					currKernelTime64.LowPart = currKernelTime.dwLowDateTime;
+					currKernelTime64.HighPart = currKernelTime.dwHighDateTime;
+					currUserTime64.LowPart = currUserTime.dwLowDateTime;
+					currUserTime64.HighPart = currUserTime.dwHighDateTime;
 
-						kernelTimeDelta = (currKernelTime64.QuadPart - kernelTime64.QuadPart);
-						userTimeDelta = (currUserTime64.QuadPart - userTime64.QuadPart);
+					kernelTimeDelta = (currKernelTime64.QuadPart - kernelTime64.QuadPart);
+					userTimeDelta = (currUserTime64.QuadPart - userTime64.QuadPart);
 
-						section.Log(kernelTimeDelta, userTimeDelta, frameTick);
+					section.log(kernelTimeDelta, userTimeDelta, frameTick);
 
-						if (enclosingSection && enclosingSection != &section && enclosingSection != section.parent)
-						{
-							enclosingSection->Log(-kernelTimeDelta, -userTimeDelta, false);
-						}
+					if (enclosingSection && enclosingSection != &section && enclosingSection != section.parent)
+					{
+						enclosingSection->log(-kernelTimeDelta, -userTimeDelta, false);
 					}
 				}
+			}
 		};
 	}
 }
