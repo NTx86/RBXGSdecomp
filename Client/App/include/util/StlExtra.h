@@ -1,23 +1,23 @@
 #pragma once
+#include <vector>
+#include <util/debug.h>
+
 namespace RBX
 {
-	//Unfinished!!!
-	template<typename T> unsigned int fastRemoveShort(std::vector<T>& vec, T const& item);
-	/*{
-		std::vector<T>::iterator iter;
-		for (iter = vec.begin(); iter != vec.end(); iter++)
-		{
-			if (*iter == item)
-				break;
-		}
-		unsigned int index = std::distance(vec.begin(),iter);
-		RBXAssert(vec[index] == item);
-		RBXAssert(iter == vec.end());
+	template<typename T> unsigned int fastRemoveShort(std::vector<T>& vec, T const& item)
+	{
+		std::vector<T>::iterator iter = std::find(vec.begin(), vec.end(), item);
+		unsigned int answer = (unsigned int)std::distance(vec.begin(),iter);
+		RBXAssert(vec[answer] == item);
+		RBXAssert(iter != vec.end());
 		RBXAssert(vec.size() < 32);
-		if (iter != vec.end() - 1) {
-			*iter = vec.back();
+		std::vector<T>::iterator vecEnd = vec.end();
+		vecEnd--;
+		RBXAssert(*vecEnd == *(vec.end()-1)); //useless check, in 2013 this either got removed or optimized out
+		if (iter != vecEnd) {
+			*iter = *vecEnd;
 		}
-		vec.pop_back();
-		return index;
-	}*/
+		vec.resize(vec.size()-1);
+		return answer;
+	}
 }

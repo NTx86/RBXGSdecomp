@@ -1,7 +1,7 @@
+#include "util/StlExtra.h"
 #include "v8world/Mechanism.h"
 #include "v8world/Primitive.h"
 #include "v8world/Assembly.h"
-#include "util/StlExtra.h"
 namespace RBX
 {
 	Mechanism* Mechanism::getMechanismFromPrimitive(const Primitive* primitive)
