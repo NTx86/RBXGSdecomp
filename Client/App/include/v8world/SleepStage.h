@@ -28,36 +28,39 @@ namespace RBX
 		boost::scoped_ptr<Profiling::CodeProfiler> profilingSleep;
   
 	private:
-		std::set<Assembly*>& statusToArray(Sim::AssemblyState);
-		void remove(Assembly*);
-		void insert(Assembly*, Sim::AssemblyState);
-		void changeSleepStatus(Assembly*, Sim::AssemblyState);
-		bool shouldSleep(Assembly*);
-		Sim::AssemblyState shouldWakeOrSleepDeeply(Assembly*);
-		void wakeAssembly(Assembly*);
-		void goToSleep(Assembly*);
+		std::set<Assembly*>& statusToArray(Sim::AssemblyState status);
+		void remove(Assembly* assembly);
+		void insert(Assembly* assembly, Sim::AssemblyState newStatus);
+		void changeSleepStatus(Assembly* assembly, Sim::AssemblyState newStatus);
+		bool shouldSleep(Assembly* assembly);
+		Sim::AssemblyState shouldWakeOrSleepDeeply(Assembly* assembly);
+		void wakeAssembly(Assembly* assembly);
+		void goToSleep(Assembly* assembly);
 		void wakeAssemblyAndNeighbors(Assembly*, bool);
-		void wakeAssemblyAndNeighbors(Assembly*, int);
-		void checkAwakeAssemblies(bool);
+		void wakeAssemblyAndNeighbors(Assembly* assembly, int recurseDepth);
+		void checkAwakeAssemblies(bool throttling);
 		void checkSleepingAssemblies();
 		void validateEdge(Edge*);
 		bool debugValidate();
 		CollisionStage* getCollisionStage();
 	public:
 		//SleepStage(const SleepStage&);
-		SleepStage(IStage*, World*);
+		SleepStage(IStage* upstream, World* world);
 		virtual ~SleepStage();
 	public:
-		virtual IStage::StageType getStageType();
-		virtual void stepWorld(int, int, bool);
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		void onAssemblyAdded(Assembly*);
-		void onAssemblyRemoving(Assembly*);
-		void onWakeUpRequest(Assembly*);
+		virtual StageType getStageType()
+		{
+			return SLEEP_STAGE;
+		}
+		virtual void stepWorld(int worldStepId, int uiStepId, bool throttling);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		void onAssemblyAdded(Assembly* assembly);
+		void onAssemblyRemoving(Assembly* assembly);
+		void onWakeUpRequest(Assembly* assembly);
 		int numTouchingContacts();
 		const std::set<Assembly*>& getAwakeAssemblies() const;
-		void onLosingContact(const Array<Contact*>&);
+		void onLosingContact(const Array<Contact*>& separating);
 		//SleepStage& operator=(const SleepStage&);
   
 	private:

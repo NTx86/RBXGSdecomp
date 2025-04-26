@@ -79,7 +79,7 @@ namespace RBX
 		private:
 			void log(G3D::int64 kern, G3D::int64 user, bool frameTick);
 		public:
-			~CodeProfiler();
+			~CodeProfiler() {}
 		public:
 			//CodeProfiler& operator=(const CodeProfiler&);
 		};
