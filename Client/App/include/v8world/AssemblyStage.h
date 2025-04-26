@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include "v8world/IWorldStage.h"
 
 namespace RBX
@@ -22,7 +23,10 @@ namespace RBX
 		AssemblyStage(IStage*, World*);
 		virtual ~AssemblyStage();
 	public:
-		virtual StageType getStageType();
+		virtual StageType getStageType()
+		{
+			return ASSEMBLY_STAGE;
+		}
 		virtual void onEdgeAdded(Edge*);
 		virtual void onEdgeRemoving(Edge*);
 		void stepUi(int);
