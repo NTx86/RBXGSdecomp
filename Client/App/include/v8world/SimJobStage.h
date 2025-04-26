@@ -15,23 +15,23 @@ namespace RBX
 		std::list<Mechanism*> mechanisms;
 	  
 	private:
-		void combineMechanisms(Edge*);
-		void insertMechanism(Mechanism*);
-		void destroyMechanism(Mechanism*);
+		void combineMechanisms(Edge* e);
+		void insertMechanism(Mechanism* m);
+		void destroyMechanism(Mechanism* m);
 		void splitMechanisms(Assembly*, Assembly*);
-		bool validateEdge(Edge*);
+		bool validateEdge(Edge* e);
 	public:
-		Mechanism* nextMechanism(std::list<Mechanism*>&, const Mechanism*);
+		Mechanism* nextMechanism(std::list<Mechanism*>& list, const Mechanism* current);
 	public:
 		//SimJobStage(const SimJobStage&);
 		SimJobStage(IStage*, World*);
 		virtual ~SimJobStage();
 	public:
 		virtual IStage::StageType getStageType();
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		void onAssemblyAdded(Assembly*);
-		void onAssemblyRemoving(Assembly*);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		void onAssemblyAdded(Assembly* a);
+		void onAssemblyRemoving(Assembly* a);
 		void notifyMovingPrimitives();
 		//SimJobStage& operator=(const SimJobStage&);
 	};

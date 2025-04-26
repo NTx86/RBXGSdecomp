@@ -7,7 +7,7 @@
 #include "util/Profiling.h"
 
 namespace RBX {
-class Kernel : IStage {
+class Kernel : public IStage {
 	private:
 		void matchDummy(); //hack, not in original src
 		bool inStepCode;
