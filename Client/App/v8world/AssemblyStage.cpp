@@ -36,6 +36,18 @@ namespace RBX
 		}
 	}
 
+	void AssemblyStage::onJointAdded(Joint* j)
+	{
+		bool inserted = joints.insert(j).second;
+		RBXAssert(inserted);
+	}
+
+	void AssemblyStage::onJointRemoving(Joint* j)
+	{
+		size_t removed = joints.erase(j);
+		RBXAssert(removed == 1);
+	}
+
 	void AssemblyStage::onEdgeAdded(Edge* e)
 	{
 		IWorldStage::onEdgeAdded(e);
@@ -43,9 +55,7 @@ namespace RBX
 		if (e->getEdgeType() == Edge::JOINT)
 		{
 			Joint* j = rbx_static_cast<Joint*>(e);
-
-			bool inserted = joints.insert(j).second;
-			RBXAssert(inserted);
+			onJointAdded(j);
 		}
 	}
 
@@ -54,9 +64,7 @@ namespace RBX
 		if (e->getEdgeType() == Edge::JOINT)
 		{
 			Joint* j = rbx_static_cast<Joint*>(e);
-
-			size_t removed = joints.erase(j);
-			RBXAssert(removed == 1);
+			onJointRemoving(j);
 		}
 
 		IWorldStage::onEdgeRemoving(e);

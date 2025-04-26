@@ -16,8 +16,8 @@ namespace RBX
 		std::set<Joint*> joints;
   
 	private:
-		void onJointAdded(Joint*);
-		void onJointRemoving(Joint*);
+		void onJointAdded(Joint* j);
+		void onJointRemoving(Joint* j);
 	public:
 		//AssemblyStage(const AssemblyStage&);
 		AssemblyStage(IStage* upstream, World* world);
