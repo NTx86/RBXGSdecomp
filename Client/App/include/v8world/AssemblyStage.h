@@ -20,18 +20,18 @@ namespace RBX
 		void onJointRemoving(Joint*);
 	public:
 		//AssemblyStage(const AssemblyStage&);
-		AssemblyStage(IStage*, World*);
+		AssemblyStage(IStage* upstream, World* world);
 		virtual ~AssemblyStage();
 	public:
 		virtual StageType getStageType()
 		{
 			return ASSEMBLY_STAGE;
 		}
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		void stepUi(int);
-		void onAssemblyAdded(Assembly*);
-		void onAssemblyRemoving(Assembly*);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		void stepUi(int uiStepId);
+		void onAssemblyAdded(Assembly* assembly);
+		void onAssemblyRemoving(Assembly* assembly);
 		void wakeAssembly(Assembly*);
 		//AssemblyStage& operator=(const AssemblyStage&);
 	};
