@@ -129,8 +129,14 @@ namespace RBX
 		}
 		PrimIterator assemblyPrimBegin() const;
 		PrimIterator assemblyPrimEnd() const;
-		std::set<Edge*>::const_iterator externalEdgeBegin() const;
-		std::set<Edge*>::const_iterator externalEdgeEnd() const;
+		std::set<Edge*>::const_iterator externalEdgeBegin() const
+		{
+			return externalEdges.begin();
+		}
+		std::set<Edge*>::const_iterator externalEdgeEnd() const
+		{
+			return externalEdges.end();
+		}
 		const std::set<Edge*>& getInternalEdges() const
 		{
 			return internalEdges;

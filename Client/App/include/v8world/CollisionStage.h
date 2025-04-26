@@ -16,33 +16,36 @@ namespace RBX
 	{
 	private:
 		int numContactsInStage;
-		RBX::IndexArray<Contact, &Contact::steppingIndexFunc> stepping;
+		IndexArray<Contact, &Contact::steppingIndexFunc> stepping;
 		boost::scoped_ptr<Profiling::CodeProfiler> profilingCollision;
 	  
 	private:
-		bool getOkToSim(Contact*, bool&);
+		bool getOkToSim(Contact* c, bool& okToStep);
 		bool confirmOneClumpHere(Edge*);
-		RBX::Contact* getContactBetweenPrimitives(Joint*);
-		void removeContactFromDownstreamStage(Contact*);
-		void removeContact(Contact*);
-		void updateContact(Contact*);
-		void onJointAdded(Joint*);
-		void onJointRemoved(Joint*);
+		Contact* getContactBetweenPrimitives(Joint*);
+		void removeContactFromDownstreamStage(Contact* c);
+		void removeContact(Contact* c);
+		void updateContact(Contact* c);
+		void onJointAdded(Joint* j);
+		void onJointRemoved(Joint* j);
 	public:
 		//CollisionStage(const CollisionStage&);
-		CollisionStage(IStage*, World*);
+		CollisionStage(IStage* upstream, World* world);
 		virtual ~CollisionStage();
 	public:
-		virtual IStage::StageType getStageType();
-		virtual void stepWorld(int, int, bool);
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		virtual int getMetric(IWorldStage::MetricType);
-		void onAssemblyAdded(Assembly*);
-		void onAssemblyRemoving(Assembly*);
-		void onPrimitiveCanCollideChanged(Primitive*);
-		void onSleepChanged(const Assembly*);
-		void onLosingContact(const G3D::Array<Contact*>&);
+		virtual StageType getStageType()
+		{
+			return COLLISION_STAGE;
+		}
+		virtual void stepWorld(int worldStepId, int uiStepId, bool throttling);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		virtual int getMetric(MetricType metricType);
+		void onAssemblyAdded(Assembly* assembly);
+		void onAssemblyRemoving(Assembly* assembly);
+		void onPrimitiveCanCollideChanged(Primitive* p);
+		void onSleepChanged(const Assembly* assembly);
+		void onLosingContact(const G3D::Array<Contact*>& separating);
 		//CollisionStage& operator=(const CollisionStage&);
 	};
 }
