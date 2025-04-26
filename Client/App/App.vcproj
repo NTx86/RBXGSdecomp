@@ -613,6 +613,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\SeparateStage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\SimJobStage.cpp"
 				>
 			</File>
