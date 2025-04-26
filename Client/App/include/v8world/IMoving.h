@@ -6,6 +6,8 @@ namespace RBX
 	class IMovingManager;
 	class IMoving
 	{
+		friend class IMovingManager;
+
 	private:
 		IMovingManager* iMovingManager;
 		int stepsToSleep;
@@ -13,8 +15,8 @@ namespace RBX
 	private:
 		void makeMoving();
 	protected:
-		virtual void onCanAggregateChanged(bool);
-		void setMovingManager(IMovingManager*);
+		virtual void onCanAggregateChanged(bool canAggregate);
+		void setMovingManager(IMovingManager* _iMovingManager);
 		bool checkSleep();
 	public:
 		//IMoving(const IMoving&);
@@ -29,12 +31,14 @@ namespace RBX
 
 	class IMovingManager
 	{
+		friend class IMoving;
+
 	private:
 		std::set<IMoving*> moving;
 		std::set<IMoving*>::iterator current;
 	protected:
-		void remove(IMoving*);
-		void moved(IMoving*);
+		void remove(IMoving* iMoving);
+		void moved(IMoving* iMoving);
 	public:
 		//IMovingManager(const IMovingManager&);
 		IMovingManager();
