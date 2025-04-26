@@ -49,7 +49,7 @@ namespace RBX
 			Profiling::Mark mark(*profilingSleep.get(), false);
 
 			checkAwakeAssemblies(throttling);
-			if (!(worldStepId % 4))
+			if (worldStepId % 4 == 0)
 				checkSleepingAssemblies();
 		}
 
