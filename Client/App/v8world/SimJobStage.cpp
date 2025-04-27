@@ -8,6 +8,15 @@
 
 namespace RBX
 {
+	bool SimJobStage::validateEdge(Edge* e)
+	{
+		Assembly* a0 = e->getPrimitive(0)->getAssembly();
+		Assembly* a1 = e->getPrimitive(1)->getAssembly();
+		RBXAssert(a0 && a1);
+
+		return true;
+	}
+
 	Mechanism* SimJobStage::nextMechanism(std::list<Mechanism*>& list, const Mechanism* current)
 	{
 		RBXAssert(!list.empty());
@@ -109,5 +118,28 @@ namespace RBX
 				destroyMechanism(m0);
 			}
 		}
+	}
+
+	void SimJobStage::onEdgeAdded(Edge* e)
+	{
+		RBXAssert(validateEdge(e));
+
+		e->putInStage(this);
+
+		if (e->getEdgeType() == Edge::JOINT)
+		{
+			Assembly* a0 = e->getPrimitive(0)->getAssembly();
+			Assembly* a1 = e->getPrimitive(1)->getAssembly();
+
+			if (a0->inOrDownstreamOfStage(this) && a1->inOrDownstreamOfStage(this))
+			{
+				RBXAssert(a0->getDof() > 0);
+				RBXAssert(a1->getDof() > 0);
+
+				combineMechanisms(e);
+			}
+		}
+
+		e->putInKernel(getKernel());
 	}
 }
