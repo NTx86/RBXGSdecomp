@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include "v8world/IWorldStage.h"
 
 namespace RBX
@@ -15,19 +16,22 @@ namespace RBX
 		std::set<Joint*> joints;
   
 	private:
-		void onJointAdded(Joint*);
-		void onJointRemoving(Joint*);
+		void onJointAdded(Joint* j);
+		void onJointRemoving(Joint* j);
 	public:
 		//AssemblyStage(const AssemblyStage&);
-		AssemblyStage(IStage*, World*);
+		AssemblyStage(IStage* upstream, World* world);
 		virtual ~AssemblyStage();
 	public:
-		virtual StageType getStageType();
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		void stepUi(int);
-		void onAssemblyAdded(Assembly*);
-		void onAssemblyRemoving(Assembly*);
+		virtual StageType getStageType()
+		{
+			return ASSEMBLY_STAGE;
+		}
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		void stepUi(int uiStepId);
+		void onAssemblyAdded(Assembly* assembly);
+		void onAssemblyRemoving(Assembly* assembly);
 		void wakeAssembly(Assembly*);
 		//AssemblyStage& operator=(const AssemblyStage&);
 	};

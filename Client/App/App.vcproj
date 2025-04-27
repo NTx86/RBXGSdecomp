@@ -533,6 +533,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\AssemblyStage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\Ball.cpp"
 				>
 			</File>
