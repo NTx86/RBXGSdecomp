@@ -3,6 +3,8 @@
 #include "v8world/Primitive.h"
 #include "v8world/Edge.h"
 #include "v8world/Assembly.h"
+#include "v8world/RigidJoint.h"
+#include "v8world/MotorJoint.h"
 
 namespace RBX
 {
@@ -78,5 +80,34 @@ namespace RBX
 		if (mech->getAssemblies().empty())
 			this->destroyMechanism(mech);
 		a->removeFromStage(this);
+	}
+
+	void SimJobStage::combineMechanisms(Edge* e)
+	{
+		RBXAssert(e->getEdgeType() == Edge::JOINT);
+		RBXAssert(!RigidJoint::isRigidJoint(e));
+		RBXAssert(!MotorJoint::isMotorJoint(e));
+
+		Joint* j = rbx_static_cast<Joint*>(e);
+		Assembly* a0 = e->getPrimitive(0)->getAssembly();
+		Assembly* a1 = e->getPrimitive(1)->getAssembly();
+		RBXAssert(a0->inOrDownstreamOfStage(this));
+		RBXAssert(a1->inOrDownstreamOfStage(this));
+
+		Mechanism* m0 = a0->getMechanism();
+		Mechanism* m1 = a1->getMechanism();
+		if (m0 != m1)
+		{
+			if (m0->getAssemblies().size() > m1->getAssemblies().size())
+			{
+				m0->absorb(m1);
+				destroyMechanism(m1);
+			}
+			else
+			{
+				m1->absorb(m0);
+				destroyMechanism(m0);
+			}
+		}
 	}
 }
