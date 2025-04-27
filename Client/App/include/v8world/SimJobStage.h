@@ -24,10 +24,13 @@ namespace RBX
 		Mechanism* nextMechanism(std::list<Mechanism*>& list, const Mechanism* current);
 	public:
 		//SimJobStage(const SimJobStage&);
-		SimJobStage(IStage*, World*);
+		SimJobStage(IStage* upstream, World* world);
 		virtual ~SimJobStage();
 	public:
-		virtual IStage::StageType getStageType();
+		virtual StageType getStageType()
+		{
+			return SIMJOB_STAGE;
+		}
 		virtual void onEdgeAdded(Edge* e);
 		virtual void onEdgeRemoving(Edge* e);
 		void onAssemblyAdded(Assembly* a);

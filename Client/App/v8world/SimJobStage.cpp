@@ -40,7 +40,15 @@ namespace RBX
 		e->removeFromStage(this);
 	}
 
-	SimJobStage::SimJobStage(IStage* upstream, World* world):IWorldStage(upstream, new Kernel(this), world) {}
+#pragma warning (push)
+#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
+	SimJobStage::SimJobStage(IStage* upstream, World* world)
+		: IWorldStage(upstream, new Kernel(this), world)
+	{}
+#pragma warning (pop)
+
+	SimJobStage::~SimJobStage()
+	{}
 
 	void SimJobStage::insertMechanism(Mechanism* m)
 	{
