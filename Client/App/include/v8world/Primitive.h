@@ -143,7 +143,10 @@ namespace RBX
 		void setVelocity(const Velocity&);
 		void setMassInertia(float);
 		void setDragging(bool);
-		bool getDragging() const;
+		bool getDragging() const
+		{
+			return dragging;
+		}
 		void setAnchor(bool);
 		bool getAnchor() const;
 		Anchor* getAnchorObject()
@@ -151,7 +154,10 @@ namespace RBX
 			return anchorObject;
 		}
 		void setCanCollide(bool);
-		const bool getCanCollide() const;
+		const bool getCanCollide() const
+		{
+			return canCollide;
+		}
 		void setCanSleep(bool);
 		const bool getCanSleep() const
 		{

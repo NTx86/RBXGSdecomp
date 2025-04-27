@@ -33,7 +33,10 @@ namespace RBX
 		Contact(Primitive*, Primitive*);
 		virtual ~Contact();
 	public:
-		int& steppingIndexFunc();
+		int& steppingIndexFunc()
+		{
+			return steppingIndex;
+		}
 		virtual bool computeIsColliding(float);
 		bool computeIsAdjacent(float);
 		void onPrimitiveContactParametersChanged();
