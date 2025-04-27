@@ -34,9 +34,8 @@ namespace RBX
 
 	void SimJobStage::onEdgeRemoving(Edge* e)
 	{
-		//asserts non matching
-		RBXAssert(e->getPrimitive(0)->getAssembly());
-		RBXAssert(e->getPrimitive(1)->getAssembly());
+		RBXAssert(validateEdge(e));
+
 		e->removeFromKernel();
 		e->removeFromStage(this);
 	}
