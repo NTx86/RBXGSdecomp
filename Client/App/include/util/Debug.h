@@ -24,6 +24,8 @@ namespace RBX {
 	} \
 	while (0)
 #define RBXASSERT(expr) SCOPED( (void)( ( RBX::Debugable::assertAction != RBX::Debugable::CrashOnAssert || !!(expr) ) || (RBX::Debugable::doCrash(), 0) ) )
+//temporary redefinition in case this is being implemented while new code is being decompiled.
+#define RBXAssert(expr) RBXASSERT(expr)
 
 template <typename To, typename From>
 To rbx_static_cast(From u)
