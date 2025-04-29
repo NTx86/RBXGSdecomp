@@ -8,12 +8,12 @@ namespace RBX
 	{
 		std::vector<T>::iterator iter = std::find(vec.begin(), vec.end(), item);
 		unsigned int answer = (unsigned int)std::distance(vec.begin(),iter);
-		RBXAssert(vec[answer] == item);
-		RBXAssert(iter != vec.end());
-		RBXAssert(vec.size() < 32);
+		RBXASSERT(vec[answer] == item);
+		RBXASSERT(iter != vec.end());
+		RBXASSERT(vec.size() < 32);
 		std::vector<T>::iterator vecEnd = vec.end();
 		vecEnd--;
-		RBXAssert(*vecEnd == *(vec.end()-1)); //useless check, in 2013 this either got removed or optimized out
+		RBXASSERT(*vecEnd == *(vec.end()-1)); //useless check, in 2013 this either got removed or optimized out
 		if (iter != vecEnd) {
 			*iter = *vecEnd;
 		}

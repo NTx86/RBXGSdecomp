@@ -17,7 +17,7 @@ namespace RBX
 
 	void Assembly::removeFromKernel()
 	{
-		RBXAssert(getKernel());
+		RBXASSERT(getKernel());
 		rootClump->removeFromKernel(getKernel());
 		IPipelined::removeFromKernel();
 	}
@@ -119,7 +119,7 @@ namespace RBX
 		const std::set<Clump*>& clumps = assembly->getClumps();
 		const std::set<Clump*>::const_iterator start = clumps.begin();
 
-		RBXAssert(start != clumps.end());
+		RBXASSERT(start != clumps.end());
 		Clump* clump = *start;
 
 		return PrimIterator(assembly, start, clump->clumpPrimBegin());
@@ -148,7 +148,7 @@ namespace RBX
 
 	Assembly::PrimIterator& Assembly::PrimIterator::operator++()
 	{
-		RBXAssert(clumpIterator != assembly->getClumps().end());
+		RBXASSERT(clumpIterator != assembly->getClumps().end());
 
 		Clump* clump = *clumpIterator;
 		primIterator++;
@@ -163,7 +163,7 @@ namespace RBX
 			else
 			{
 				primIterator = (*clumpIterator)->clumpPrimBegin();
-				RBXAssert(primIterator != (*clumpIterator)->clumpPrimEnd());
+				RBXASSERT(primIterator != (*clumpIterator)->clumpPrimEnd());
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace RBX
 		typedef std::vector<MotorJoint*>::iterator Iterator;
 		Iterator iter = std::find(motors.begin(), motors.end(), m);
 
-		RBXAssert(iter != motors.end());
+		RBXASSERT(iter != motors.end());
 		motors.erase(iter);
 	}
 
@@ -204,36 +204,36 @@ namespace RBX
 	void Assembly::insertClump(Clump* c)
 	{
 		bool success = clumps.insert(c).second;
-		RBXAssert(success);
+		RBXASSERT(success);
 		c->setAssembly(this);
 	}
 
 	void Assembly::addExternalEdge(Edge* e)
 	{
 		bool success = externalEdges.insert(e).second;
-		RBXAssert(success);
+		RBXASSERT(success);
 	}
 
 	void Assembly::addInternalEdge(Edge* e)
 	{
 		bool success = internalEdges.insert(e).second;
-		RBXAssert(success);
+		RBXASSERT(success);
 	}
 
 	void Assembly::addInconsistentMotor(MotorJoint* m)
 	{
 		bool success = inconsistentMotors.insert(m).second;
-		RBXAssert(success);
+		RBXASSERT(success);
 	}
 
 	Assembly::~Assembly()
 	{
-		RBXAssert(!mechanism);
-		RBXAssert(clumps.empty());
-		RBXAssert(motors.empty());
-		RBXAssert(inconsistentMotors.empty());
-		RBXAssert(externalEdges.empty());
-		RBXAssert(internalEdges.empty());
+		RBXASSERT(!mechanism);
+		RBXASSERT(clumps.empty());
+		RBXASSERT(motors.empty());
+		RBXASSERT(inconsistentMotors.empty());
+		RBXASSERT(externalEdges.empty());
+		RBXASSERT(internalEdges.empty());
 	}
 
 	void Assembly::removeClump(Clump* c)
@@ -244,25 +244,25 @@ namespace RBX
 		c->getRootPrimitive()->getBody()->setParent(NULL);
 
 		size_t removed = clumps.erase(c);
-		RBXAssert(removed == 1);
+		RBXASSERT(removed == 1);
 	}
 
 	void Assembly::removeExternalEdge(Edge* e)
 	{
 		size_t removed = externalEdges.erase(e);
-		RBXAssert(removed == 1);
+		RBXASSERT(removed == 1);
 	}
 
 	void Assembly::removeInternalEdge(Edge* e)
 	{
 		size_t removed = internalEdges.erase(e);
-		RBXAssert(removed == 1);
+		RBXASSERT(removed == 1);
 	}
 
 	void Assembly::removeInconsistentMotor(MotorJoint* m)
 	{
 		size_t removed = inconsistentMotors.erase(m);
-		RBXAssert(removed == 1);
+		RBXASSERT(removed == 1);
 	}
 
 	Assembly::Assembly(Clump* root)
@@ -310,10 +310,10 @@ namespace RBX
 		else
 			other = m->getPrimitive(1);
 
-		RBXAssert(clumps.find(other->getClump()) != clumps.end());
+		RBXASSERT(clumps.find(other->getClump()) != clumps.end());
 
 		c->getRootPrimitive()->getBody()->setParent(other->getBody());
-		RBXAssert(std::find(motors.begin(), motors.end(), m) == motors.end());
+		RBXASSERT(std::find(motors.begin(), motors.end(), m) == motors.end());
 		motors.push_back(m);
 	}
 }

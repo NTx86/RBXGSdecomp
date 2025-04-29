@@ -56,14 +56,14 @@ namespace RBX
 				return zn_0;
 				}
 		}
-		RBXAssert(0);
+		RBXASSERT(0);
 		return G3D::Vector3::zero();
 	}
 
 	NormalId Vector3ToNormalId(const G3D::Vector3& v)
 	{
 		//the assertion does not match, the rest of the code does
-		RBXAssert((v == Vector3::unitX()) || (v == Vector3::unitY()) || (v == Vector3::unitZ()) || (v == -Vector3::unitX()) || (v == -Vector3::unitY()) || (v == -Vector3::unitZ()));
+		RBXASSERT((v == Vector3::unitX()) || (v == Vector3::unitY()) || (v == Vector3::unitZ()) || (v == -Vector3::unitX()) || (v == -Vector3::unitY()) || (v == -Vector3::unitZ()));
 		if (v.x == 1.0f)
 			return NORM_X;
 		if (v.y == 1.0f)
@@ -76,7 +76,7 @@ namespace RBX
 			return NORM_Y_NEG;
 		if (v.z == -1.0f)
 			return NORM_Z_NEG;
-		RBXAssert(0);
+		RBXASSERT(0);
 		return NORM_UNDEFINED;
 	}
 }

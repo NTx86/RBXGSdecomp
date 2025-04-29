@@ -17,7 +17,7 @@ namespace RBX
 
 	SeparateStage::~SeparateStage()
 	{
-		RBXAssert(inContact.empty());
+		RBXASSERT(inContact.empty());
 	}
 
 	SleepStage* SeparateStage::getSleepStage()
@@ -64,7 +64,7 @@ namespace RBX
 
 	void SeparateStage::onEdgeAdded(Edge* e)
 	{
-		RBXAssert(!e->inOrDownstreamOfStage(this));
+		RBXASSERT(!e->inOrDownstreamOfStage(this));
 
 		e->putInStage(this);
 		if (e->getEdgeType() == Edge::CONTACT)
@@ -72,7 +72,7 @@ namespace RBX
 			Contact* c = rbx_static_cast<Contact*>(e);
 
 			bool inserted = inContact.insert(c).second;
-			RBXAssert(inserted);
+			RBXASSERT(inserted);
 		}
 
 		getDownstreamWS()->onEdgeAdded(e);
@@ -87,7 +87,7 @@ namespace RBX
 			Contact* c = rbx_static_cast<Contact*>(e);
 
 			size_t removed = inContact.erase(c);
-			RBXAssert(removed == 1);
+			RBXASSERT(removed == 1);
 		}
 
 		e->removeFromStage(this);

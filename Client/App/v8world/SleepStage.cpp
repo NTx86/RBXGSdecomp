@@ -18,9 +18,9 @@ namespace RBX
 
 	SleepStage::~SleepStage()
 	{
-		RBXAssert(awake.empty());
-		RBXAssert(sleepingChecking.empty());
-		RBXAssert(sleepingDeeply.empty());
+		RBXASSERT(awake.empty());
+		RBXASSERT(sleepingChecking.empty());
+		RBXASSERT(sleepingDeeply.empty());
 	}
 
 	int SleepStage::stepsToSleep()
@@ -53,7 +53,7 @@ namespace RBX
 				checkSleepingAssemblies();
 		}
 
-		RBXAssert(getDownstream());
+		RBXASSERT(getDownstream());
 		getDownstream()->stepWorld(worldStepId, uiStepId, throttling);
 	}
 
@@ -61,15 +61,15 @@ namespace RBX
 	{
 		if (assembly->getSleepStatus() == Sim::AWAKE)
 		{
-			RBXAssert(assembly->downstreamOfStage(this));
+			RBXASSERT(assembly->downstreamOfStage(this));
 			rbx_static_cast<SeparateStage*>(getDownstreamWS())->onAssemblyRemoving(assembly);
 		}
 
-		RBXAssert(assembly->inStage(this));
+		RBXASSERT(assembly->inStage(this));
 
 		std::set<Assembly*>& assemblyArray = statusToArray(assembly->getSleepStatus());
 		size_t removed = assemblyArray.erase(assembly);
-		RBXAssert(removed == 1);
+		RBXASSERT(removed == 1);
 
 		assembly->setSleepStatus(Sim::AWAKE);
 		assembly->setSleepCount(0);
@@ -77,13 +77,13 @@ namespace RBX
 
 	void SleepStage::insert(Assembly* assembly, Sim::AssemblyState newStatus)
 	{
-		RBXAssert(assembly->getSleepCount() == 0);
-		RBXAssert(assembly->getSleepStatus() == Sim::AWAKE);
-		RBXAssert(!assembly->downstreamOfStage(this));
+		RBXASSERT(assembly->getSleepCount() == 0);
+		RBXASSERT(assembly->getSleepStatus() == Sim::AWAKE);
+		RBXASSERT(!assembly->downstreamOfStage(this));
 
 		std::set<Assembly*>& assemblyArray = statusToArray(newStatus);
 		bool inserted = assemblyArray.insert(assembly).second;
-		RBXAssert(inserted);
+		RBXASSERT(inserted);
 
 		assembly->setSleepStatus(newStatus);
 		if (assembly->getSleepStatus() == Sim::AWAKE)
@@ -100,8 +100,8 @@ namespace RBX
 
 	void SleepStage::onAssemblyAdded(Assembly* assembly)
 	{
-		RBXAssert(!assembly->getAnchored());
-		RBXAssert(assembly->getSleepStatus() == Sim::AWAKE);
+		RBXASSERT(!assembly->getAnchored());
+		RBXASSERT(assembly->getSleepStatus() == Sim::AWAKE);
 
 		assembly->putInStage(this);
 		insert(assembly, Sim::AWAKE);
@@ -109,22 +109,22 @@ namespace RBX
 
 	void SleepStage::onAssemblyRemoving(Assembly* assembly)
 	{
-		RBXAssert(assembly->inOrDownstreamOfStage(this));
+		RBXASSERT(assembly->inOrDownstreamOfStage(this));
 
 		remove(assembly);
-		RBXAssert(assembly->getSleepStatus() == Sim::AWAKE);
+		RBXASSERT(assembly->getSleepStatus() == Sim::AWAKE);
 		assembly->removeFromStage(this);
 	}
 
 	void SleepStage::onEdgeAdded(Edge* e)
 	{
-		RBXAssert(!e->inOrDownstreamOfStage(this));
+		RBXASSERT(!e->inOrDownstreamOfStage(this));
 
 		Assembly* a0 = e->getPrimitive(0)->getAssembly();
 		Assembly* a1 = e->getPrimitive(1)->getAssembly();
 
-		RBXAssert(!a0->getAnchored() || !a1->getAnchored());
-		RBXAssert(a0->inOrDownstreamOfStage(this) || a1->inOrDownstreamOfStage(this));
+		RBXASSERT(!a0->getAnchored() || !a1->getAnchored());
+		RBXASSERT(a0->inOrDownstreamOfStage(this) || a1->inOrDownstreamOfStage(this));
 
 		bool a0Awoken = false;
 		bool a1Awoken = false;
@@ -152,14 +152,14 @@ namespace RBX
 
 	void SleepStage::onEdgeRemoving(Edge* e)
 	{
-		RBXAssert(e->inOrDownstreamOfStage(this));
+		RBXASSERT(e->inOrDownstreamOfStage(this));
 
 		if (e->downstreamOfStage(this))
 			getDownstreamWS()->onEdgeRemoving(e);
 
 		Assembly* a0 = e->getPrimitive(0)->getAssembly();
 		Assembly* a1 = e->getPrimitive(1)->getAssembly();
-		RBXAssert(a0->inOrDownstreamOfStage(this) || a1->inOrDownstreamOfStage(this));
+		RBXASSERT(a0->inOrDownstreamOfStage(this) || a1->inOrDownstreamOfStage(this));
 
 		e->removeFromStage(this);
 
@@ -171,7 +171,7 @@ namespace RBX
 
 	bool SleepStage::shouldSleep(Assembly* assembly)
 	{
-		RBXAssert(assembly->getSleepStatus() == Sim::AWAKE);
+		RBXASSERT(assembly->getSleepStatus() == Sim::AWAKE);
 		if (!assembly->getCanSleep())
 			return false;
 		if (!assembly->calcShouldSleep())
@@ -195,7 +195,7 @@ namespace RBX
 
 	Sim::AssemblyState SleepStage::shouldWakeOrSleepDeeply(Assembly* assembly)
 	{
-		RBXAssert(assembly->getSleepStatus() == Sim::SLEEPING_CHECKING);
+		RBXASSERT(assembly->getSleepStatus() == Sim::SLEEPING_CHECKING);
 		if (!assembly->getCanSleep())
 			return Sim::AWAKE;
 
@@ -221,7 +221,7 @@ namespace RBX
 
 	void SleepStage::goToSleep(Assembly* assembly)
 	{
-		RBXAssert(assembly->getSleepStatus() == Sim::AWAKE);
+		RBXASSERT(assembly->getSleepStatus() == Sim::AWAKE);
 
 		typedef std::set<Edge*>::iterator Iterator;
 		for (Iterator it = assembly->getExternalEdges().begin(); it != assembly->getExternalEdges().end(); it++)
@@ -244,9 +244,9 @@ namespace RBX
 
 	void SleepStage::wakeAssembly(Assembly* assembly)
 	{
-		RBXAssert(assembly->getSleepStatus() != Sim::AWAKE);
-		RBXAssert(!assembly->getAnchored());
-		RBXAssert(assembly->inOrDownstreamOfStage(this));
+		RBXASSERT(assembly->getSleepStatus() != Sim::AWAKE);
+		RBXASSERT(!assembly->getAnchored());
+		RBXASSERT(assembly->inOrDownstreamOfStage(this));
 
 		changeSleepStatus(assembly, Sim::AWAKE);
 	}
@@ -300,7 +300,7 @@ namespace RBX
 			Assembly* a0 = c->getPrimitive(0)->getAssembly();
 			Assembly* a1 = c->getPrimitive(1)->getAssembly();
 
-			RBXAssert(a0->inOrDownstreamOfStage(this) || a1->inOrDownstreamOfStage(this));
+			RBXASSERT(a0->inOrDownstreamOfStage(this) || a1->inOrDownstreamOfStage(this));
 
 			if (a0->getSleepStatus() != Sim::AWAKE)
 				wakeAssemblyAndNeighbors(a0, 8);
@@ -312,13 +312,13 @@ namespace RBX
 		{
 			Contact* c = separating[i];
 
-			RBXAssert(c->inOrDownstreamOfStage(this));
+			RBXASSERT(c->inOrDownstreamOfStage(this));
 			if (c->downstreamOfStage(this))
 			{
 				getDownstreamWS()->onEdgeRemoving(c);
 			}
 
-			RBXAssert(c->inStage(this));
+			RBXASSERT(c->inStage(this));
 			c->removeFromStage(this);
 		}
 
@@ -339,7 +339,7 @@ namespace RBX
 		for (Iterator it = awake.begin(); it != awake.end(); it++)
 		{
 			Assembly* assembly = *it;
-			RBXAssert(!assembly->getAnchored());
+			RBXASSERT(!assembly->getAnchored());
 
 			if (!throttling || !assembly->getMainPrimitive()->getBody()->getCanThrottle())
 			{
@@ -374,8 +374,8 @@ namespace RBX
 		for (Iterator it = sleepingChecking.begin(); it != sleepingChecking.end(); it++)
 		{
 			Assembly* assembly = *it;
-			RBXAssert(!assembly->getAnchored());
-			RBXAssert(assembly->getSleepCount() == 0);
+			RBXASSERT(!assembly->getAnchored());
+			RBXASSERT(assembly->getSleepCount() == 0);
 
 			Sim::AssemblyState state = shouldWakeOrSleepDeeply(assembly);
 

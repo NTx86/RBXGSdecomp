@@ -48,7 +48,7 @@ namespace RBX
 	{
 		if (!sName)
 		{
-			RBXAssert(dictionaryIndex == -1 || !dictionaryIndex);
+			RBXASSERT(dictionaryIndex == -1 || !dictionaryIndex);
 			return getNullName();
 		}
 
@@ -59,7 +59,7 @@ namespace RBX
 		{
 			if (dictionaryIndex != -1)
 			{
-				RBXAssert(iter->second->dictionaryIndex == dictionaryIndex || iter->second->dictionaryIndex == -1);
+				RBXASSERT(iter->second->dictionaryIndex == dictionaryIndex || iter->second->dictionaryIndex == -1);
 				dictionary()[dictionaryIndex] = iter->second;
 			}
 			return *iter->second;
@@ -75,7 +75,7 @@ namespace RBX
 
 	const Name& Name::lookup(const std::string& sName)
 	{
-		RBXAssert(sName.size() < 50);
+		RBXASSERT(sName.size() < 50);
 		boost::mutex::scoped_lock scoped_lock(mutex());
 
 		NamMap::iterator iter = namMap().find(sName);

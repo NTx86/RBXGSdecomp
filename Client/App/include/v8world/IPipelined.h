@@ -22,7 +22,7 @@ namespace RBX
 		IPipelined() : currentStage(NULL) {}
 		virtual ~IPipelined()
 		{
-			RBXAssert(currentStage == NULL);
+			RBXASSERT(currentStage == NULL);
 		}
 		void putInPipeline(IStage* stage);
 		void removeFromPipeline(IStage* stage);
@@ -33,28 +33,28 @@ namespace RBX
 		}
 		bool inStage(IStage* iStage) const
 		{
-			RBXAssert(iStage);
-			RBXAssert(currentStage);
+			RBXASSERT(iStage);
+			RBXASSERT(currentStage);
 
 			return currentStage == iStage;
 		}
 		bool inStage(IStage::StageType stageType) const
 		{
-			RBXAssert(currentStage);
+			RBXASSERT(currentStage);
 
 			return currentStage->getStageType() == stageType;
 		}
 		bool inOrDownstreamOfStage(IStage* iStage) const
 		{
-			RBXAssert(iStage);
-			RBXAssert(currentStage);
+			RBXASSERT(iStage);
+			RBXASSERT(currentStage);
 
 			return (int)currentStage->getStageType() >= (int)iStage->getStageType();
 		}
 		bool downstreamOfStage(IStage* iStage) const
 		{
-			RBXAssert(iStage);
-			RBXAssert(currentStage);
+			RBXASSERT(iStage);
+			RBXASSERT(currentStage);
 
 			return (int)currentStage->getStageType() > (int)iStage->getStageType();
 		}

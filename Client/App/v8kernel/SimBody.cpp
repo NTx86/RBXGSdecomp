@@ -33,7 +33,7 @@ __forceinline void SimBody::unkSimInline(float fNum)
 
 void SimBody::update()
 {
-	RBXAssert(dirty);
+	RBXASSERT(dirty);
 	{
 		const G3D::Vector3 cofmOffset = body->getCofmOffset();
 		pv = body->getPV().pvAtLocalOffset(cofmOffset);
@@ -136,7 +136,7 @@ void SimBody::step(float dt)
 
 PV SimBody::getOwnerPV()
 {
-	RBXAssert(!dirty);
+	RBXASSERT(!dirty);
 	G3D::Vector3 cofmOffset = body->getCofmOffset();
 	return pv.pvAtLocalOffset(Vector3(-cofmOffset.x, -cofmOffset.y, -cofmOffset.z));
 }

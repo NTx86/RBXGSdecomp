@@ -9,7 +9,7 @@ void Link::dirty()
 {
 	if (body)
 	{
-		RBXAssert(body->getLink() == this);
+		RBXASSERT(body->getLink() == this);
 		body->getRoot()->advanceStateIndex();
 	}
 }

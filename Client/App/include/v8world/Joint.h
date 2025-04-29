@@ -51,7 +51,7 @@ namespace RBX
 		virtual void setPrimitive(int i, Primitive* p);
 		virtual JointType getJointType() const
 		{
-			RBXAssert(0);
+			RBXASSERT(0);
 			return NO_JOINT;
 		}
 		virtual bool isBreakable() const
@@ -72,7 +72,7 @@ namespace RBX
 		}
 		virtual G3D::CoordinateFrame align(Primitive* pMove, Primitive* pStay)
 		{
-			RBXAssert(0);
+			RBXASSERT(0);
 			return G3D::CoordinateFrame();
 		}
 		virtual bool canStepUi() const
