@@ -10,10 +10,10 @@ namespace RBX {
 		public:
 			KernelData::~KernelData()
 			{
-				RBXAssert(!points.size());
-				RBXAssert(!bodies.size());
-				RBXAssert(!connectors.size());
-				RBXAssert(!connectors2ndPass.size());
+				RBXASSERT(!points.size());
+				RBXASSERT(!bodies.size());
+				RBXASSERT(!connectors.size());
+				RBXASSERT(!connectors2ndPass.size());
 			}
 			IndexArray<Body, &Body::getKernelIndex> bodies;
 			IndexArray<Point, &Point::getKernelIndex> points;

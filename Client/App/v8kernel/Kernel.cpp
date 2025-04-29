@@ -18,7 +18,7 @@ Kernel::Kernel(RBX::IStage* upstream)
 Kernel::~Kernel()
 {
 	Kernel::numKernels--;
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	delete kernelData;
 
 }
@@ -30,44 +30,44 @@ void Kernel::insertBody(RBX::Body *b)
 
 inline void Kernel::insertPoint(RBX::Point *p)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	kernelData->points.fastAppend(p);
 }
 
 void Kernel::insertConnector(RBX::Connector *c)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	kernelData->connectors.fastAppend(c);
 }
 
 void Kernel::insertConnector2ndPass(RBX::Connector *c)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	kernelData->connectors2ndPass.fastAppend(c);
 }
 
 void Kernel::removeBody(Body *b) 
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	kernelData->bodies.fastRemove(b);
 }
 
 inline void Kernel::removePoint(RBX::Point *p)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	kernelData->points.fastRemove(p);
 }
 
 void Kernel::removeConnector(RBX::Connector *c)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	realTimeConnectors.resize(0, false);
 	kernelData->connectors.fastRemove(c);
 }
 
 void Kernel::removeConnector2ndPass(RBX::Connector *c) 
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	kernelData->connectors2ndPass.fastRemove(c);
 }
 
@@ -77,7 +77,7 @@ int Kernel::numConnectors() const { return kernelData->connectors.size(); }
 
 Point* Kernel::newPoint(Body* _body, const G3D::Vector3& worldPos)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	Point* nPoint = new Point(_body);
 
 	nPoint->setWorldPos(worldPos);
@@ -98,7 +98,7 @@ Point* Kernel::newPoint(Body* _body, const G3D::Vector3& worldPos)
 
 void Kernel::deletePoint(RBX::Point* _point)
 {
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 
 	if (_point) 
 	{
@@ -118,7 +118,7 @@ void Kernel::stepWorld(int worldStepId, int uiStepId, bool throttling)
 	IndexArray<Connector, &Connector::getKernelIndex>& connectors = kernelData->connectors;
 	IndexArray<Connector, &Connector::getKernelIndex>& connectors2ndPass = kernelData->connectors2ndPass;
 
-	RBXAssert(!inStepCode);
+	RBXASSERT(!inStepCode);
 	inStepCode = true;
 	Profiling::Mark mark = Profiling::Mark(*profilingKernel.get(), false);
 	float kernelDt = Constants::kernelDt();

@@ -32,8 +32,8 @@ const float Constants::getElasticMultiplier(float elasticity)
 
 const float RBX::Constants::getKmsMaxJointForce(float grid1, float grid2)
 {
-	RBXAssert(std::abs(grid1 * 10.0f - G3D::iRound(grid1 * 10.0f)) < 0.01f);
-	RBXAssert(std::abs(grid2 * 10.0f - G3D::iRound(grid2 * 10.0f)) < 0.01f);
+	RBXASSERT(std::abs(grid1 * 10.0f - G3D::iRound(grid1 * 10.0f)) < 0.01f);
+	RBXASSERT(std::abs(grid2 * 10.0f - G3D::iRound(grid2 * 10.0f)) < 0.01f);
 
 	int grid1int = std::max(1, G3D::iRound(grid1));
 	int grid2int = std::max(1, G3D::iRound(grid2));
@@ -62,15 +62,15 @@ __forceinline Vector3 getClippedSortedSize(const Vector3& v)
 
 const float Constants::getJointKMultiplier(const G3D::Vector3& clippedSortedSize, bool ball)
 {
-	RBXAssert(clippedSortedSize.y >= clippedSortedSize.x);
-	RBXAssert(clippedSortedSize.z >= clippedSortedSize.y);
-	RBXAssert(getClippedSortedSize(clippedSortedSize) == clippedSortedSize);
+	RBXASSERT(clippedSortedSize.y >= clippedSortedSize.x);
+	RBXASSERT(clippedSortedSize.z >= clippedSortedSize.y);
+	RBXASSERT(getClippedSortedSize(clippedSortedSize) == clippedSortedSize);
 
 	Vector3int16 size(clippedSortedSize);
 
 	if (ball)
 	{
-		RBXAssert(size.x >= 1);
+		RBXASSERT(size.x >= 1);
 
 		switch(size.x)
 		{

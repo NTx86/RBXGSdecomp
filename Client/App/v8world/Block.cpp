@@ -144,7 +144,7 @@ namespace RBX
 			return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[edgeId / 4][edgeId % 4]];
 
 		NormalId faceId = getFaceId(edgeId);
-		RBXAssert(validNormalId(faceId));
+		RBXASSERT(validNormalId(faceId));
 		return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[faceId][edgeId + 1]];
 	}
 
@@ -167,7 +167,7 @@ namespace RBX
 		}
 		else
 		{
-			RBXAssert(clip.z == 0);
+			RBXASSERT(clip.z == 0);
 			normalID = NORM_Z;
 			return &this->vertices[4 * (clip.x <= 0) + 1 + 2 * (clip.y <= 1)];
 		}
@@ -187,7 +187,7 @@ namespace RBX
 		}
 		else
 		{
-			RBXAssert(clip.z != 0);
+			RBXASSERT(clip.z != 0);
 			normalID = clip.z > 0 ? NORM_Z : NORM_Z_NEG;
 			return &this->vertices[(clip.z <= 0)];
 		}
@@ -265,7 +265,7 @@ namespace RBX
 			normalID = NORM_Z_NEG;
 		}
 
-		RBXAssert(best != 1.0e30);
+		RBXASSERT(best != 1.0e30);
 
 		offset = (normalID > NORM_Z) ? this->vertices + 7 /*wtf?*/ : this->vertices;
 
@@ -392,7 +392,7 @@ namespace RBX
 				localHitPoint,
 				inside);
 
-			RBXAssert(!inside);
+			RBXASSERT(!inside);
 			return true;
 		}
 		return result;

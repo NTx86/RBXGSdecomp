@@ -5,21 +5,21 @@ namespace RBX
 {
 	void IWorldStage::onEdgeAdded(Edge* e)
 	{
-		RBXAssert(getDownstreamWS());
+		RBXASSERT(getDownstreamWS());
 		e->putInPipeline(this);
 		getDownstreamWS()->onEdgeAdded(e);
 	}
 
 	void IWorldStage::onEdgeRemoving(Edge* e)
 	{
-		RBXAssert(getDownstreamWS());
+		RBXASSERT(getDownstreamWS());
 		getDownstreamWS()->onEdgeRemoving(e);
 		e->removeFromStage(this);
 	}
 
 	int IWorldStage::getMetric(MetricType metricType)
 	{
-		RBXAssert(getDownstreamWS());
+		RBXASSERT(getDownstreamWS());
 		return getDownstreamWS()->getMetric(metricType);
 	}
 }

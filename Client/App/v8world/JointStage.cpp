@@ -24,7 +24,7 @@ namespace RBX
 
 	void JointStage::moveEdgeToDownstream(Edge* e)
 	{
-		RBXAssert(edgeHasPrimitivesDownstream(e));
+		RBXASSERT(edgeHasPrimitivesDownstream(e));
 
 		IStage* downstream = getDownstream();
 		ClumpStage* clumpStage = rbx_static_cast<ClumpStage*>(downstream);
@@ -33,7 +33,7 @@ namespace RBX
 
 	void JointStage::removeEdgeFromDownstream(Edge* e)
 	{
-		RBXAssert(edgeHasPrimitivesDownstream(e));
+		RBXASSERT(edgeHasPrimitivesDownstream(e));
 
 		IStage* downstream = getDownstream();
 		ClumpStage* clumpStage = rbx_static_cast<ClumpStage*>(downstream);
@@ -60,7 +60,7 @@ namespace RBX
 		if (!p)
 			return;
 
-		RBXAssert(!pairInMap(j, p));
+		RBXASSERT(!pairInMap(j, p));
 		jointMap.insert(std::pair<Primitive*, Joint*>(p, j));
 	}
 
@@ -68,7 +68,7 @@ namespace RBX
 	{
 		// TODO
 		// remove noinline once completed
-		RBXAssert(0);
+		RBXASSERT(0);
 	}
 
 	// NOTE: might be in headers
@@ -80,67 +80,67 @@ namespace RBX
 	void JointStage::removeFromList(Joint* j)
 	{
 		size_t count = incompleteJoints.erase(j);
-		RBXAssert(count == 1);
+		RBXASSERT(count == 1);
 	}
 
 	void JointStage::insertToList(Joint* j)
 	{
 		std::pair<std::set<Joint*>::iterator, bool> result = incompleteJoints.insert(j);
-		RBXAssert(result.second);
+		RBXASSERT(result.second);
 	}
 
 	void JointStage::moveJointToDownstream(Joint* j)
 	{
-		RBXAssert(!jointInList(j));
-		RBXAssert(!pairInMap(j, j->getPrimitive(0)));
-		RBXAssert(!pairInMap(j, j->getPrimitive(1)));
+		RBXASSERT(!jointInList(j));
+		RBXASSERT(!pairInMap(j, j->getPrimitive(0)));
+		RBXASSERT(!pairInMap(j, j->getPrimitive(1)));
 
 		moveEdgeToDownstream(j);
 	}
 
 	void JointStage::removeJointFromDownstream(Joint* j)
 	{
-		RBXAssert(!jointInList(j));
-		RBXAssert(!pairInMap(j, j->getPrimitive(0)));
-		RBXAssert(!pairInMap(j, j->getPrimitive(1)));
+		RBXASSERT(!jointInList(j));
+		RBXASSERT(!pairInMap(j, j->getPrimitive(0)));
+		RBXASSERT(!pairInMap(j, j->getPrimitive(1)));
 
 		removeEdgeFromDownstream(j);
 	}
 
 	void JointStage::onJointPrimitiveNulling(Joint* j, Primitive* nulling)
 	{
-		RBXAssert(!nulling);
-		RBXAssert(!j->links(nulling));
-		RBXAssert(j->downstreamOfStage(this) == edgeHasPrimitivesDownstream(j));
-		RBXAssert(j->downstreamOfStage(this) != edgeHasPrimitivesDownstream(j));
+		RBXASSERT(!nulling);
+		RBXASSERT(!j->links(nulling));
+		RBXASSERT(j->downstreamOfStage(this) == edgeHasPrimitivesDownstream(j));
+		RBXASSERT(j->downstreamOfStage(this) != edgeHasPrimitivesDownstream(j));
 
 		if (j->downstreamOfStage(this))
 		{
-			RBXAssert(!pairInMap(j, nulling));
+			RBXASSERT(!pairInMap(j, nulling));
 			removeJointFromDownstream(j);
 			insertToList(j);
 			insertToMap(j, j->otherPrimitive(nulling));
 		}
 		else
 		{
-			RBXAssert(!j->inStage(this));
+			RBXASSERT(!j->inStage(this));
 			removeFromMap(j, nulling);
 		}
 
-		RBXAssert(!pairInMap(j, nulling));
+		RBXASSERT(!pairInMap(j, nulling));
 	}
 
 	void JointStage::onJointPrimitiveSet(Joint* j, Primitive* p)
 	{
-		RBXAssert(!p);
-		RBXAssert(!j->links(p));
-		RBXAssert(j->inStage(this));
-		RBXAssert(!jointInList(j));
+		RBXASSERT(!p);
+		RBXASSERT(!j->links(p));
+		RBXASSERT(j->inStage(this));
+		RBXASSERT(!jointInList(j));
 
 		if (edgeHasPrimitivesDownstream(j))
 		{
-			RBXAssert(!pairInMap(j, p));
-			RBXAssert(pairInMap(j, j->otherPrimitive(p)));
+			RBXASSERT(!pairInMap(j, p));
+			RBXASSERT(pairInMap(j, j->otherPrimitive(p)));
 
 			removeFromList(j);
 			removeFromMap(j, j->otherPrimitive(p));

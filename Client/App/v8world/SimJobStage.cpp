@@ -12,14 +12,14 @@ namespace RBX
 	{
 		Assembly* a0 = e->getPrimitive(0)->getAssembly();
 		Assembly* a1 = e->getPrimitive(1)->getAssembly();
-		RBXAssert(a0 && a1);
+		RBXASSERT(a0 && a1);
 
 		return true;
 	}
 
 	Mechanism* SimJobStage::nextMechanism(std::list<Mechanism*>& list, const Mechanism* current)
 	{
-		RBXAssert(!list.empty());
+		RBXASSERT(!list.empty());
 		std::list<Mechanism*>::iterator myIt = current->myIt;
 		myIt++;
 		if (myIt == list.end())
@@ -34,7 +34,7 @@ namespace RBX
 
 	void SimJobStage::onEdgeRemoving(Edge* e)
 	{
-		RBXAssert(validateEdge(e));
+		RBXASSERT(validateEdge(e));
 
 		e->removeFromKernel();
 		e->removeFromStage(this);
@@ -55,7 +55,7 @@ namespace RBX
 		this->mechanisms.push_back(m);
 		std::list<Mechanism*>::iterator mechEnd = this->mechanisms.end();
 		mechEnd--;
-		RBXAssert(*mechEnd == m);
+		RBXASSERT(*mechEnd == m);
 		m->myIt = mechEnd;
 	}
 
@@ -71,7 +71,7 @@ namespace RBX
 
 	void SimJobStage::destroyMechanism(Mechanism* m)
 	{
-		RBXAssert(std::find(this->mechanisms.begin(), this->mechanisms.end(), m) == m->myIt);
+		RBXASSERT(std::find(this->mechanisms.begin(), this->mechanisms.end(), m) == m->myIt);
 		Mechanism* next = this->mechanisms.size() > 1 ? this->nextMechanism(this->mechanisms, m) : NULL;
 		MechanismTracker::transferTrackers(m, next);
 		this->mechanisms.erase(m->myIt);
@@ -81,7 +81,7 @@ namespace RBX
 	void SimJobStage::onAssemblyAdded(Assembly* a)
 	{
 		a->putInStage(this);
-		RBXAssert(!a->getMechanism());
+		RBXASSERT(!a->getMechanism());
 		Mechanism* newMech = new Mechanism;
 		newMech->insertAssembly(a);
 		this->insertMechanism(newMech);
@@ -100,15 +100,15 @@ namespace RBX
 
 	void SimJobStage::combineMechanisms(Edge* e)
 	{
-		RBXAssert(e->getEdgeType() == Edge::JOINT);
-		RBXAssert(!RigidJoint::isRigidJoint(e));
-		RBXAssert(!MotorJoint::isMotorJoint(e));
+		RBXASSERT(e->getEdgeType() == Edge::JOINT);
+		RBXASSERT(!RigidJoint::isRigidJoint(e));
+		RBXASSERT(!MotorJoint::isMotorJoint(e));
 
 		Joint* j = rbx_static_cast<Joint*>(e);
 		Assembly* a0 = e->getPrimitive(0)->getAssembly();
 		Assembly* a1 = e->getPrimitive(1)->getAssembly();
-		RBXAssert(a0->inOrDownstreamOfStage(this));
-		RBXAssert(a1->inOrDownstreamOfStage(this));
+		RBXASSERT(a0->inOrDownstreamOfStage(this));
+		RBXASSERT(a1->inOrDownstreamOfStage(this));
 
 		Mechanism* m0 = a0->getMechanism();
 		Mechanism* m1 = a1->getMechanism();
@@ -129,7 +129,7 @@ namespace RBX
 
 	void SimJobStage::onEdgeAdded(Edge* e)
 	{
-		RBXAssert(validateEdge(e));
+		RBXASSERT(validateEdge(e));
 
 		e->putInStage(this);
 
@@ -140,8 +140,8 @@ namespace RBX
 
 			if (a0->inOrDownstreamOfStage(this) && a1->inOrDownstreamOfStage(this))
 			{
-				RBXAssert(a0->getDof() > 0);
-				RBXAssert(a1->getDof() > 0);
+				RBXASSERT(a0->getDof() > 0);
+				RBXASSERT(a1->getDof() > 0);
 
 				combineMechanisms(e);
 			}

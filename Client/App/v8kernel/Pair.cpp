@@ -28,7 +28,7 @@ namespace RBX
 	{
 		this->body0->accumulateForce(-_force, _position);
 		this->body1->accumulateForce(_force, _position);
-		RBXAssert(fabs(_force.x) < Math::inf());
+		RBXASSERT(fabs(_force.x) < Math::inf());
 	}
 
 	void GeoPair::computeBallBall(PairParams& _params)

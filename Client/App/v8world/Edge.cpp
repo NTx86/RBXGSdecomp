@@ -15,7 +15,7 @@ namespace RBX
 
 	void Edge::setPrimitive(int i, Primitive* p)
 	{
-		RBXAssert((i == 0) || (i == 1));
+		RBXASSERT((i == 0) || (i == 1));
 
 		if (i == 0)
 			prim0 = p;

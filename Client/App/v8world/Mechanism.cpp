@@ -28,17 +28,17 @@ namespace RBX
 
 	void Mechanism::insertAssembly(Assembly* a)
 	{
-		RBXAssert(!a->getMechanism());
+		RBXASSERT(!a->getMechanism());
 		bool success = this->getAssemblies().insert(a).second;
-		RBXAssert(success);
+		RBXASSERT(success);
 		a->setMechanism(this);
 	}
 
 	void Mechanism::removeAssembly(Assembly* a)
 	{
-		RBXAssert(a->getMechanism() == this);
+		RBXASSERT(a->getMechanism() == this);
 		size_t count = this->getAssemblies().erase(a);
-		RBXAssert(count == 1);
+		RBXASSERT(count == 1);
 		a->setMechanism(NULL);
 	}
 
@@ -61,7 +61,7 @@ namespace RBX
 	{
 		if (this->mechanism)
 		{
-			RBXAssert(this->containedBy(this->mechanism));
+			RBXASSERT(this->containedBy(this->mechanism));
 			return true;
 		}
 		return false;
@@ -71,17 +71,17 @@ namespace RBX
 	{
 		if (this->mechanism)
 		{
-			RBXAssert(this->containedBy(this->mechanism));
+			RBXASSERT(this->containedBy(this->mechanism));
 			fastRemoveShort<MechanismTracker*>(this->mechanism->trackers, this);
-			RBXAssert(!this->containedBy(this->mechanism));
+			RBXASSERT(!this->containedBy(this->mechanism));
 			this->mechanism = NULL;
 		}
 	}
 
 	Mechanism* MechanismTracker::getMechanism()
 	{
-		RBXAssert(this->mechanism);
-		RBXAssert(this->containedBy(this->mechanism));
+		RBXASSERT(this->mechanism);
+		RBXASSERT(this->containedBy(this->mechanism));
 		return this->mechanism;
 	}
 
@@ -90,17 +90,17 @@ namespace RBX
 		this->stopTracking();
 		if (m)
 		{
-			RBXAssert(!this->containedBy(m));
+			RBXASSERT(!this->containedBy(m));
 			m->trackers.push_back(this);
-			RBXAssert(this->containedBy(m));
+			RBXASSERT(this->containedBy(m));
 			this->mechanism = m;
 		}
 	}
 
 	void MechanismTracker::transferTrackers(Mechanism* from, Mechanism* to)
 	{
-		RBXAssert(from);
-		RBXAssert(from != to);
+		RBXASSERT(from);
+		RBXASSERT(from != to);
 
 		while (!from->trackers.empty())
 		{

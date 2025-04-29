@@ -23,23 +23,23 @@ namespace RBX
 
 	RotateJoint::~RotateJoint()
 	{
-		RBXAssert(!rotateConnector);
+		RBXASSERT(!rotateConnector);
 	}
 
 	void RotateJoint::removeFromKernel()
 	{
-		RBXAssert(getKernel());
+		RBXASSERT(getKernel());
 		rotateConnector = NULL;
 		MultiJoint::removeFromKernel();
 	}
 
 	float RotateJoint::getChannelValue(int uiStepId)
 	{
-		RBXAssert(getAxlePrim());
+		RBXASSERT(getAxlePrim());
 		const SurfaceData& axleSurface = getAxlePrim()->getSurfaceData(getAxleId());
 
 		Controller* controller = getAxlePrim()->getController();
-		RBXAssert(controller);
+		RBXASSERT(controller);
 
 		float value = controller->getValue(axleSurface.inputType);
 		float paramA = axleSurface.paramA;
@@ -92,7 +92,7 @@ namespace RBX
 		case ROTATE_V:
 			return new RotateVJoint(axlePrim, holePrim, c0, c1);
 		default:
-			RBXAssert(0);
+			RBXASSERT(0);
 			return NULL;
 		}
 	}
@@ -221,7 +221,7 @@ namespace RBX
 			Point* pMarker0 = getKernel()->newPoint(b0, marker0);
 			Point* pMarker1 = getKernel()->newPoint(b1, marker0);
 
-			RBXAssert(!rotateConnector);
+			RBXASSERT(!rotateConnector);
 			RotateConnector* connector = new RotateConnector(getPoint(0), getPoint(2), pMarker0, pMarker1, getJointK(), getTorqueArmLength());
 			rotateConnector = connector;
 			addToMultiJoint(pMarker0, pMarker1, connector);

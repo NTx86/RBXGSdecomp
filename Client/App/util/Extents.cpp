@@ -60,8 +60,8 @@ namespace RBX
 
 	Vector3 Extents::getCorner(int i) const
 	{
-		RBXAssert(i >= 0);
-		RBXAssert(i <= 7);
+		RBXASSERT(i >= 0);
+		RBXASSERT(i <= 7);
 
 		return Vector3(
 			this->low[0 + 3 * (i / 4)],
@@ -111,7 +111,7 @@ namespace RBX
 			v3 = Vector3(this->high.x, this->low.y, this->low.z);
 			break;
 		default:
-			RBXAssert(0);
+			RBXASSERT(0);
 		}
 	}
 
@@ -188,7 +188,7 @@ namespace RBX
 
 	bool Extents::separatedByMoreThan(const Extents& other, float distance) const
 	{
-		RBXAssert(distance > 0.0);
+		RBXASSERT(distance > 0.0);
 
 		Vector3 dv(distance, distance, distance);
 

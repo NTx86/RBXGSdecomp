@@ -20,13 +20,13 @@ namespace RBX
 
 	CollisionStage::~CollisionStage()
 	{
-		RBXAssert(stepping.size() == 0);
-		RBXAssert(numContactsInStage == 0);
+		RBXASSERT(stepping.size() == 0);
+		RBXASSERT(numContactsInStage == 0);
 	}
 
 	void CollisionStage::removeContact(Contact* c)
 	{
-		RBXAssert(c->inOrDownstreamOfStage(this));
+		RBXASSERT(c->inOrDownstreamOfStage(this));
 		if (c->downstreamOfStage(this))
 			removeContactFromDownstreamStage(c);
 
@@ -59,7 +59,7 @@ namespace RBX
 			{
 				Contact* c = stepping[i];
 
-				RBXAssert(c->inStage(this));
+				RBXASSERT(c->inStage(this));
 				if (!throttling || !c->getPrimitive(0)->getBody()->getCanThrottle() || !c->getPrimitive(1)->getBody()->getCanThrottle())
 				{
 					bool okToStep;
@@ -74,7 +74,7 @@ namespace RBX
 						{
 							toErase.push_back(c);
 							getDownstreamWS()->onEdgeAdded(c);
-							RBXAssert(c->downstreamOfStage(this));
+							RBXASSERT(c->downstreamOfStage(this));
 						}
 					}
 				}
@@ -110,23 +110,23 @@ namespace RBX
 		for (int i = 0; i < separating.size(); ++i)
 		{
 			Contact* c = separating[i];
-			RBXAssert(!c->downstreamOfStage(this));
-			RBXAssert(c->inStage(this));
+			RBXASSERT(!c->downstreamOfStage(this));
+			RBXASSERT(c->inStage(this));
 			updateContact(c);
 		}
 	}
 
 	void CollisionStage::removeContactFromDownstreamStage(Contact* c)
 	{
-		RBXAssert(c->downstreamOfStage(this));
-		RBXAssert(c->steppingIndexFunc() < 0);
+		RBXASSERT(c->downstreamOfStage(this));
+		RBXASSERT(c->steppingIndexFunc() < 0);
 
 		getDownstreamWS()->onEdgeRemoving(c);
 	}
 
 	void CollisionStage::updateContact(Contact* c)
 	{
-		RBXAssert(c->inOrDownstreamOfStage(this));
+		RBXASSERT(c->inOrDownstreamOfStage(this));
 		if (c->downstreamOfStage(this))
 		{
 			bool temp;
@@ -136,7 +136,7 @@ namespace RBX
 			removeContactFromDownstreamStage(c);
 		}
 
-		RBXAssert(c->inStage(this));
+		RBXASSERT(c->inStage(this));
 
 		if (c->steppingIndexFunc() < 0)
 			stepping.fastAppend(c);
@@ -144,7 +144,7 @@ namespace RBX
 
 	void CollisionStage::onJointAdded(Joint* j)
 	{
-		RBXAssert(!j->inKernel());
+		RBXASSERT(!j->inKernel());
 		getDownstreamWS()->onEdgeAdded(j);
 
 		Contact* c = Primitive::getContact(j->getPrimitive(0), j->getPrimitive(1));
@@ -156,7 +156,7 @@ namespace RBX
 	{
 		Contact* c = Primitive::getContact(j->getPrimitive(0), j->getPrimitive(1));
 		if (c && c->inOrDownstreamOfStage(this))
-			RBXAssert(c->inStage(this));
+			RBXASSERT(c->inStage(this));
 
 		getDownstreamWS()->onEdgeRemoving(j);
 
@@ -173,16 +173,16 @@ namespace RBX
 
 	void CollisionStage::onEdgeAdded(Edge* e)
 	{
-		RBXAssert(!e->inKernel());
-		RBXAssert(!e->inOrDownstreamOfStage(this));
-		RBXAssert(isAssemblyInOrDownstreamOfStage(e, this));
+		RBXASSERT(!e->inKernel());
+		RBXASSERT(!e->inOrDownstreamOfStage(this));
+		RBXASSERT(isAssemblyInOrDownstreamOfStage(e, this));
 
 		e->putInStage(this);
 		if (e->getEdgeType() == Edge::CONTACT)
 		{
 			++numContactsInStage;
 			Contact* c = rbx_static_cast<Contact*>(e);
-			RBXAssert(c->steppingIndexFunc() < 0);
+			RBXASSERT(c->steppingIndexFunc() < 0);
 			updateContact(c);
 		}
 		else
@@ -194,8 +194,8 @@ namespace RBX
 
 	void CollisionStage::onEdgeRemoving(Edge* e)
 	{
-		RBXAssert(isAssemblyInOrDownstreamOfStage(e, this));
-		RBXAssert(e->inOrDownstreamOfStage(this));
+		RBXASSERT(isAssemblyInOrDownstreamOfStage(e, this));
+		RBXASSERT(e->inOrDownstreamOfStage(this));
 
 		if (e->getEdgeType() == Edge::CONTACT)
 		{
@@ -210,7 +210,7 @@ namespace RBX
 		}
 
 		e->removeFromStage(this);
-		RBXAssert(!e->inOrDownstreamOfStage(this));
+		RBXASSERT(!e->inOrDownstreamOfStage(this));
 	}
 
 	void CollisionStage::onPrimitiveCanCollideChanged(Primitive* p)

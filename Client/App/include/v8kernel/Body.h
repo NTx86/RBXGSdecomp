@@ -33,7 +33,7 @@ namespace RBX {
 			bool validateParentCofmDirty();
 			const G3D::CoordinateFrame& getMeInParent() const
 			{
-				RBXAssert(getParent());
+				RBXASSERT(getParent());
 				return getLink() ? getLink()->getChildInParent() : meInParent;
 			}
 			void updatePV() const;
@@ -134,7 +134,7 @@ namespace RBX {
 			void accumulateForceAtCofm(const G3D::Vector3&);
 			void accumulateForceAtBranchCofm(const G3D::Vector3& force)
 			{
-				RBXAssert(root == this);
+				RBXASSERT(root == this);
 
 				if (root->simBody)
 					root->simBody->accumulateForceCofm(force);

@@ -36,7 +36,7 @@ namespace RBX
 		}
 		else
 		{
-			RBXAssert(me == getPrimitive(0));
+			RBXASSERT(me == getPrimitive(0));
 			return p1InP0.inverse();
 		}
 	}
@@ -65,10 +65,10 @@ namespace RBX
 
 	void MotorJoint::setJointAngle(float value)
 	{
-		RBXAssert(link);
+		RBXASSERT(link);
 		if (polarity == -1)
 		{
-			RBXAssert(0);
+			RBXASSERT(0);
 			G3D::CoordinateFrame oldParentCoord = getPrimitive(0)->getCoordinateFrame();
 			link->setJointAngle(-value);
 			Assembly* assembly = getPrimitive(1)->getAssembly();
