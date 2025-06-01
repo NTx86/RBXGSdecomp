@@ -28,6 +28,15 @@ namespace RBX
 		if (clump != this->clump)
 			this->clump = clump;
 	}
+
+	//100% Match
+	Assembly *Primitive::getAssembly() const
+	{
+		if (clump)
+			return clump->getAssembly();
+
+		return NULL;
+	}
 	
 	//100% Match
 	float Primitive::computeJointK() const
@@ -37,6 +46,30 @@ namespace RBX
 		type = geometry->getGeometryType();
 		return RBX::Constants::getJointK(geometry->getGridSize(), 
 			type == geometry->GEOMETRY_BALL);
+	}
+	
+	//100% Match
+	void Primitive::setVelocity(const Velocity &vel)
+	{
+		body->setVelocity(vel);
+	}
+
+
+	//100% Match
+	void Primitive::setSurfaceType(NormalId id, SurfaceType newSurfaceType)
+	{
+		if (this->surfaceType[id] != newSurfaceType)
+			this->surfaceType[id] = newSurfaceType;
+	}
+
+	//88% Match
+	Joint* Primitive::getFirstJoint() const
+	{
+		Edge *first;
+		first = (this->joints).first;
+		
+		RBXASSERT(dynamic_cast<Joint*>(first) == first);
+		return (Joint*)first;
 	}
 
 	//60% Match
