@@ -3,6 +3,14 @@
 namespace RBX
 {
 	//100% Match
+	void Primitive::setGuid(const RBX::Guid &value)
+	{
+		RBXASSERT(!world);
+		guid.assign(value.getData());
+		guidSetExternally = 1;
+	}
+
+	//100% Match
 	Edge* Primitive::getFirstEdge() const
 	{
 		Edge *edge;
