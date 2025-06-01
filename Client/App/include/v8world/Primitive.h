@@ -10,6 +10,9 @@
 #include "util/Face.h"
 #include "util/Velocity.h"
 
+#include "v8world/Joint.h"
+#include "v8world/Clump.h"
+
 namespace RBX
 {
 	class Edge;
