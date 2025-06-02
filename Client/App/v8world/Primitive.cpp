@@ -54,6 +54,44 @@ namespace RBX
 		body->setVelocity(vel);
 	}
 
+	//93% Match
+	void Primitive::setSurfaceData(NormalId id, const SurfaceData &newSurfaceData)
+	{
+		SurfaceData *pSVar2;
+
+		if (!surfaceData[id] && newSurfaceData.isEmpty())
+			return;
+
+		pSVar2 = surfaceData[id];
+		if (!pSVar2 || pSVar2->inputType != newSurfaceData.inputType 
+			|| pSVar2->paramA != newSurfaceData.paramA 
+			|| pSVar2->paramB != newSurfaceData.paramB)
+		{
+			if (newSurfaceData.isEmpty()) 
+			{
+				RBXASSERT(!surfaceData[id]);
+				operator delete(surfaceData[id]);
+				surfaceData[id] = NULL;
+				return;
+			}
+			if (!this->surfaceData[id])
+			{
+				pSVar2 = (SurfaceData*) operator new(sizeof(SurfaceData));
+				if (pSVar2)
+				{
+					pSVar2->inputType = Controller::NO_INPUT;
+					pSVar2->paramA = -0.5;
+					pSVar2->paramB = 0.5;
+				}
+				else
+				{
+					pSVar2 = NULL;
+				}
+				surfaceData[id] = pSVar2;
+			}
+			*surfaceData[id] = newSurfaceData;
+		}
+	}
 
 	//100% Match
 	void Primitive::setSurfaceType(NormalId id, SurfaceType newSurfaceType)
