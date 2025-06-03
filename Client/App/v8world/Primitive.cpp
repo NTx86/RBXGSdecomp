@@ -1,3 +1,6 @@
+#include "v8world/World.h"
+#include "v8world/Joint.h"
+#include "v8world/Clump.h"
 #include "v8world/Primitive.h"
 
 namespace RBX
@@ -47,6 +50,67 @@ namespace RBX
 		return RBX::Constants::getJointK(geometry->getGridSize(), 
 			type == geometry->GEOMETRY_BALL);
 	}
+
+	//100% Match
+	void Primitive::setCanSleep(bool canSleep)
+	{
+		if (canSleep != this->canSleep)
+		{
+			this->canSleep = canSleep;
+			if (world)
+			{
+				world->onPrimitiveCanSleepChanged(this);
+			}	
+		}
+	}
+
+	//100% Match
+	void Primitive::setCanCollide(bool canCollide)
+	{
+		char cVar1;
+		char cVar2;
+
+		cVar2 = !dragging && this->canCollide;
+
+		if (this->canCollide != canCollide) 
+		{
+			this->canCollide = canCollide;
+			if (world) 
+			{
+				cVar1 = !dragging && canCollide;
+				if (cVar2 != cVar1) 
+				{
+					world->onPrimitiveCanCollideChanged(this);
+				}
+			}
+		}
+	}
+
+	//100% Match
+	void Primitive::setFriction(float friction)
+	{
+		if (friction != this->friction) 
+		{
+			this->friction = friction;
+			if (world) 
+			{
+				world->onPrimitiveContactParametersChanged(this);
+			}
+		}
+	}
+
+	//100% Match
+	void Primitive::setElasticity(float elasticity)
+	{
+		if (elasticity != this->elasticity) 
+		{
+			this->elasticity = elasticity;
+			if (world) 
+			{
+				world->onPrimitiveContactParametersChanged(this);
+			}
+		}
+	}
 	
 	//100% Match
 	void Primitive::setVelocity(const Velocity &vel)
@@ -54,7 +118,7 @@ namespace RBX
 		body->setVelocity(vel);
 	}
 
-	//93% Match
+	//94% Match
 	void Primitive::setSurfaceData(NormalId id, const SurfaceData &newSurfaceData)
 	{
 		SurfaceData *pSVar2;
@@ -69,7 +133,7 @@ namespace RBX
 		{
 			if (newSurfaceData.isEmpty()) 
 			{
-				RBXASSERT(!surfaceData[id]);
+				RBXASSERT(surfaceData[id]);
 				operator delete(surfaceData[id]);
 				surfaceData[id] = NULL;
 				return;
