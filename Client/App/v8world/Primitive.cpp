@@ -1,6 +1,8 @@
 #include "v8world/World.h"
 #include "v8world/Joint.h"
 #include "v8world/Clump.h"
+#include "v8world/Contact.h"
+#include "v8world/RigidJoint.h"
 #include "v8world/Primitive.h"
 
 namespace RBX
@@ -23,6 +25,22 @@ namespace RBX
 			edge = contacts.first;
 
 		return edge;
+	}
+
+	// ? Match
+	Edge* Primitive::getNextEdge(Edge* e) const
+	{
+		RBX::Edge *result;
+
+		result = e->getNext(this);
+		if (!result)
+		{
+			if (e->getEdgeType())
+				return NULL;
+			else
+				return this->contacts.first;
+		}
+		return result;
 	}
 
 	//100% Match
@@ -172,6 +190,48 @@ namespace RBX
 		
 		RBXASSERT(dynamic_cast<Joint*>(first) == first);
 		return (Joint*)first;
+	}
+
+	//90% Match
+	Joint* Primitive::getNextJoint(Joint *prev) const
+	{
+		Edge *pJVar2;
+		pJVar2 = prev->getNext(this);
+		RBXASSERT(dynamic_cast<Joint*>(pJVar2) == pJVar2);
+		return (Joint*)pJVar2;
+	}
+
+	//88% Match
+	Contact* Primitive::getFirstContact()
+	{
+		Edge *pCVar1;
+
+		pCVar1 = this->contacts.first;
+		RBXASSERT(dynamic_cast<Contact*>(pCVar1) == pCVar1);
+		return (Contact*)pCVar1;
+	}
+
+	//90% Match
+	Contact* Primitive::getNextContact(Contact *prev)
+	{
+		Edge *pCVar1;
+
+		pCVar1 = prev->getNext(this);
+		RBXASSERT(dynamic_cast<Contact*>(pCVar1) == pCVar1);
+		return (Contact*)pCVar1;
+	}
+
+	//85% Match because missing getFirstRigidAt Function
+	RigidJoint* Primitive::getFirstRigid()
+	{
+		Edge *pEVar1;
+		RigidJoint *pRVar2;
+
+		pEVar1 = (this->joints).first;
+		if (!pEVar1) 
+			pEVar1 = (this->contacts).first;
+		pRVar2 = getFirstRigidAt(pEVar1);
+		return pRVar2;
 	}
 
 	//60% Match
