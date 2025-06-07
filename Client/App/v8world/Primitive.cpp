@@ -290,6 +290,11 @@ namespace RBX
 		}
 	}
 
+	const CoordinateFrame &Primitive::getCoordinateFrame() const
+	{
+		return body->getPV().position;
+	}
+
 	void Primitive::setDragging(bool dragging)
 	{
 		if (this->dragging != dragging) 
