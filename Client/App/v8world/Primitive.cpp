@@ -3,11 +3,12 @@
 #include "v8world/Clump.h"
 #include "v8world/Contact.h"
 #include "v8world/RigidJoint.h"
+#include "v8world/Anchor.h"
 #include "v8world/Primitive.h"
 
 namespace RBX
 {
-	//100% Match
+
 	void Primitive::setGuid(const RBX::Guid &value)
 	{
 		RBXASSERT(!world);
@@ -15,7 +16,6 @@ namespace RBX
 		guidSetExternally = 1;
 	}
 
-	//100% Match
 	Edge* Primitive::getFirstEdge() const
 	{
 		Edge *edge;
@@ -27,7 +27,6 @@ namespace RBX
 		return edge;
 	}
 
-	// ? Match
 	Edge* Primitive::getNextEdge(Edge* e) const
 	{
 		RBX::Edge *result;
@@ -43,14 +42,12 @@ namespace RBX
 		return result;
 	}
 
-	//100% Match
 	void Primitive::setClump(Clump *clump)
 	{
 		if (clump != this->clump)
 			this->clump = clump;
 	}
 
-	//100% Match
 	Assembly *Primitive::getAssembly() const
 	{
 		if (clump)
@@ -59,7 +56,6 @@ namespace RBX
 		return NULL;
 	}
 	
-	//100% Match
 	float Primitive::computeJointK() const
 	{
 		Geometry::GeometryType type;
@@ -69,7 +65,6 @@ namespace RBX
 			type == geometry->GEOMETRY_BALL);
 	}
 
-	//100% Match
 	void Primitive::setCanSleep(bool canSleep)
 	{
 		if (canSleep != this->canSleep)
@@ -82,7 +77,6 @@ namespace RBX
 		}
 	}
 
-	//100% Match
 	void Primitive::setCanCollide(bool canCollide)
 	{
 		char cVar1;
@@ -104,7 +98,6 @@ namespace RBX
 		}
 	}
 
-	//100% Match
 	void Primitive::setFriction(float friction)
 	{
 		if (friction != this->friction) 
@@ -117,7 +110,6 @@ namespace RBX
 		}
 	}
 
-	//100% Match
 	void Primitive::setElasticity(float elasticity)
 	{
 		if (elasticity != this->elasticity) 
@@ -130,13 +122,11 @@ namespace RBX
 		}
 	}
 	
-	//100% Match
 	void Primitive::setVelocity(const Velocity &vel)
 	{
 		body->setVelocity(vel);
 	}
 
-	//94% Match
 	void Primitive::setSurfaceData(NormalId id, const SurfaceData &newSurfaceData)
 	{
 		SurfaceData *pSVar2;
@@ -175,53 +165,43 @@ namespace RBX
 		}
 	}
 
-	//100% Match
 	void Primitive::setSurfaceType(NormalId id, SurfaceType newSurfaceType)
 	{
 		if (this->surfaceType[id] != newSurfaceType)
 			this->surfaceType[id] = newSurfaceType;
 	}
 
-	//88% Match
 	Joint* Primitive::getFirstJoint() const
 	{
 		Edge *first;
 		first = (this->joints).first;
 		
-		RBXASSERT(dynamic_cast<Joint*>(first) == first);
-		return (Joint*)first;
+		return rbx_static_cast<Joint*>(first);
 	}
 
-	//90% Match
 	Joint* Primitive::getNextJoint(Joint *prev) const
 	{
 		Edge *pJVar2;
 		pJVar2 = prev->getNext(this);
-		RBXASSERT(dynamic_cast<Joint*>(pJVar2) == pJVar2);
-		return (Joint*)pJVar2;
+		return rbx_static_cast<Joint*>(pJVar2);
 	}
 
-	//88% Match
 	Contact* Primitive::getFirstContact()
 	{
 		Edge *pCVar1;
 
 		pCVar1 = this->contacts.first;
-		RBXASSERT(dynamic_cast<Contact*>(pCVar1) == pCVar1);
-		return (Contact*)pCVar1;
+		return rbx_static_cast<Contact*>(pCVar1);
 	}
 
-	//90% Match
 	Contact* Primitive::getNextContact(Contact *prev)
 	{
 		Edge *pCVar1;
 
 		pCVar1 = prev->getNext(this);
-		RBXASSERT(dynamic_cast<Contact*>(pCVar1) == pCVar1);
-		return (Contact*)pCVar1;
+		return rbx_static_cast<Contact*>(pCVar1);
 	}
 
-	//85% Match because missing getFirstRigidAt Function
 	RigidJoint* Primitive::getFirstRigid()
 	{
 		Edge *pEVar1;
@@ -234,7 +214,33 @@ namespace RBX
 		return pRVar2;
 	}
 
-	//60% Match
+	float Primitive::getRadius() const
+	{
+		return this->geometry->getRadius();
+	}
+
+	void Primitive::setDragging(bool dragging)
+	{
+		char cVar1;
+		char cVar2;
+
+		if (this->dragging != dragging) 
+		{
+			cVar2 = (this->dragging == false) && (this->canCollide != false);
+
+			this->dragging = dragging;
+			this->setAnchor(this->anchored);
+			if (world)
+			{
+				cVar1 = (this->dragging == false) && (this->canCollide != false);
+				if (cVar1 != cVar2) 
+				{
+					this->world->onPrimitiveCanCollideChanged(this);
+				}
+			}
+		}
+	}
+
 	float Primitive::getPlanarSize() const
 	{
 		float fVar1;
