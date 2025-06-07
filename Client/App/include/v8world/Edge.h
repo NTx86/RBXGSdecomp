@@ -56,14 +56,7 @@ namespace RBX
 		int getPrimitiveId(const Primitive*) const;
 		Edge* getNext(const Primitive* p) const
 		{
-			if(p == this->prim0)
-			{
-				return this->next0;
-			}
-			else
-			{
-				return this->next1;
-			}
+			return p == prim0 ? next0 : next1;
 		}
 		void setNext(Primitive*, Edge*);
 		bool links(Primitive*, Primitive*) const;
