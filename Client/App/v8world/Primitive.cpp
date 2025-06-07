@@ -137,8 +137,7 @@ namespace RBX
 			}
 			if (!this->surfaceData[id])
 			{
-				//TODO: Resolve me below.
-				pSVar2 = (SurfaceData*) operator new(sizeof(SurfaceData));
+				pSVar2 = new SurfaceData();
 				if (pSVar2)
 				{
 					pSVar2->inputType = Controller::NO_INPUT;
