@@ -4,6 +4,8 @@
 #include "v8world/Contact.h"
 #include "v8world/RigidJoint.h"
 #include "v8world/Anchor.h"
+#include "v8world/Assembly.h"
+#include "v8world/IMoving.h"
 #include "v8world/Primitive.h"
 
 namespace RBX
@@ -250,6 +252,40 @@ namespace RBX
 				if (this->anchorObject)
 					operator delete(this->anchorObject);
 				this->anchorObject = NULL;
+			}
+		}
+	}
+
+	void Primitive::setCoordinateFrame(const CoordinateFrame &cFrame)
+	{
+		Body *body = this->body;
+		bool bVar1 = cFrame.operator != (body->getPV().position);
+		if (bVar1) 
+		{
+			Assembly *this_01 = (this->clump) ? this->clump->getAssembly() : NULL;
+
+			if (!this_01) 
+			{
+				this->body->setCoordinateFrame(cFrame);
+				this->myOwner->notifyMoved();
+				if (this->world) 
+				{
+					this->world->onPrimitiveExtentsChanged(this);
+				}
+			}
+			else 
+			{
+				RBXASSERT(this->world);
+				if (this_01->getMainPrimitive() == this) 
+				{
+					this->body->setCoordinateFrame(cFrame);
+					this_01->notifyMoved();
+					this->world->onAssemblyExtentsChanged(this_01);
+					if (this->anchored == false) 
+					{
+						this->world->ticklePrimitive(this);
+					}
+				}
 			}
 		}
 	}
