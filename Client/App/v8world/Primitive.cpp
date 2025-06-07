@@ -18,9 +18,7 @@ namespace RBX
 
 	Edge* Primitive::getFirstEdge() const
 	{
-		Edge *edge;
-
-		edge = joints.first;
+		Edge *edge = joints.first;
 		if (!edge)
 			edge = contacts.first;
 
@@ -29,9 +27,7 @@ namespace RBX
 
 	Edge* Primitive::getNextEdge(Edge* e) const
 	{
-		RBX::Edge *result;
-
-		result = e->getNext(this);
+		Edge *result = e->getNext(this);
 		if (!result)
 		{
 			if (e->getEdgeType())
@@ -57,10 +53,8 @@ namespace RBX
 	}
 	
 	float Primitive::computeJointK() const
-	{
-		Geometry::GeometryType type;
-		
-		type = geometry->getGeometryType();
+	{	
+		Geometry::GeometryType type = geometry->getGeometryType();
 		return RBX::Constants::getJointK(geometry->getGridSize(), 
 			type == geometry->GEOMETRY_BALL);
 	}
@@ -79,17 +73,14 @@ namespace RBX
 
 	void Primitive::setCanCollide(bool canCollide)
 	{
-		char cVar1;
-		char cVar2;
-
-		cVar2 = !dragging && this->canCollide;
+		bool cVar2 = !dragging && this->canCollide;
 
 		if (this->canCollide != canCollide) 
 		{
 			this->canCollide = canCollide;
 			if (world) 
 			{
-				cVar1 = !dragging && canCollide;
+				bool cVar1 = !dragging && canCollide;
 				if (cVar2 != cVar1) 
 				{
 					world->onPrimitiveCanCollideChanged(this);
@@ -129,12 +120,10 @@ namespace RBX
 
 	void Primitive::setSurfaceData(NormalId id, const SurfaceData &newSurfaceData)
 	{
-		SurfaceData *pSVar2;
-
 		if (!surfaceData[id] && newSurfaceData.isEmpty())
 			return;
 
-		pSVar2 = surfaceData[id];
+		SurfaceData *pSVar2 = surfaceData[id];
 		if (!pSVar2 || pSVar2->inputType != newSurfaceData.inputType 
 			|| pSVar2->paramA != newSurfaceData.paramA 
 			|| pSVar2->paramB != newSurfaceData.paramB)
@@ -148,12 +137,13 @@ namespace RBX
 			}
 			if (!this->surfaceData[id])
 			{
+				//TODO: Resolve me below.
 				pSVar2 = (SurfaceData*) operator new(sizeof(SurfaceData));
 				if (pSVar2)
 				{
 					pSVar2->inputType = Controller::NO_INPUT;
-					pSVar2->paramA = -0.5;
-					pSVar2->paramB = 0.5;
+					pSVar2->paramA = -0.5f;
+					pSVar2->paramB = 0.5f;
 				}
 				else
 				{
@@ -173,44 +163,34 @@ namespace RBX
 
 	Joint* Primitive::getFirstJoint() const
 	{
-		Edge *first;
-		first = (this->joints).first;
-		
+		Edge *first = this->joints.first;
 		return rbx_static_cast<Joint*>(first);
 	}
 
 	Joint* Primitive::getNextJoint(Joint *prev) const
 	{
-		Edge *pJVar2;
-		pJVar2 = prev->getNext(this);
+		Edge *pJVar2 = prev->getNext(this);
 		return rbx_static_cast<Joint*>(pJVar2);
 	}
 
 	Contact* Primitive::getFirstContact()
 	{
-		Edge *pCVar1;
-
-		pCVar1 = this->contacts.first;
+		Edge *pCVar1 = this->contacts.first;
 		return rbx_static_cast<Contact*>(pCVar1);
 	}
 
 	Contact* Primitive::getNextContact(Contact *prev)
 	{
-		Edge *pCVar1;
-
-		pCVar1 = prev->getNext(this);
+		Edge *pCVar1 = prev->getNext(this);
 		return rbx_static_cast<Contact*>(pCVar1);
 	}
 
 	RigidJoint* Primitive::getFirstRigid()
 	{
-		Edge *pEVar1;
-		RigidJoint *pRVar2;
-
-		pEVar1 = (this->joints).first;
+		Edge *pEVar1 = this->joints.first;
 		if (!pEVar1) 
-			pEVar1 = (this->contacts).first;
-		pRVar2 = getFirstRigidAt(pEVar1);
+			pEVar1 = this->contacts.first;
+		RigidJoint *pRVar2 = getFirstRigidAt(pEVar1);
 		return pRVar2;
 	}
 
@@ -221,18 +201,15 @@ namespace RBX
 
 	void Primitive::setDragging(bool dragging)
 	{
-		char cVar1;
-		char cVar2;
-
 		if (this->dragging != dragging) 
 		{
-			cVar2 = (this->dragging == false) && (this->canCollide != false);
+			bool cVar2 = this->dragging == false && this->canCollide != false;
 
 			this->dragging = dragging;
 			this->setAnchor(this->anchored);
 			if (world)
 			{
-				cVar1 = (this->dragging == false) && (this->canCollide != false);
+				bool cVar1 = this->dragging == false && this->canCollide != false;
 				if (cVar1 != cVar2) 
 				{
 					this->world->onPrimitiveCanCollideChanged(this);
@@ -243,13 +220,9 @@ namespace RBX
 
 	float Primitive::getPlanarSize() const
 	{
-		float fVar1;
-		Geometry *geometry;
-		const Vector3 *gridSize;
-
-		geometry = this->geometry;
-		gridSize = &geometry->getGridSize();
-		fVar1 = (geometry->getGridSize()).z;
+		Geometry *geometry = this->geometry;
+		const Vector3 *gridSize = &geometry->getGridSize();
+		float fVar1 = (geometry->getGridSize()).z;
 		if ((geometry->getGridSize()).y <= gridSize->x) 
 		{
 			if ((geometry->getGridSize()).y < fVar1) 
