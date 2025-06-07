@@ -9,6 +9,15 @@
 namespace RBX
 {
 
+	Extents Primitive::getExtentsWorld() const
+	{
+		Geometry *geometry = this->geometry;
+		Extents extent(-(geometry->getGridSize() * 0.5), geometry->getGridSize() * 0.5);
+		const CoordinateFrame &frame = getCoordinateFrame();
+
+		return extent.toWorldSpace(frame);
+	}
+
 	void Primitive::setGuid(const RBX::Guid &value)
 	{
 		RBXASSERT(!world);
