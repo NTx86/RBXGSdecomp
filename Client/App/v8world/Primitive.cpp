@@ -123,6 +123,13 @@ namespace RBX
 			}
 		}
 	}
+
+	Face Primitive::getFaceInObject(NormalId objectFace)
+	{
+		  Geometry *geometry = this->geometry;
+		  Extents extent(-(geometry->getGridSize() * 0.5), geometry->getGridSize() * 0.5);
+		  return Face::fromExtentsSide(extent, objectFace);
+	}
 	
 	void Primitive::setVelocity(const Velocity &vel)
 	{
