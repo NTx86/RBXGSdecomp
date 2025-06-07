@@ -201,10 +201,57 @@ namespace RBX
 		RigidJoint *pRVar2 = getFirstRigidAt(pEVar1);
 		return pRVar2;
 	}
+	
+	/*
+	RigidJoint* Primitive::getNextRigid(RigidJoint *prev)
+	{
+		Edge *next = prev->getNext(this);
+
+		if (!next)
+		{
+			if (!prev->getEdgeType())
+			{
+				return getFirstRigidAt(contacts.first);
+			}
+			next = NULL;
+		}
+		return getFirstRigidAt(next);
+	}
+	*/
 
 	float Primitive::getRadius() const
 	{
 		return this->geometry->getRadius();
+	}
+
+	void Primitive::setAnchor(bool anchor)
+	{
+		Anchor *anchorObject = this->anchorObject;
+		this->anchored = anchor;
+
+		if ( anchor || this->dragging )
+			anchor = true;
+
+		if ( anchor != (anchorObject != NULL) )
+		{
+			if (anchor)
+			{
+				RBXASSERT(!anchorObject);
+				anchorObject = new Anchor(this);
+				this->anchorObject = anchorObject;
+				if (this->world)
+					this->world->onPrimitiveAddedAnchor(this);
+			}
+			else
+			{
+				RBXASSERT(anchorObject);
+				if (world)
+					this->world->onPrimitiveRemovingAnchor(this);
+				if (this->anchorObject)
+					operator delete(this->anchorObject);
+				this->anchorObject = NULL;
+			}
+		}
 	}
 
 	void Primitive::setDragging(bool dragging)
