@@ -6,11 +6,12 @@
 #include "v8world/Anchor.h"
 #include "v8world/Assembly.h"
 #include "v8world/IMoving.h"
+#include "v8world/Ball.h"
+#include "v8world/Block.h"
 #include "v8world/Primitive.h"
 
 namespace RBX
 {
-
 	Extents Primitive::getExtentsWorld() const
 	{
 		Geometry *geometry = this->geometry;
@@ -149,7 +150,7 @@ namespace RBX
 			if (newSurfaceData.isEmpty()) 
 			{
 				RBXASSERT(surfaceData[id]);
-				operator delete(surfaceData[id]);
+				delete surfaceData[id];
 				surfaceData[id] = NULL;
 				return;
 			}
@@ -177,7 +178,7 @@ namespace RBX
 		if (this->surfaceType[id] != newSurfaceType)
 			this->surfaceType[id] = newSurfaceType;
 	}
-
+	
 	Joint* Primitive::getFirstJoint() const
 	{
 		Edge *first = this->joints.first;
@@ -257,10 +258,17 @@ namespace RBX
 				if (world)
 					this->world->onPrimitiveRemovingAnchor(this);
 				if (this->anchorObject)
-					operator delete(this->anchorObject);
+					delete this->anchorObject;
 				this->anchorObject = NULL;
 			}
 		}
+	}
+
+	Face Primitive::getFaceInWorld(NormalId objectFace)
+	{
+		Body *body = this->body;
+		Face FaceInObject = this->getFaceInObject(objectFace);
+		return FaceInObject.toWorldSpace(body->getPV().position);
 	}
 
 	void Primitive::setCoordinateFrame(const CoordinateFrame &cFrame)
