@@ -237,6 +237,27 @@ namespace RBX
 	}
 	*/
 
+	Joint* Primitive::getJoint(RBX::Primitive *p0, RBX::Primitive *p1)
+	{
+		Primitive *pPVar4 = p0;
+		if (p0->joints.num >= p1->joints.num)
+			pPVar4 = p1;
+
+		Joint *pJVar3 = rbx_static_cast<Joint*>(pPVar4->joints.first);
+		while(true)
+		{
+			if (!pJVar3) 
+				return NULL;
+
+			Primitive *pPVar1 = pJVar3->getPrimitive(0);
+			if (p0 == pPVar1 && p1 == pJVar3->getPrimitive(1)) break;
+			if (p0 == pJVar3->getPrimitive(1) && p1 == pPVar1) break;
+
+			pJVar3 = rbx_static_cast<Joint*>(pJVar3->getNext(pPVar4));
+		}
+		return pJVar3;
+	}
+
 	float Primitive::getRadius() const
 	{
 		return this->geometry->getRadius();
