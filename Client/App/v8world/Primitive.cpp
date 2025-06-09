@@ -237,7 +237,7 @@ namespace RBX
 	}
 	*/
 
-	Joint* Primitive::getJoint(RBX::Primitive *p0, RBX::Primitive *p1)
+	Joint* Primitive::getJoint(Primitive *p0, Primitive *p1)
 	{
 		Primitive *pPVar4 = p0;
 		if (p0->joints.num >= p1->joints.num)
@@ -254,6 +254,27 @@ namespace RBX
 			if (p0 == pJVar3->getPrimitive(1) && p1 == pPVar1) break;
 
 			pJVar3 = rbx_static_cast<Joint*>(pJVar3->getNext(pPVar4));
+		}
+		return pJVar3;
+	}
+
+	Contact* Primitive::getContact(Primitive *p0, Primitive *p1)
+	{
+		Primitive *pPVar4 = p0;
+		if (p0->contacts.num >= p1->contacts.num)
+			pPVar4 = p1;
+
+		Contact *pJVar3 = rbx_static_cast<Contact*>(pPVar4->contacts.first);
+		while(true)
+		{
+			if (!pJVar3) 
+				return NULL;
+
+			Primitive *pPVar1 = pJVar3->getPrimitive(0);
+			if (p0 == pPVar1 && p1 == pJVar3->getPrimitive(1)) break;
+			if (p0 == pJVar3->getPrimitive(1) && p1 == pPVar1) break;
+
+			pJVar3 = rbx_static_cast<Contact*>(pJVar3->getNext(pPVar4));
 		}
 		return pJVar3;
 	}
