@@ -42,10 +42,10 @@ namespace RBX
 		Edge *result = e->getNext(this);
 		if (!result)
 		{
-			if (e->getEdgeType())
-				return NULL;
-			else
+			if (!e->getEdgeType())
 				return this->contacts.first;
+			else
+				return NULL;
 		}
 		return result;
 	}
@@ -127,9 +127,9 @@ namespace RBX
 
 	Face Primitive::getFaceInObject(NormalId objectFace)
 	{
-		  Geometry *geometry = this->geometry;
-		  Extents extent(-(geometry->getGridSize() * 0.5), geometry->getGridSize() * 0.5);
-		  return Face::fromExtentsSide(extent, objectFace);
+		Geometry *geometry = this->geometry;
+		Extents extent(-(geometry->getGridSize() * 0.5), geometry->getGridSize() * 0.5);
+		return Face::fromExtentsSide(extent, objectFace);
 	}
 	
 	void Primitive::setVelocity(const Velocity &vel)
@@ -178,6 +178,14 @@ namespace RBX
 		if (this->surfaceType[id] != newSurfaceType)
 			this->surfaceType[id] = newSurfaceType;
 	}
+
+	/*
+	Extents Primitive::computeFuzzyExtents() const
+	{
+		Body *body0 = this->body;
+		Body *body1 = this->body;
+	}
+	*/
 	
 	Joint* Primitive::getFirstJoint() const
 	{
@@ -321,11 +329,32 @@ namespace RBX
 			if (world)
 			{
 				bool cVar1 = this->dragging == false && this->canCollide != false;
-				if (cVar1 != cVar2) 
+				if (cVar1 != cVar2)
 				{
 					this->world->onPrimitiveCanCollideChanged(this);
 				}
 			}
+		}
+	}
+
+	void Primitive::setPrimitiveType(Geometry::GeometryType geometryType)
+	{
+		RBXASSERT(this->geometry->getGeometryType() != Geometry::GEOMETRY_NONE);
+		RBXASSERT(geometryType != Geometry::GEOMETRY_NONE);
+
+		Geometry::GeometryType GVar2 = this->geometry->getGeometryType();
+		if (GVar2 != geometryType) 
+		{
+			Geometry *pGVar3 = this->geometry;
+			const Vector3 VStack_c(pGVar3->getGridSize());
+			if (pGVar3) 
+				pGVar3->~Geometry();
+			pGVar3 = newGeometry(geometryType);
+			this->geometry = pGVar3;
+			if (this->world) 
+				this->world->onPrimitiveGeometryTypeChanged(this);
+			this->setGridSize(VStack_c);
+			this->JointK.setDirty();
 		}
 	}
 
