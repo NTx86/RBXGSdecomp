@@ -338,7 +338,6 @@ namespace RBX
 		return NULL;
 	}
 
-	/*
 	Primitive::~Primitive()
 	{
 		if (this->geometry->getGeometryType() != Geometry::GEOMETRY_NONE)
@@ -353,7 +352,6 @@ namespace RBX
 				delete(body);
 			}
 		}
-		//SurfaceData* surfaceData(this->surfaceData);
 		delete(this->surfaceData);
 
 		RBXASSERT(this->world);
@@ -364,7 +362,6 @@ namespace RBX
 		RBXASSERT(!this->contacts.num);
 		//RBXASSERT(!this->currentStage);
 	}
-	*/
 
 	float Primitive::getRadius() const
 	{
