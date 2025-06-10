@@ -191,8 +191,48 @@ namespace RBX
 	/*
 	Extents Primitive::computeFuzzyExtents() const
 	{
+		float fVar1;
+		float fVar2;
+		float fVar3;
+		float fVar4;
+		float fVar5;
+		float fVar6;
+		float fVar7;
+		float fVar8;
+		float fVar9;
+		float fVar10;
+		Body *this_00;
+		Body *this_01;
+		float *pfVar11;
+		undefined1 local_c [8];
+		Extents *pEStack_4;
+
 		Body *body0 = this->body;
 		Body *body1 = this->body;
+		pfVar11 = (float *)(**(code **)(this->geometry->_padding_ + 0x14))(local_c,&this_00->pv);
+		fVar1 = *pfVar11;
+		fVar2 = (this_01->pv).position.translation.x;
+		fVar3 = (this_01->pv).position.translation.y;
+		fVar4 = pfVar11[1];
+		fVar5 = (this_01->pv).position.translation.z;
+		fVar6 = pfVar11[2];
+		fVar7 = (this_01->pv).position.translation.y;
+		fVar8 = pfVar11[1];
+		fVar9 = (this_01->pv).position.translation.z;
+		fVar10 = pfVar11[2];
+		(pEStack_4->low).x = (this_01->pv).position.translation.x - *pfVar11;
+		(pEStack_4->low).y = fVar7 - fVar8;
+		(pEStack_4->low).z = fVar9 - fVar10;
+		(pEStack_4->high).x = fVar1 + fVar2;
+		(pEStack_4->high).y = fVar3 + fVar4;
+		(pEStack_4->high).z = fVar5 + fVar6;
+		(pEStack_4->low).x = (pEStack_4->low).x - 0.01;
+		(pEStack_4->low).y = (pEStack_4->low).y - 0.01;
+		(pEStack_4->low).z = (pEStack_4->low).z - 0.01;
+		(pEStack_4->high).x = (pEStack_4->high).x + 0.01;
+		(pEStack_4->high).y = (pEStack_4->high).y + 0.01;
+		(pEStack_4->high).z = (pEStack_4->high).z + 0.01;
+		return pEStack_4;
 	}
 	*/
 	
@@ -354,8 +394,7 @@ namespace RBX
 	Face Primitive::getFaceInWorld(NormalId objectFace)
 	{
 		Body *body = this->body;
-		Face FaceInObject = this->getFaceInObject(objectFace);
-		return FaceInObject.toWorldSpace(body->getPV().position);
+		return this->getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
 	}
 
 	void Primitive::setCoordinateFrame(const CoordinateFrame &cFrame)
