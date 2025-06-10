@@ -459,6 +459,30 @@ namespace RBX
 		return body->getPV().position;
 	}
 
+	void Primitive::setGridSize(const Vector3 &gridSize)
+	{
+		Vector3 protectedSize = this->clipToSafeSize(gridSize);
+		Geometry *pGVar2 = this->geometry;
+
+		if (pGVar2->getGridSize().x != protectedSize.x 
+			|| pGVar2->getGridSize().y != protectedSize.y 
+			|| pGVar2->getGridSize().z != protectedSize.z) 
+		{
+			this->fuzzyExtentsStateId = -2;
+			this->geometry->setGridSize(protectedSize);
+			const float fVar4 = this->geometry->getGridVolume();
+			this->body->setMass(fVar4);
+			const Matrix3 &pMVar9 = this->geometry->getMoment(fVar4);
+			this->body->setMoment(pMVar9);
+			this->JointK.setDirty();
+			if (this->world) 
+			{
+				this->world->onPrimitiveExtentsChanged(this);
+			}
+			this->JointK.setDirty();
+		}
+	}
+
 	void Primitive::setDragging(bool dragging)
 	{
 		if (this->dragging != dragging) 
