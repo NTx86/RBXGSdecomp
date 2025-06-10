@@ -368,6 +368,21 @@ namespace RBX
 		return this->geometry->getRadius();
 	}
 
+	bool Primitive::hitTest(const Ray &worldRay, Vector3 &worldHitPoint, bool &inside)
+	{
+		Body *pBVar1 = this->body;
+		Vector3 localHitPoint(0, 0, 0); 
+
+		bool cVar2 = this->geometry->hitTest(pBVar1->getPV().position.toObjectSpace(worldRay), localHitPoint, inside);
+		if (cVar2)
+		{
+			pBVar1 = this->body;
+			Vector3 worldHitPoint = pBVar1->getPV().position.pointToWorldSpace(localHitPoint);
+			return true;
+		}
+		return false;
+	}
+
 	void Primitive::setAnchor(bool anchor)
 	{
 		Anchor *anchorObject = this->anchorObject;
