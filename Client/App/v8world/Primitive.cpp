@@ -253,22 +253,23 @@ namespace RBX
 		return pRVar2;
 	}
 	
-	/*
 	RigidJoint* Primitive::getNextRigid(RigidJoint *prev)
 	{
 		Edge *next = prev->getNext(this);
 
 		if (!next)
 		{
+			//Note: getEdgeType causes this error.
+			/*
 			if (!prev->getEdgeType())
 			{
 				return getFirstRigidAt(contacts.first);
 			}
+			*/
 			next = NULL;
 		}
 		return getFirstRigidAt(next);
 	}
-	*/
 
 	Joint* Primitive::getJoint(Primitive *p0, Primitive *p1)
 	{
