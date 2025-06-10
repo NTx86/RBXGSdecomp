@@ -125,6 +125,15 @@ namespace RBX
 		}
 	}
 
+	CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
+	{
+		Geometry *pGVar7 = this->geometry;
+		const Vector3 *pVVar8 = &normalIdToVector3(objectFace);
+
+		return CoordinateFrame(Matrix3(normalIdToMatrix3(objectFace)), Vector3(pVVar8->x * pGVar7->getGridSize().x,
+			pVVar8->y * pGVar7->getGridSize().y, pVVar8->z * pGVar7->getGridSize().z));
+	}
+
 	Face Primitive::getFaceInObject(NormalId objectFace)
 	{
 		Geometry *geometry = this->geometry;
@@ -278,6 +287,34 @@ namespace RBX
 		}
 		return pJVar3;
 	}
+
+	/*
+	Primitive::~Primitive()
+	{
+		if (this->geometry->getGeometryType() != Geometry::GEOMETRY_NONE)
+		{
+			Geometry *geometry = this->geometry;
+			if (geometry)
+				geometry->~Geometry();
+			Body *body = this->body;
+			if (body)
+			{
+				body->~Body();
+				delete(body);
+			}
+		}
+		//SurfaceData* surfaceData(this->surfaceData);
+		delete(this->surfaceData);
+
+		RBXASSERT(this->world);
+		RBXASSERT(!this->clump);
+		RBXASSERT(this->joints.first);
+		RBXASSERT(!this->joints.num);
+		RBXASSERT(this->contacts.first);
+		RBXASSERT(!this->contacts.num);
+		//RBXASSERT(!this->currentStage);
+	}
+	*/
 
 	float Primitive::getRadius() const
 	{
