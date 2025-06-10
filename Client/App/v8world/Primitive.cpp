@@ -223,7 +223,6 @@ namespace RBX
 				if (edge->getEdgeType() == Edge::JOINT)
 				{
 					pRVar2 = rbx_static_cast<Joint*>(edge);
-					edge->~Edge();
 					if ((edge->getEdgeType() == 6) || (edge->getEdgeType() == 7))
 						break;
 				}
