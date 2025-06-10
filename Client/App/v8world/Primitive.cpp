@@ -312,6 +312,32 @@ namespace RBX
 		return pJVar3;
 	}
 
+	Geometry* Primitive::newGeometry(Geometry::GeometryType geometryType)
+	{
+		if (geometryType == Geometry::GEOMETRY_BALL)
+		{
+			Geometry *pGVar1 = new Ball();
+			if (pGVar1)
+			{
+				return pGVar1;
+			}
+		}
+		else
+		{
+			if (geometryType != Geometry::GEOMETRY_BLOCK)
+			{
+				Geometry *pGVar1 = Geometry::nullGeometry();
+				return pGVar1;
+			}
+			Geometry *pGVar1 = new Block();
+			if (pGVar1)
+			{
+				return pGVar1;
+			}
+		}
+		return NULL;
+	}
+
 	/*
 	Primitive::~Primitive()
 	{
