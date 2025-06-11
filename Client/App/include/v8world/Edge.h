@@ -58,7 +58,10 @@ namespace RBX
 		{
 			return p == prim0 ? next0 : next1;
 		}
-		void setNext(Primitive*, Edge*);
+		void setNext(Primitive* p, Edge* e)
+		{
+			p == prim0 ? next0 = e : next1 = e;
+		}
 		bool links(Primitive*, Primitive*) const;
 		bool links(const Primitive* p) const
 		{
