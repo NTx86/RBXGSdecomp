@@ -188,6 +188,77 @@ namespace RBX
 			this->surfaceType[id] = newSurfaceType;
 	}
 
+	Extents Primitive::computeFuzzyExtents() const
+	{
+		Body *this_00 = this->body;
+		Body *this_01 = this->body;
+
+		Vector3 pfVar11 = this->geometry->getCenterToCorner(this_00->getPV().position.rotation);
+
+		Extents pEStack_4(Vector3((this_01->getPV().position.translation.x - pfVar11.x) - 0.01F, 
+			(this_01->getPV().position.translation.y - pfVar11.y) - 0.01F, 
+			(this_01->getPV().position.translation.z - pfVar11.z) - 0.01F), 
+			Vector3((this_01->getPV().position.translation.x + pfVar11.x) + 0.01F, 
+			(this_01->getPV().position.translation.y + pfVar11.y) + 0.01F, 
+			(this_01->getPV().position.translation.z + pfVar11.z) + 0.01F));
+
+		return pEStack_4;
+	}
+
+	/*
+	void Primitive::insertEdge(Edge* e)
+	{
+		Primitive *pPVar2 = e->getPrimitive(1);
+		Primitive *pPVar3 = e->getPrimitive(0);
+		bool iVar5 = e->getEdgeType() == Edge::JOINT;
+		Primitive *pPVar4 = e->getPrimitive(0);
+
+		if (iVar5) 
+		{
+			Edge *pEVar6 = (pPVar4->joints).first;
+
+			e->setNext(pPVar3, pEVar6);
+
+			pPVar4->joints.num++;
+			(pPVar4->joints).first = e;
+
+			if (!pPVar2)
+			{
+				pEVar6 = rbx_static_cast<Joint*>(e);
+				e->~Edge();
+			}
+
+			pPVar3 = e->getPrimitive(1);
+			pEVar6 = (pPVar3->joints).first;
+			EdgeList *pEVar7 = &pPVar3->joints;
+
+			if (pPVar2 == e->getPrimitive(0)) 
+			{
+				e->setNext(pPVar2, pEVar6);
+				pPVar3->joints.num++;
+				pEVar7->first = e;
+				return;
+			}
+		}
+		else 
+		{
+			Edge *pEVar6 = (pPVar4->contacts).first;
+			e->setNext(pPVar3, pEVar6);
+			(pPVar4->contacts).first = e;
+
+			pPVar4->contacts.num++;
+
+			pPVar3 = e->getPrimitive(1);
+			pEVar6 = (pPVar3->contacts).first;
+			EdgeList *pEVar7 = &pPVar3->contacts;
+
+			e->setNext(pPVar2, pEVar6);
+			pPVar3->contacts.num++;
+			pEVar7->first = e;
+		}
+	}
+	*/
+
 	void Primitive::removeEdge(Edge* e)
 	{
 		Primitive *prim0 = e->getPrimitive(0);
