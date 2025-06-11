@@ -459,6 +459,36 @@ namespace RBX
 		return body->getPV().position;
 	}
 
+	CoordinateFrame Primitive::getGridCorner() const
+	{
+		Body *this_00 = this->body;
+		Geometry *pGVar13 = this->geometry;
+		float fVar14 = -((pGVar13->getGridSize()).x * 0.5);
+		float fVar15 = -((pGVar13->getGridSize()).y * 0.5);
+		float fVar16 = -((pGVar13->getGridSize()).z * 0.5);
+		const Vector3 vector0 = this_00->getPV().position.rotation.getRow(0);
+		const Vector3 vector1 = this_00->getPV().position.rotation.getRow(1);
+		const Vector3 vector2 = this_00->getPV().position.rotation.getRow(2);
+
+		float fVar1 = vector0.z;
+		float fVar2 = vector0.y;
+		float fVar3 = vector0.x;
+		float fVar4 = (this_00->getPV()).position.translation.x;
+		float fVar5 = vector1.z;
+		float fVar6 = vector1.x;
+		float fVar7 = vector1.y;
+		float fVar8 = (this_00->getPV()).position.translation.y;
+		float fVar9 = vector2.z;
+		float fVar10 = vector2.x;
+		float fVar11 = vector2.y;
+		float fVar12 = (this_00->getPV()).position.translation.z;
+
+		return CoordinateFrame(Matrix3(this_00->getPV().position.rotation), 
+			Vector3((fVar3 * fVar14 + fVar2 * fVar15 + fVar1 * fVar16 + fVar4),
+			(fVar7 * fVar15 + fVar6 * fVar14 + fVar5 * fVar16 + fVar8),
+			(fVar15 * fVar11 + fVar16 * fVar9 + fVar10 * fVar14 + fVar12)));
+	}
+
 	void Primitive::setGridSize(const Vector3 &gridSize)
 	{
 		Vector3 protectedSize = this->clipToSafeSize(gridSize);
