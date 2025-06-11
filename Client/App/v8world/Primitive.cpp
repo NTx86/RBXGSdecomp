@@ -187,6 +187,28 @@ namespace RBX
 		if (this->surfaceType[id] != newSurfaceType)
 			this->surfaceType[id] = newSurfaceType;
 	}
+
+	void Primitive::removeEdge(Edge* e)
+	{
+		Primitive *prim0 = e->getPrimitive(0);
+		Primitive *prim1 = e->getPrimitive(1);
+
+		if (!e->getEdgeType())
+		{
+			EdgeList::removeEdge(prim0, e, prim0->joints);
+			if (prim1)
+			{
+				EdgeList::removeEdge(prim1, e, prim1->joints);
+			}
+			e = rbx_static_cast<Joint*>(e);
+			e->~Edge();
+		}
+		else
+		{
+			EdgeList::removeEdge(prim0, e, prim0->contacts);
+			EdgeList::removeEdge(prim1, e, prim1->contacts);
+		}
+	}
 	
 	Joint* Primitive::getFirstJoint() const
 	{
