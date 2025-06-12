@@ -14,10 +14,8 @@ namespace RBX
 {
 	Extents Primitive::getExtentsWorld() const
 	{
-		Extents extent(-(this->geometry->getGridSize() * 0.5), this->geometry->getGridSize() * 0.5);
-		const CoordinateFrame &frame = getCoordinateFrame();
-
-		return extent.toWorldSpace(frame);
+		Extents extent(-(geometry->getGridSize() * 0.5), geometry->getGridSize() * 0.5);
+		return extent.toWorldSpace(getCoordinateFrame());
 	}
 
 	void Primitive::setGuid(const RBX::Guid &value)
@@ -84,15 +82,15 @@ namespace RBX
 
 	void Primitive::setCanCollide(bool canCollide)
 	{
-		bool cVar2 = !dragging && this->canCollide;
+		bool canCollide1 = !dragging && this->canCollide;
 
 		if (this->canCollide != canCollide) 
 		{
 			this->canCollide = canCollide;
 			if (world) 
 			{
-				bool cVar1 = !dragging && canCollide;
-				if (cVar2 != cVar1) 
+				bool canCollide2 = !dragging && canCollide;
+				if (canCollide1 != canCollide2) 
 				{
 					world->onPrimitiveCanCollideChanged(this);
 				}
@@ -126,16 +124,14 @@ namespace RBX
 
 	CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
 	{
-		Geometry *pGVar7 = this->geometry;
-		const Vector3 *pVVar8 = &normalIdToVector3(objectFace);
+		Vector3 normalIdVector = normalIdToVector3(objectFace);
 
-		return CoordinateFrame(Matrix3(normalIdToMatrix3(objectFace)), Vector3(pVVar8->x * pGVar7->getGridSize().x,
-			pVVar8->y * pGVar7->getGridSize().y, pVVar8->z * pGVar7->getGridSize().z));
+		return CoordinateFrame(Matrix3(normalIdToMatrix3(objectFace)), 
+			Vector3(normalIdVector * geometry->getGridSize()));
 	}
 
 	Face Primitive::getFaceInObject(NormalId objectFace)
 	{
-		Geometry *geometry = this->geometry;
 		Extents extent(-(geometry->getGridSize() * 0.5), geometry->getGridSize() * 0.5);
 		return Face::fromExtentsSide(extent, objectFace);
 	}
@@ -150,10 +146,10 @@ namespace RBX
 		if (!surfaceData[id] && newSurfaceData.isEmpty())
 			return;
 
-		SurfaceData *pSVar2 = surfaceData[id];
-		if (!pSVar2 || pSVar2->inputType != newSurfaceData.inputType 
-			|| pSVar2->paramA != newSurfaceData.paramA 
-			|| pSVar2->paramB != newSurfaceData.paramB)
+		SurfaceData *data = surfaceData[id];
+		if (!data || data->inputType != newSurfaceData.inputType 
+			|| data->paramA != newSurfaceData.paramA 
+			|| data->paramB != newSurfaceData.paramB)
 		{
 			if (newSurfaceData.isEmpty()) 
 			{
@@ -164,18 +160,18 @@ namespace RBX
 			}
 			if (!this->surfaceData[id])
 			{
-				pSVar2 = new SurfaceData();
-				if (pSVar2)
+				data = new SurfaceData();
+				if (data)
 				{
-					pSVar2->inputType = Controller::NO_INPUT;
-					pSVar2->paramA = -0.5f;
-					pSVar2->paramB = 0.5f;
+					data->inputType = Controller::NO_INPUT;
+					data->paramA = -0.5f;
+					data->paramB = 0.5f;
 				}
 				else
 				{
-					pSVar2 = NULL;
+					data = NULL;
 				}
-				surfaceData[id] = pSVar2;
+				surfaceData[id] = data;
 			}
 			*surfaceData[id] = newSurfaceData;
 		}
@@ -189,19 +185,10 @@ namespace RBX
 
 	Extents Primitive::computeFuzzyExtents() const
 	{
-		Body *this_00 = this->body;
-		Body *this_01 = this->body;
+		Vector3 centerToCornerVector = this->geometry->getCenterToCorner(body->getPV().position.rotation);
 
-		Vector3 pfVar11 = this->geometry->getCenterToCorner(this_00->getPV().position.rotation);
-
-		Extents pEStack_4(Vector3((this_01->getPV().position.translation.x - pfVar11.x) - 0.01F, 
-			(this_01->getPV().position.translation.y - pfVar11.y) - 0.01F, 
-			(this_01->getPV().position.translation.z - pfVar11.z) - 0.01F), 
-			Vector3((this_01->getPV().position.translation.x + pfVar11.x) + 0.01F, 
-			(this_01->getPV().position.translation.y + pfVar11.y) + 0.01F, 
-			(this_01->getPV().position.translation.z + pfVar11.z) + 0.01F));
-
-		return pEStack_4;
+		return Extents((body->getPV().position.translation - centerToCornerVector) - Vector3(0.01f, 0.01f, 0.01f), 
+			(body->getPV().position.translation + centerToCornerVector) + Vector3(0.01f, 0.01f, 0.01f));
 	}
 
 	/*
@@ -271,7 +258,7 @@ namespace RBX
 				EdgeList::removeEdge(prim1, e, prim1->joints);
 			}
 			e = rbx_static_cast<Joint*>(e);
-			e->~Edge();
+			delete e;
 		}
 		else
 		{
@@ -282,67 +269,55 @@ namespace RBX
 	
 	Joint* Primitive::getFirstJoint() const
 	{
-		Edge *first = this->joints.first;
-		return rbx_static_cast<Joint*>(first);
+		return rbx_static_cast<Joint*>(this->joints.first);
 	}
 
 	Joint* Primitive::getNextJoint(Joint *prev) const
 	{
-		Edge *pJVar2 = prev->getNext(this);
-		return rbx_static_cast<Joint*>(pJVar2);
+		return rbx_static_cast<Joint*>(prev->getNext(this));
 	}
 
 	Contact* Primitive::getFirstContact()
 	{
-		Edge *pCVar1 = this->contacts.first;
-		return rbx_static_cast<Contact*>(pCVar1);
+		return rbx_static_cast<Contact*>(this->contacts.first);
 	}
 
 	Contact* Primitive::getNextContact(Contact *prev)
 	{
-		Edge *pCVar1 = prev->getNext(this);
-		return rbx_static_cast<Contact*>(pCVar1);
+		return rbx_static_cast<Contact*>(prev->getNext(this));
 	}
 
 	RigidJoint* Primitive::getFirstRigidAt(Edge *edge)
 	{
-		Edge *pRVar2 = edge;
-
-		if (edge) 
+		if (edge)
 		{
 			while (true)
 			{
 				if (edge->getEdgeType() == Edge::JOINT)
 				{
-					pRVar2 = rbx_static_cast<Joint*>(edge);
-					if ((edge->getEdgeType() == 6) || (edge->getEdgeType() == 7))
+					if(RigidJoint::isRigidJoint(edge))
 						break;
 				}
-				pRVar2 = edge->getNext(this);
-				if (pRVar2) 
+				edge = edge->getNext(this);
+				if (!edge) 
 				{
-					edge = (Edge *)pRVar2;
-				}
-				else
-				{
-					if (!edge->getEdgeType()) 
+					if (edge->getEdgeType()) 
 						return NULL;
 
-					pRVar2 = (RigidJoint *)(this->contacts).first;
+					edge = this->contacts.first;
 				}
-
 			}
 		}
-		return rbx_static_cast<RigidJoint*>(pRVar2);
+		return rbx_static_cast<RigidJoint*>(edge);
 	}
 
 	RigidJoint* Primitive::getFirstRigid()
 	{
-		Edge *pEVar1 = this->joints.first;
-		if (!pEVar1) 
-			pEVar1 = this->contacts.first;
-		RigidJoint *pRVar2 = getFirstRigidAt(pEVar1);
-		return pRVar2;
+		Edge *firstEdge = this->joints.first;
+		if (!firstEdge) 
+			firstEdge = this->contacts.first;
+		RigidJoint *rigidJoint = getFirstRigidAt(firstEdge);
+		return rigidJoint;
 	}
 	
 	RigidJoint* Primitive::getNextRigid(RigidJoint *prev)
@@ -351,13 +326,10 @@ namespace RBX
 
 		if (!next)
 		{
-			//Note: getEdgeType causes this error.
-			/*
-			if (!prev->getEdgeType())
+			if (!next->getEdgeType())
 			{
 				return getFirstRigidAt(contacts.first);
 			}
-			*/
 			next = NULL;
 		}
 		return getFirstRigidAt(next);
@@ -365,85 +337,76 @@ namespace RBX
 
 	Joint* Primitive::getJoint(Primitive *p0, Primitive *p1)
 	{
-		Primitive *pPVar4 = p0;
+		Primitive *prim = p0;
 		if (p0->joints.num >= p1->joints.num)
-			pPVar4 = p1;
+			prim = p1;
 
-		Joint *pJVar3 = rbx_static_cast<Joint*>(pPVar4->joints.first);
+		Joint *firstJoint = rbx_static_cast<Joint*>(prim->joints.first);
 		while(true)
 		{
-			if (!pJVar3) 
+			if (!firstJoint) 
 				return NULL;
 
-			Primitive *pPVar1 = pJVar3->getPrimitive(0);
-			if (p0 == pPVar1 && p1 == pJVar3->getPrimitive(1)) break;
-			if (p0 == pJVar3->getPrimitive(1) && p1 == pPVar1) break;
+			Primitive *jointPrim0 = firstJoint->getPrimitive(0);
+			if (p0 == jointPrim0 && p1 == firstJoint->getPrimitive(1)) break;
+			if (p0 == firstJoint->getPrimitive(1) && p1 == jointPrim0) break;
 
-			pJVar3 = rbx_static_cast<Joint*>(pJVar3->getNext(pPVar4));
+			firstJoint = rbx_static_cast<Joint*>(firstJoint->getNext(prim));
 		}
-		return pJVar3;
+		return firstJoint;
 	}
 
 	Contact* Primitive::getContact(Primitive *p0, Primitive *p1)
 	{
-		Primitive *pPVar4 = p0;
+		Primitive *prim = p0;
 		if (p0->contacts.num >= p1->contacts.num)
-			pPVar4 = p1;
+			prim = p1;
 
-		Contact *pJVar3 = rbx_static_cast<Contact*>(pPVar4->contacts.first);
+		Contact *firstContact = rbx_static_cast<Contact*>(prim->contacts.first);
 		while(true)
 		{
-			if (!pJVar3) 
+			if (!firstContact) 
 				return NULL;
 
-			Primitive *pPVar1 = pJVar3->getPrimitive(0);
-			if (p0 == pPVar1 && p1 == pJVar3->getPrimitive(1)) break;
-			if (p0 == pJVar3->getPrimitive(1) && p1 == pPVar1) break;
+			Primitive *contactPrim0 = firstContact->getPrimitive(0);
+			if (p0 == contactPrim0 && p1 == firstContact->getPrimitive(1)) break;
+			if (p0 == firstContact->getPrimitive(1) && p1 == contactPrim0) break;
 
-			pJVar3 = rbx_static_cast<Contact*>(pJVar3->getNext(pPVar4));
+			firstContact = rbx_static_cast<Contact*>(firstContact->getNext(prim));
 		}
-		return pJVar3;
+		return firstContact;
 	}
 
 	Geometry* Primitive::newGeometry(Geometry::GeometryType geometryType)
 	{
 		if (geometryType == Geometry::GEOMETRY_BALL)
 		{
-			Geometry *pGVar1 = new Ball();
-			if (pGVar1)
-			{
-				return pGVar1;
-			}
+			Geometry *object = new Ball();
+			if (object)
+				return object;
 		}
 		else
 		{
 			if (geometryType != Geometry::GEOMETRY_BLOCK)
 			{
-				Geometry *pGVar1 = Geometry::nullGeometry();
-				return pGVar1;
+				Geometry *object = Geometry::nullGeometry();
+				return object;
 			}
-			Geometry *pGVar1 = new Block();
-			if (pGVar1)
-			{
-				return pGVar1;
-			}
+			Geometry *object = new Block();
+			if (object)
+				return object;
 		}
 		return NULL;
 	}
 
 	Primitive::~Primitive()
 	{
-		if (this->geometry->getGeometryType() != Geometry::GEOMETRY_NONE)
+		if (geometry->getGeometryType() != Geometry::GEOMETRY_NONE)
 		{
-			Geometry *geometry = this->geometry;
 			if (geometry)
-				geometry->~Geometry();
-			Body *body = this->body;
+				delete geometry;
 			if (body)
-			{
-				body->~Body();
-				delete(body);
-			}
+				delete body;
 		}
 		delete(this->surfaceData);
 
@@ -463,14 +426,12 @@ namespace RBX
 
 	bool Primitive::hitTest(const Ray &worldRay, Vector3 &worldHitPoint, bool &inside)
 	{
-		Body *pBVar1 = this->body;
 		Vector3 localHitPoint(0, 0, 0); 
 
-		bool cVar2 = this->geometry->hitTest(pBVar1->getPV().position.toObjectSpace(worldRay), localHitPoint, inside);
-		if (cVar2)
+		bool hit = this->geometry->hitTest(body->getPV().position.toObjectSpace(worldRay), localHitPoint, inside);
+		if (hit)
 		{
-			pBVar1 = this->body;
-			Vector3 worldHitPoint = pBVar1->getPV().position.pointToWorldSpace(localHitPoint);
+			Vector3 worldHitPoint = body->getPV().position.pointToWorldSpace(localHitPoint);
 			return true;
 		}
 		return false;
@@ -479,12 +440,13 @@ namespace RBX
 	void Primitive::setAnchor(bool anchor)
 	{
 		Anchor *anchorObject = this->anchorObject;
+		bool isAnchorObject = anchorObject != NULL;
 		this->anchored = anchor;
 
 		if ( anchor || this->dragging )
 			anchor = true;
 
-		if ( anchor != (anchorObject != NULL) )
+		if (anchor != isAnchorObject)
 		{
 			if (anchor)
 			{
@@ -508,19 +470,17 @@ namespace RBX
 
 	Face Primitive::getFaceInWorld(NormalId objectFace)
 	{
-		Body *body = this->body;
 		return this->getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
 	}
 
 	void Primitive::setCoordinateFrame(const CoordinateFrame &cFrame)
 	{
-		Body *body = this->body;
-		bool bVar1 = cFrame.operator != (body->getPV().position);
-		if (bVar1) 
+		bool ifcFrame = cFrame != body->getPV().position;
+		if (ifcFrame) 
 		{
-			Assembly *this_01 = (this->clump) ? this->clump->getAssembly() : NULL;
+			Assembly *assembly = (this->clump) ? this->clump->getAssembly() : NULL;
 
-			if (!this_01) 
+			if (!assembly) 
 			{
 				this->body->setCoordinateFrame(cFrame);
 				this->myOwner->notifyMoved();
@@ -532,11 +492,11 @@ namespace RBX
 			else 
 			{
 				RBXASSERT(this->world);
-				if (this_01->getMainPrimitive() == this) 
+				if (assembly->getMainPrimitive() == this) 
 				{
 					this->body->setCoordinateFrame(cFrame);
-					this_01->notifyMoved();
-					this->world->onAssemblyExtentsChanged(this_01);
+					assembly->notifyMoved();
+					this->world->onAssemblyExtentsChanged(assembly);
 					if (this->anchored == false) 
 					{
 						this->world->ticklePrimitive(this);
@@ -553,49 +513,24 @@ namespace RBX
 
 	CoordinateFrame Primitive::getGridCorner() const
 	{
-		Body *this_00 = this->body;
-		Geometry *pGVar13 = this->geometry;
-		float fVar14 = -((pGVar13->getGridSize()).x * 0.5);
-		float fVar15 = -((pGVar13->getGridSize()).y * 0.5);
-		float fVar16 = -((pGVar13->getGridSize()).z * 0.5);
-		const Vector3 vector0 = this_00->getPV().position.rotation.getRow(0);
-		const Vector3 vector1 = this_00->getPV().position.rotation.getRow(1);
-		const Vector3 vector2 = this_00->getPV().position.rotation.getRow(2);
-
-		float fVar1 = vector0.z;
-		float fVar2 = vector0.y;
-		float fVar3 = vector0.x;
-		float fVar4 = (this_00->getPV()).position.translation.x;
-		float fVar5 = vector1.z;
-		float fVar6 = vector1.x;
-		float fVar7 = vector1.y;
-		float fVar8 = (this_00->getPV()).position.translation.y;
-		float fVar9 = vector2.z;
-		float fVar10 = vector2.x;
-		float fVar11 = vector2.y;
-		float fVar12 = (this_00->getPV()).position.translation.z;
-
-		return CoordinateFrame(Matrix3(this_00->getPV().position.rotation), 
-			Vector3((fVar3 * fVar14 + fVar2 * fVar15 + fVar1 * fVar16 + fVar4),
-			(fVar7 * fVar15 + fVar6 * fVar14 + fVar5 * fVar16 + fVar8),
-			(fVar15 * fVar11 + fVar16 * fVar9 + fVar10 * fVar14 + fVar12)));
+		return CoordinateFrame(body->getPV().position.rotation, 
+			body->getPV().position.pointToWorldSpace(-(geometry->getGridSize() * 0.5f)));
 	}
 
 	void Primitive::setGridSize(const Vector3 &gridSize)
 	{
 		Vector3 protectedSize = this->clipToSafeSize(gridSize);
-		Geometry *pGVar2 = this->geometry;
 
-		if (pGVar2->getGridSize().x != protectedSize.x 
-			|| pGVar2->getGridSize().y != protectedSize.y 
-			|| pGVar2->getGridSize().z != protectedSize.z) 
+		if (geometry->getGridSize().x != protectedSize.x 
+			|| geometry->getGridSize().y != protectedSize.y 
+			|| geometry->getGridSize().z != protectedSize.z) 
 		{
 			this->fuzzyExtentsStateId = -2;
 			this->geometry->setGridSize(protectedSize);
-			const float fVar4 = this->geometry->getGridVolume();
-			this->body->setMass(fVar4);
-			const Matrix3 &pMVar9 = this->geometry->getMoment(fVar4);
-			this->body->setMoment(pMVar9);
+			const float mass = this->geometry->getGridVolume();
+			this->body->setMass(mass);
+			const Matrix3 &moment = this->geometry->getMoment(mass);
+			this->body->setMoment(moment);
 			this->JointK.setDirty();
 			if (this->world) 
 			{
@@ -609,14 +544,14 @@ namespace RBX
 	{
 		if (this->dragging != dragging) 
 		{
-			bool cVar2 = this->dragging == false && this->canCollide != false;
+			bool notDrag1 = !dragging && this->canCollide;
 
 			this->dragging = dragging;
 			this->setAnchor(this->anchored);
 			if (world)
 			{
-				bool cVar1 = this->dragging == false && this->canCollide != false;
-				if (cVar1 != cVar2)
+				bool notDrag2 = !this->dragging && this->canCollide;
+				if (notDrag2 != notDrag1)
 				{
 					this->world->onPrimitiveCanCollideChanged(this);
 				}
@@ -626,41 +561,38 @@ namespace RBX
 
 	void Primitive::setPrimitiveType(Geometry::GeometryType geometryType)
 	{
-		RBXASSERT(this->geometry->getGeometryType() != Geometry::GEOMETRY_NONE);
+		RBXASSERT(geometry->getGeometryType() != Geometry::GEOMETRY_NONE);
 		RBXASSERT(geometryType != Geometry::GEOMETRY_NONE);
 
-		Geometry::GeometryType GVar2 = this->geometry->getGeometryType();
-		if (GVar2 != geometryType) 
+		Geometry::GeometryType currentGeometryType = this->geometry->getGeometryType();
+		if (currentGeometryType != geometryType) 
 		{
-			Geometry *pGVar3 = this->geometry;
-			const Vector3 VStack_c(pGVar3->getGridSize());
-			if (pGVar3) 
-				pGVar3->~Geometry();
-			pGVar3 = newGeometry(geometryType);
-			this->geometry = pGVar3;
+			const Vector3 gridSize(geometry->getGridSize());
+			if (geometry) 
+				delete geometry;
+			this->geometry = newGeometry(geometryType);
 			if (this->world) 
 				this->world->onPrimitiveGeometryTypeChanged(this);
-			this->setGridSize(VStack_c);
+			this->setGridSize(gridSize);
 			this->JointK.setDirty();
 		}
 	}
 
 	float Primitive::getPlanarSize() const
 	{
-		Geometry *geometry = this->geometry;
 		const Vector3 *gridSize = &geometry->getGridSize();
-		float fVar1 = (geometry->getGridSize()).z;
-		if ((geometry->getGridSize()).y <= gridSize->x) 
+
+		if (gridSize->y <= gridSize->x) 
 		{
-			if ((geometry->getGridSize()).y < fVar1)
+			if (gridSize->y < gridSize->z)
 			{
-				return (geometry->getGridSize()).z * gridSize->x;
+				return gridSize->z * gridSize->x;
 			}
 		}
-		else if (gridSize->x < fVar1) 
+		else if (gridSize->x < gridSize->z) 
 		{
-			return (geometry->getGridSize()).z * (geometry->getGridSize()).y;
+			return gridSize->z * gridSize->y;
 		}
-		return gridSize->x * (geometry->getGridSize()).y;
+		return gridSize->x * gridSize->y;
 	}
 }
