@@ -559,6 +559,12 @@ namespace RBX
 		}
 	}
 
+	void Primitive::setGridCorner(const CoordinateFrame &gridCorner)
+	{
+		this->setCoordinateFrame(CoordinateFrame(gridCorner.rotation, 
+			gridCorner.pointToWorldSpace(geometry->getGridSize() * 0.5)));
+	}
+
 	void Primitive::setPrimitiveType(Geometry::GeometryType geometryType)
 	{
 		RBXASSERT(geometry->getGeometryType() != Geometry::GEOMETRY_NONE);
