@@ -47,6 +47,14 @@ namespace RBX
 		return result;
 	}
 
+	/*
+	void Primitive::onNewTouch(Primitive *p0, Primitive* p1)
+	{
+		newTouch(p0, p1);
+		newTouch(p1, p0);
+	}
+	*/
+
 	void Primitive::setClump(Clump *clump)
 	{
 		if (clump != this->clump)
@@ -124,10 +132,8 @@ namespace RBX
 
 	CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
 	{
-		Vector3 normalIdVector = normalIdToVector3(objectFace);
-
-		return CoordinateFrame(Matrix3(normalIdToMatrix3(objectFace)), 
-			Vector3(normalIdVector * geometry->getGridSize()));
+		return CoordinateFrame(normalIdToMatrix3(objectFace), 
+			normalIdToVector3(objectFace) * geometry->getGridSize());
 	}
 
 	Face Primitive::getFaceInObject(NormalId objectFace)
@@ -190,6 +196,19 @@ namespace RBX
 		return Extents((body->getPV().position.translation - centerToCornerVector) - Vector3(0.01f, 0.01f, 0.01f), 
 			(body->getPV().position.translation + centerToCornerVector) + Vector3(0.01f, 0.01f, 0.01f));
 	}
+
+	/*
+	const Extents &Primitive::getFastFuzzyExtents() const
+	{
+		if (this->fuzzyExtentsStateId != body->getStateIndex()) 
+		{
+			Extents fuzzyExtents = computeFuzzyExtents();
+			this->fuzzyExtents = fuzzyExtents;
+			this->fuzzyExtentsStateId = body->getStateIndex();
+		}
+		return this->fuzzyExtents;
+	}
+	*/
 
 	/*
 	void Primitive::insertEdge(Edge* e)
@@ -517,6 +536,21 @@ namespace RBX
 			body->getPV().position.pointToWorldSpace(-(geometry->getGridSize() * 0.5f)));
 	}
 
+	int Primitive::countNumJoints() const
+	{
+		int numJoints = 0;
+		Joint *joint = rbx_static_cast<Joint*>(this->joints.first);
+
+		while (joint)
+		{
+			Joint::JointType jointType = joint->getJointType();
+			if (jointType != Joint::FREE_JOINT && jointType != Joint::ANCHOR_JOINT) 
+				numJoints++;
+			joint = rbx_static_cast<Joint*>(joint->getNext(this));
+		}
+		return numJoints;
+	}
+
 	void Primitive::setGridSize(const Vector3 &gridSize)
 	{
 		Vector3 protectedSize = this->clipToSafeSize(gridSize);
@@ -562,7 +596,7 @@ namespace RBX
 	void Primitive::setGridCorner(const CoordinateFrame &gridCorner)
 	{
 		this->setCoordinateFrame(CoordinateFrame(gridCorner.rotation, 
-			gridCorner.pointToWorldSpace(geometry->getGridSize() * 0.5)));
+			gridCorner.pointToWorldSpace(geometry->getGridSize() * 0.5f)));
 	}
 
 	void Primitive::setPrimitiveType(Geometry::GeometryType geometryType)
