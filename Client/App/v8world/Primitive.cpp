@@ -210,60 +210,6 @@ namespace RBX
 	}
 	*/
 
-	/*
-	void Primitive::insertEdge(Edge* e)
-	{
-		Primitive *pPVar2 = e->getPrimitive(1);
-		Primitive *pPVar3 = e->getPrimitive(0);
-		bool iVar5 = e->getEdgeType() == Edge::JOINT;
-		Primitive *pPVar4 = e->getPrimitive(0);
-
-		if (iVar5) 
-		{
-			Edge *pEVar6 = (pPVar4->joints).first;
-
-			e->setNext(pPVar3, pEVar6);
-
-			pPVar4->joints.num++;
-			(pPVar4->joints).first = e;
-
-			if (!pPVar2)
-			{
-				pEVar6 = rbx_static_cast<Joint*>(e);
-				e->~Edge();
-			}
-
-			pPVar3 = e->getPrimitive(1);
-			pEVar6 = (pPVar3->joints).first;
-			EdgeList *pEVar7 = &pPVar3->joints;
-
-			if (pPVar2 == e->getPrimitive(0)) 
-			{
-				e->setNext(pPVar2, pEVar6);
-				pPVar3->joints.num++;
-				pEVar7->first = e;
-				return;
-			}
-		}
-		else 
-		{
-			Edge *pEVar6 = (pPVar4->contacts).first;
-			e->setNext(pPVar3, pEVar6);
-			(pPVar4->contacts).first = e;
-
-			pPVar4->contacts.num++;
-
-			pPVar3 = e->getPrimitive(1);
-			pEVar6 = (pPVar3->contacts).first;
-			EdgeList *pEVar7 = &pPVar3->contacts;
-
-			e->setNext(pPVar2, pEVar6);
-			pPVar3->contacts.num++;
-			pEVar7->first = e;
-		}
-	}
-	*/
-
 	void Primitive::removeEdge(Edge* e)
 	{
 		Primitive *prim0 = e->getPrimitive(0);
@@ -430,11 +376,11 @@ namespace RBX
 		delete(this->surfaceData);
 
 		RBXASSERT(this->world);
-		RBXASSERT(!this->clump);
+		RBXASSERT(this->clump == 0);
 		RBXASSERT(this->joints.first);
-		RBXASSERT(!this->joints.num);
+		RBXASSERT(this->joints.num == 0);
 		RBXASSERT(this->contacts.first);
-		RBXASSERT(!this->contacts.num);
+		RBXASSERT(this->contacts.num == 0);
 		//RBXASSERT(!this->currentStage);
 	}
 
@@ -551,6 +497,46 @@ namespace RBX
 		return numJoints;
 	}
 
+	/*
+	Vector3 Primitive::clipToSafeSize(const Vector3 &newSize)
+	{
+		float fVar1;
+		float fVar2;
+		float fVar3;
+		float *pfVar4;
+		float10 fVar5;
+		Vector3 local_c;
+
+		local_c.x = 512.0;
+		pfVar4 = &param_1->z;
+		local_c.y = 512.0;
+		local_c.z = 512.0;
+		if (512.0 <= *pfVar4) {
+		pfVar4 = &local_c.z;
+		}
+		fVar1 = *pfVar4;
+		pfVar4 = &param_1->y;
+		if (512.0 <= *pfVar4) {
+		pfVar4 = &local_c.y;
+		}
+		fVar2 = *pfVar4;
+		if (512.0 <= param_1->x) {
+		param_1 = &local_c;
+		}
+		fVar3 = param_1->x;
+		__return_storage_ptr__->x = fVar3;
+		__return_storage_ptr__->y = fVar2;
+		__return_storage_ptr__->z = fVar1;
+		fVar2 = fVar3 * fVar2 * fVar1;
+		if (1e+06 < fVar2 != NAN(fVar2)) {
+		fVar5 = (float10)floor((double)(1e+06 / (fVar1 * fVar3)));
+		__return_storage_ptr__->y = (float)fVar5;
+		return __return_storage_ptr__;
+		}
+		return __return_storage_ptr__;
+	}
+	*/
+
 	void Primitive::setGridSize(const Vector3 &gridSize)
 	{
 		Vector3 protectedSize = this->clipToSafeSize(gridSize);
@@ -597,6 +583,15 @@ namespace RBX
 	{
 		this->setCoordinateFrame(CoordinateFrame(gridCorner.rotation, 
 			gridCorner.pointToWorldSpace(geometry->getGridSize() * 0.5f)));
+	}
+
+	void Primitive::setController(Controller *controller)
+	{
+		if (!controller)
+			controller = NullController::getStaticNullController();
+
+		if (this->controller != controller) 
+			this->controller = controller;
 	}
 
 	void Primitive::setPrimitiveType(Geometry::GeometryType geometryType)
