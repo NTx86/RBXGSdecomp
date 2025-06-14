@@ -52,4 +52,12 @@ namespace RBX
 		static bool isControllableInput(InputType inputType); // this is inlined :(
 		static G3D::Color3 controllerTypeToColor(ControllerType controllerType);
 	};
+
+	class NullController : public RBX::Controller
+	{
+	public:
+		NullController();
+		virtual ~NullController() {}
+		static NullController * getStaticNullController();
+	};
 }
