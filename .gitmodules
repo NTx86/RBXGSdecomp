@@ -1,0 +1,3 @@
+[submodule "Client/Rendering/G3D"]
+	path = Client/Rendering/G3D
+	url = https://github.com/Nukley/g3d-609.git
