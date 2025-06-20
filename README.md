@@ -9,3 +9,19 @@ Some tools we recommend for matching are [objdiff](https://github.com/encounter/
 * [boost 1.34.1](https://www.boost.org/users/history/version_1_34_1.html)
 * [SDL 1.2.6](https://www.libsdl.org/release/SDL-1.2.6.zip)
 * [Graphics3D 6.09](https://sourceforge.net/projects/g3d/files/g3d-cpp/6.09/)
+
+# Cloning using git
+To clone the repo:
+```
+git clone https://github.com/NTx86/RBXGSdecomp.git
+cd RBXGSdecomp
+```
+If you need to change branches:
+```
+git checkout BRANCH_NAME_HERE
+```
+To install submodules (required for building):
+```
+git submodule init 
+git submodule update
+```
