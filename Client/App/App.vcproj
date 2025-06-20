@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
+				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\source\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -108,7 +108,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
+				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\source\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;MBCS"
 				StringPooling="true"
 				RuntimeLibrary="2"
