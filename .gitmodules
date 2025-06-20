@@ -1,3 +1,9 @@
 [submodule "Client/Rendering/G3D"]
 	path = Client/Rendering/G3D
 	url = https://github.com/Nukley/g3d-609.git
+[submodule "Client/Rendering/SDL-1.2.6"]
+	path = Client/Rendering/SDL-1.2.6
+	url = https://github.com/Nukley/SDL-1.2.6.git
+[submodule "Client/boost_1_34_1"]
+	path = Client/boost_1_34_1
+	url = https://github.com/Nukley/boost-1.34.1.git
