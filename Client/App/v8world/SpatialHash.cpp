@@ -11,4 +11,9 @@ namespace RBX
 		RBXASSERT(result < 0x10000);
 		return result;
 	}
+
+	Vector3int32 SpatialHash::realToHashGrid(const Vector3& realPoint)
+	{
+		return Vector3int32::floor(realPoint * 0.125f);
+	}
 }

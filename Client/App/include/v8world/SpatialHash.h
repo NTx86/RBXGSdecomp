@@ -74,7 +74,7 @@ namespace RBX
 		static void computeMinMax(const Extents&, Vector3int32&, Vector3int32&);
 		static void computeMinMax(const Primitive*, Vector3int32&, Vector3int32&);
 	public:
-		static Vector3int32 realToHashGrid(const G3D::Vector3&);
+		static Vector3int32 realToHashGrid(const G3D::Vector3& realPoint);
 		static G3D::Vector3 hashGridToReal(const G3D::Vector3&);
 		static Extents hashGridToRealExtents(const G3D::Vector3&);
 	};
