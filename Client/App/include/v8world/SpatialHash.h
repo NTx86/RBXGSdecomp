@@ -69,7 +69,7 @@ namespace RBX
 		static float hashGridRecip();
 		static unsigned int numBuckets();
 		static unsigned int numBits();
-		static int getHash(const Vector3int32&);
+		static int getHash(const Vector3int32& grid);
 		static Extents computeMinMax(const Extents&);
 		static void computeMinMax(const Extents&, Vector3int32&, Vector3int32&);
 		static void computeMinMax(const Primitive*, Vector3int32&, Vector3int32&);
