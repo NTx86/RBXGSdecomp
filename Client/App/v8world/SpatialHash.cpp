@@ -16,4 +16,9 @@ namespace RBX
 	{
 		return Vector3int32::floor(realPoint * 0.125f);
 	}
+
+	Extents SpatialHash::hashGridToRealExtents(const G3D::Vector3& hashGrid)
+	{
+		return Extents::Extents(hashGrid * 8.0f, (hashGrid + Vector3(1, 1, 1)) * 8.0f);
+	}
 }

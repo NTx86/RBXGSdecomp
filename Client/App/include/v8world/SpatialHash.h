@@ -76,6 +76,6 @@ namespace RBX
 	public:
 		static Vector3int32 realToHashGrid(const G3D::Vector3& realPoint);
 		static G3D::Vector3 hashGridToReal(const G3D::Vector3&);
-		static Extents hashGridToRealExtents(const G3D::Vector3&);
+		static Extents hashGridToRealExtents(const G3D::Vector3& hashGrid);
 	};
 }
