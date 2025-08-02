@@ -7,6 +7,17 @@
 namespace RBX
 {
 	// TODO: determine which of these functions need to go into the header
+#pragma warning (push)
+#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
+	JointStage::JointStage(IStage* upstream, World* world)
+		: IWorldStage(upstream, new ClumpStage(this, world), world)
+	{
+	}
+#pragma warning (pop)
+
+	JointStage::~JointStage()
+	{
+	}
 
 	// TODO: move to header
 	__forceinline bool JointStage::edgeHasPrimitivesDownstream(Edge* e)
@@ -22,37 +33,42 @@ namespace RBX
 			p1->downstreamOfStage(this);
 	}
 
+	ClumpStage* JointStage::getClumpStage()
+	{
+		IStage* downstream = getDownstream();
+		return rbx_static_cast<ClumpStage*>(downstream);
+	}
+
 	void JointStage::moveEdgeToDownstream(Edge* e)
 	{
 		RBXASSERT(edgeHasPrimitivesDownstream(e));
-
-		IStage* downstream = getDownstream();
-		ClumpStage* clumpStage = rbx_static_cast<ClumpStage*>(downstream);
-		clumpStage->onEdgeAdded(e);
+		getClumpStage()->onEdgeAdded(e);
 	}
 
 	void JointStage::removeEdgeFromDownstream(Edge* e)
 	{
 		RBXASSERT(edgeHasPrimitivesDownstream(e));
-
-		IStage* downstream = getDownstream();
-		ClumpStage* clumpStage = rbx_static_cast<ClumpStage*>(downstream);
-		clumpStage->onEdgeRemoving(e);
+		getClumpStage()->onEdgeRemoving(e);
 	}
 
 	bool JointStage::pairInMap(Joint* j, Primitive* p)
 	{
 		typedef std::multimap<Primitive*, Joint*>::const_iterator Iterator;
-		Iterator iter = jointMap.lower_bound(p);
-		Iterator iter2 = jointMap.upper_bound(p);
 
-		for (; iter != iter2; iter++)
+		do
 		{
-			if (iter->second == j)
-				return true;
-		}
+			std::pair<Iterator, Iterator> range = jointMap.equal_range(p);
+			Iterator& it = range.first;
 
-		return false;
+			for (; it != range.second; it++)
+			{
+				if (it->second == j)
+					return true;
+			}
+
+			return false;
+		}
+		while (false);
 	}
 
 	void JointStage::insertToMap(Joint* j, Primitive* p)
@@ -64,11 +80,39 @@ namespace RBX
 		jointMap.insert(std::pair<Primitive*, Joint*>(p, j));
 	}
 
-	__declspec(noinline) void JointStage::removeFromMap(Joint* j, Primitive* p)
+	void JointStage::removeFromMap(Joint* j, Primitive* p)
 	{
-		// TODO
-		// remove noinline once completed
-		RBXASSERT(0);
+		typedef std::multimap<Primitive*, Joint*>::iterator Iterator;
+
+		if (!p)
+		{
+			RBXASSERT(pairInMap(j, p));
+
+			do
+			{
+				std::pair<Iterator, Iterator> range = jointMap.equal_range(p);
+				Iterator it = range.first;
+
+				// I feel like this is a function elsewhere
+				for (; it != range.second; it++)
+				{
+					if (it->second == j)
+						break;
+				}
+
+				if (it != range.second)
+				{
+					jointMap.erase(it);
+				}
+				else
+				{
+					RBXASSERT(0);
+				}
+
+				RBXASSERT(!pairInMap(j, p));
+			}
+			while (0); // do while forces standard library functions to inline... dont ask why but i need it right now
+		}
 	}
 
 	// NOTE: might be in headers
@@ -85,8 +129,8 @@ namespace RBX
 
 	void JointStage::insertToList(Joint* j)
 	{
-		std::pair<std::set<Joint*>::iterator, bool> result = incompleteJoints.insert(j);
-		RBXASSERT(result.second);
+		bool result = incompleteJoints.insert(j).second;
+		RBXASSERT(result);
 	}
 
 	void JointStage::moveJointToDownstream(Joint* j)
@@ -112,7 +156,8 @@ namespace RBX
 		RBXASSERT(!nulling);
 		RBXASSERT(!j->links(nulling));
 		RBXASSERT(j->downstreamOfStage(this) == edgeHasPrimitivesDownstream(j));
-		RBXASSERT(j->downstreamOfStage(this) != edgeHasPrimitivesDownstream(j));
+		RBXASSERT(!j->inPipeline());
+		RBXASSERT(j->downstreamOfStage(this) != jointInList(j));
 
 		if (j->downstreamOfStage(this))
 		{
@@ -132,10 +177,11 @@ namespace RBX
 
 	void JointStage::onJointPrimitiveSet(Joint* j, Primitive* p)
 	{
-		RBXASSERT(!p);
-		RBXASSERT(!j->links(p));
+		RBXASSERT(p);
+		RBXASSERT(j->links(p));
+		RBXASSERT(!pairInMap(j, p));
 		RBXASSERT(j->inStage(this));
-		RBXASSERT(!jointInList(j));
+		RBXASSERT(jointInList(j));
 
 		if (edgeHasPrimitivesDownstream(j))
 		{
@@ -150,5 +196,77 @@ namespace RBX
 		{
 			insertToMap(j, p);
 		}
+	}
+
+	void JointStage::onEdgeAdded(Edge* e)
+	{
+		e->putInPipeline(this);
+
+		if (edgeHasPrimitivesDownstream(e))
+		{
+			moveEdgeToDownstream(e);
+		}
+		else
+		{
+			RBXASSERT(e->getEdgeType() == Edge::JOINT);
+			Joint* j = rbx_static_cast<Joint*>(e);
+			insertToList(j);
+			insertToMap(j, j->getPrimitive(0));
+			insertToMap(j, j->getPrimitive(1));
+		}
+	}
+
+	void JointStage::onEdgeRemoving(Edge* e)
+	{
+		if (e->downstreamOfStage(this))
+		{
+			RBXASSERT(edgeHasPrimitivesDownstream(e));
+			removeEdgeFromDownstream(e);
+			e->removeFromPipeline(this);
+		}
+		else
+		{
+			RBXASSERT(e->getEdgeType() == Edge::JOINT);
+			Joint* j = rbx_static_cast<Joint*>(e);
+			removeFromList(j);
+			removeFromMap(j, j->getPrimitive(0));
+			removeFromMap(j, j->getPrimitive(1));
+			e->removeFromPipeline(this);
+		}
+	}
+
+	void JointStage::onPrimitiveAdded(Primitive* p)
+	{
+		p->putInPipeline(this);
+		getClumpStage()->onPrimitiveAdded(p);
+		// TODO
+	}
+
+	void JointStage::onPrimitiveRemoving(Primitive* p)
+	{
+		std::vector<Joint*> tempJointList;
+
+		Joint* j;
+		for (j = p->getFirstJoint(); j != NULL; j = p->getNextJoint(j))
+		{
+			if (j->getJointType() != Joint::ANCHOR_JOINT && j->getJointType() != Joint::FREE_JOINT)
+			{
+				RBXASSERT(edgeHasPrimitivesDownstream(j));
+				tempJointList.push_back(j);
+			}
+		}
+
+		for (size_t i = 0; i < tempJointList.size(); ++i) // why loop here???
+		{
+			removeJointFromDownstream(j);
+			insertToList(j);
+			insertToMap(j, p);
+
+			Primitive* otherP = j->otherPrimitive(p);
+			insertToMap(j, otherP);
+		}
+
+		getClumpStage()->onPrimitiveRemoving(p);
+		p->removeFromPipeline(this);
 	}
 }
