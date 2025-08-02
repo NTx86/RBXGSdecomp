@@ -90,4 +90,23 @@ namespace RBX
 		--this->nodesOut;
 		this->extraNodes = destroy;
 	}
+
+	bool SpatialHash::shareCommonGrid(Primitive* me, Primitive* other)
+	{
+		SpatialNode* spatialNodes = me->spatialNodes;
+		while (true)
+		{
+			if (!spatialNodes)
+				return false;
+			int hashId = spatialNodes->hashId;
+			SpatialNode* currentNode = this->nodes[hashId];
+			while (currentNode)
+			{
+				if (currentNode->primitive == other && currentNode->gridId == spatialNodes->gridId)
+					return true;
+				currentNode = currentNode->nextHashLink;
+			}
+			spatialNodes = spatialNodes->nextPrimitiveLink;
+		}
+	}
 }
