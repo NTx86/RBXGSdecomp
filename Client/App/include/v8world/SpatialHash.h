@@ -38,7 +38,7 @@ namespace RBX
 		void returnNode(SpatialNode*);
 		bool shareCommonGrid(Primitive*, Primitive*);
 		bool hashHasPrimitive(Primitive*, int, const Vector3int32&);
-		SpatialNode* findNode(Primitive*, const Vector3int32&);
+		SpatialNode* findNode(Primitive* p, const Vector3int32& grid);
 		void removeNodeFromHash(SpatialNode* remove);
 		void insertNodeToPrimitive(SpatialNode*, Primitive*, const Vector3int32&, int);
 		void removeNodeFromPrimitive(SpatialNode*);

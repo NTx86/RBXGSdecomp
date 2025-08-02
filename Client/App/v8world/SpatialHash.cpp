@@ -37,4 +37,15 @@ namespace RBX
 		}
 		*temp = remove->nextHashLink;
 	}
+
+	SpatialNode* SpatialHash::findNode(Primitive* p, const Vector3int32& grid)
+	{
+		int hash = SpatialHash::getHash(grid);
+		SpatialNode* result = this->nodes[hash];
+		while (result->primitive != p || result->gridId != grid)
+		{
+			result = result->nextHashLink;
+		}
+		return result;
+	}
 }
