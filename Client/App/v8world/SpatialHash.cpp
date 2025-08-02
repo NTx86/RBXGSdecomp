@@ -109,4 +109,50 @@ namespace RBX
 			spatialNodes = spatialNodes->nextPrimitiveLink;
 		}
 	}
+
+	void SpatialHash::addNode(Primitive* p, const Vector3int32& grid)
+	{
+		int hash = getHash(grid);
+
+		SpatialNode* node = this->extraNodes;
+		++this->nodesOut;
+		if (node)
+			this->extraNodes = node->nextHashLink;
+		else
+			node = new SpatialNode();
+
+		node->primitive = p;
+		node->gridId = grid;
+		node->hashId = hash;
+
+		SpatialNode* oldNodes = p->spatialNodes;
+		node->nextPrimitiveLink = oldNodes;
+		node->prevPrimitiveLink = NULL;
+		if (oldNodes)
+			oldNodes->prevPrimitiveLink = node;
+
+		SpatialNode* linkedNode = this->nodes[hash];
+		node->nextHashLink = linkedNode;
+		this->nodes[hash] = node;
+
+		int numNodes = 1;
+		for (; linkedNode != NULL; linkedNode = linkedNode->nextHashLink)
+		{
+			++numNodes;
+
+			Primitive* linkedP = linkedNode->primitive;
+			if (linkedP != p && linkedNode->gridId == grid)
+			{
+				if (!Primitive::getContact(p, linkedP))
+					this->contactManager->onNewPair(p, linkedP);
+			}
+			else
+			{
+				RBXASSERT(grid != linkedNode->gridId);
+			}
+		}
+
+		int newMaxBucket = (this->maxBucket < numNodes) ? numNodes : this->maxBucket;
+		this->maxBucket = newMaxBucket;
+	}
 }

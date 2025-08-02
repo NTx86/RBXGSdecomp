@@ -20,7 +20,10 @@ namespace RBX
 		Vector3int32 gridId;
 
 	public:
-		SpatialNode();
+		SpatialNode()
+			: gridId()
+		{
+		}
 	};
 
 	class SpatialHash
@@ -42,7 +45,7 @@ namespace RBX
 		void removeNodeFromHash(SpatialNode* remove);
 		void insertNodeToPrimitive(SpatialNode*, Primitive*, const Vector3int32&, int);
 		void removeNodeFromPrimitive(SpatialNode*);
-		void addNode(Primitive*, const Vector3int32&);
+		void addNode(Primitive* p, const Vector3int32& grid);
 		void destroyNode(SpatialNode* destroy);
 		void changeMinMax(Primitive*, const Extents&, const Extents&, const Extents&);
 		void primitiveExtentsChanged(Primitive*);
