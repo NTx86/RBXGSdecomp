@@ -21,4 +21,12 @@ namespace RBX
 	{
 		return Extents(hashGrid * 8.0f, (hashGrid + Vector3(1, 1, 1)) * 8.0f);
 	}
+
+	void SpatialHash::computeMinMax(const Extents& extents, Vector3int32& min, Vector3int32& max)
+	{
+		Vector3int32 minTemp = Vector3int32::floor(extents.min() * 0.125f);
+		min = minTemp;
+		Vector3int32 maxTemp = Vector3int32::floor(extents.max() * 0.125f);
+		max = maxTemp;
+	}
 }

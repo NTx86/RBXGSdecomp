@@ -20,8 +20,8 @@ namespace RBX
 		bool operator==(const Extents&) const;
 		bool operator!=(const Extents&) const;
 		Extents& operator=(const Extents&);
-		const Vector3& min() const;
-		const Vector3& max() const;
+		const Vector3& min() const {return this->low;}
+		const Vector3& max() const {return this->high;}
 		Vector3 getCorner(int i) const;
 		Vector3 size() const { return this->high - this->low; }
 		Vector3 center() const { return (this->high + this->low) * 0.5f; }
