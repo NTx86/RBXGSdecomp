@@ -19,6 +19,6 @@ namespace RBX
 
 	Extents SpatialHash::hashGridToRealExtents(const G3D::Vector3& hashGrid)
 	{
-		return Extents::Extents(hashGrid * 8.0f, (hashGrid + Vector3(1, 1, 1)) * 8.0f);
+		return Extents(hashGrid * 8.0f, (hashGrid + Vector3(1, 1, 1)) * 8.0f);
 	}
 }
