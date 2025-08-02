@@ -3,12 +3,17 @@
 
 namespace RBX
 {
+	size_t SpatialHash::numBuckets()
+	{
+		return 0x10000;
+	}
+
 	int SpatialHash::getHash(const Vector3int32& grid)
 	{
 		int result = grid.x * -0xba3 ^ grid.y * 0x409f ^ grid.z * -0x49;
-		result &= 0xffff;
+		result &= (numBuckets()-1);
 		RBXASSERT(result >= 0);
-		RBXASSERT(result < 0x10000);
+		RBXASSERT(result < (int)numBuckets());
 		return result;
 	}
 
