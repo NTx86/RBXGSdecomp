@@ -155,4 +155,33 @@ namespace RBX
 		int newMaxBucket = (this->maxBucket < numNodes) ? numNodes : this->maxBucket;
 		this->maxBucket = newMaxBucket;
 	}
+
+	void SpatialHash::changeMinMax(Primitive* p, const Extents& change, const Extents& oldBox, const Extents& newBox)
+	{
+		Vector3int32 min = Vector3int32::floor(change.min());
+		Vector3int32 max = Vector3int32::floor(change.max());
+
+		for (int i = min.x; i <= max.x; ++i)
+		{
+			for (int j = min.y; j <= max.y; ++j)
+			{
+				for (int k = min.z; k <= max.z; ++k)
+				{
+					bool inNew = newBox.contains(Vector3(i, j, k));
+					bool inOld = oldBox.contains(Vector3(i, j, k));
+
+					if (inNew)
+					{
+						if (!inOld)
+							addNode(p, Vector3int32(i, j, k));
+					}
+					else if (inOld)
+					{
+						SpatialNode* node = findNode(p, Vector3int32(i, j, k));
+						destroyNode(node);
+					}
+				}
+			}
+		}
+	}
 }

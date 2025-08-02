@@ -47,7 +47,7 @@ namespace RBX
 		void removeNodeFromPrimitive(SpatialNode*);
 		void addNode(Primitive* p, const Vector3int32& grid);
 		void destroyNode(SpatialNode* destroy);
-		void changeMinMax(Primitive*, const Extents&, const Extents&, const Extents&);
+		void changeMinMax(Primitive* p, const Extents& change, const Extents& oldBox, const Extents& newBox);
 		void primitiveExtentsChanged(Primitive*);
 		unsigned int numNodes(unsigned int) const;
 	public:
