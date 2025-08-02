@@ -184,4 +184,10 @@ namespace RBX
 			}
 		}
 	}
+
+	void SpatialHash::onPrimitiveRemoved(Primitive* p)
+	{
+		for (SpatialNode* node = p->spatialNodes; node != NULL; node = p->spatialNodes)
+			destroyNode(node);
+	}
 }

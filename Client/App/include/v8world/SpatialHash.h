@@ -56,7 +56,7 @@ namespace RBX
 		~SpatialHash();
 	public:
 		void onPrimitiveAdded(Primitive*);
-		void onPrimitiveRemoved(Primitive*);
+		void onPrimitiveRemoved(Primitive* p);
 		void onPrimitiveExtentsChanged(Primitive*);
 		void onAllPrimitivesMoved();
 		void getPrimitivesInGrid(const Vector3int32&, G3D::Array<Primitive*>&);
