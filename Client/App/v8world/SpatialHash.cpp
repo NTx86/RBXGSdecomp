@@ -24,9 +24,17 @@ namespace RBX
 
 	void SpatialHash::computeMinMax(const Extents& extents, Vector3int32& min, Vector3int32& max)
 	{
-		Vector3int32 minTemp = Vector3int32::floor(extents.min() * 0.125f);
-		min = minTemp;
-		Vector3int32 maxTemp = Vector3int32::floor(extents.max() * 0.125f);
-		max = maxTemp;
+		min = SpatialHash::realToHashGrid(extents.min());
+		max = SpatialHash::realToHashGrid(extents.max());
+	}
+
+	void SpatialHash::removeNodeFromHash(SpatialNode* remove)
+	{
+		SpatialNode** temp = &this->nodes[remove->hashId];
+		while (*temp != remove)
+		{
+			temp = &(*temp)->nextHashLink;
+		}
+		*temp = remove->nextHashLink;
 	}
 }
