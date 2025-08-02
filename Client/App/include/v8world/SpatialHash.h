@@ -43,7 +43,7 @@ namespace RBX
 		void insertNodeToPrimitive(SpatialNode*, Primitive*, const Vector3int32&, int);
 		void removeNodeFromPrimitive(SpatialNode*);
 		void addNode(Primitive*, const Vector3int32&);
-		void destroyNode(SpatialNode*);
+		void destroyNode(SpatialNode* destroy);
 		void changeMinMax(Primitive*, const Extents&, const Extents&, const Extents&);
 		void primitiveExtentsChanged(Primitive*);
 		unsigned int numNodes(unsigned int) const;

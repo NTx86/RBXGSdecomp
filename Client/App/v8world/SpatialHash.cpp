@@ -1,4 +1,6 @@
 #include "v8world/SpatialHash.h"
+#include "v8world/Primitive.h"
+#include "v8world/ContactManager.h"
 #include "util/debug.h"
 
 namespace RBX
@@ -52,5 +54,40 @@ namespace RBX
 			result = result->nextHashLink;
 		}
 		return result;
+	}
+
+	void SpatialHash::destroyNode(SpatialNode* destroy)
+	{
+		SpatialNode* nextPrimitiveLink = destroy->nextPrimitiveLink;
+		SpatialNode* prevPrimitiveLink = destroy->prevPrimitiveLink;
+
+		if (nextPrimitiveLink)
+			nextPrimitiveLink->prevPrimitiveLink = prevPrimitiveLink;
+
+		if (prevPrimitiveLink)
+			prevPrimitiveLink->nextPrimitiveLink = nextPrimitiveLink;
+		else
+			destroy->primitive->spatialNodes = nextPrimitiveLink;
+
+		removeNodeFromHash(destroy);
+
+		int destroyHash = destroy->hashId;
+		Vector3int32 destroyGrid = destroy->gridId;
+
+		for (SpatialNode* node = nodes[destroyHash]; node != NULL; node = node->nextHashLink)
+		{
+			if (node->gridId == destroyGrid)
+			{
+				Primitive* destroyPrim = destroy->primitive;
+				Primitive* nodePrim = node->primitive;
+				RBXASSERT(nodePrim != destroyPrim);
+				if (Primitive::getContact(destroyPrim, nodePrim) && !shareCommonGrid(destroyPrim, nodePrim))
+					this->contactManager->onReleasePair(destroyPrim, nodePrim);
+			}
+		}
+
+		destroy->nextHashLink = this->extraNodes;
+		--this->nodesOut;
+		this->extraNodes = destroy;
 	}
 }
