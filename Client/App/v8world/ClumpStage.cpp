@@ -11,34 +11,37 @@
 
 namespace RBX
 {
-	__forceinline float calculateAnchorSize2(const Vector3& size)
+	float calculatePlanar(const Vector3& gridSize)
 	{
-		if (size.x >= size.y)
+		if (gridSize.x < gridSize.y)
 		{
-			if (size.y < size.z)
-				return size.x * size.z;
+			if (gridSize.x < gridSize.z)
+				return gridSize.y * gridSize.z;
 			else
-				return size.x * size.y;
-		}
-		else if (size.x < size.z)
-		{
-			return size.y * size.z;
+				return gridSize.x * gridSize.y;
 		}
 		else
 		{
-			return size.x * size.y;
+			if (gridSize.y < gridSize.z)
+				return gridSize.x * gridSize.z;
+			else
+				return gridSize.x * gridSize.y;
 		}
-	}
-
-	__forceinline int calculateAnchorSize(const Vector3& size)
-	{
-		return G3D::iRound(floor(calculateAnchorSize2(size)));
 	}
 
 	PrimitiveSort::PrimitiveSort()
 		: anchored(false),
 		  surfaceAreaJoints(0)
 	{
+	}
+
+	PrimitiveSort::PrimitiveSort(const Primitive* p)
+	{
+		float planar = calculatePlanar(p->getGeometry()->getGridSize());
+		RBXASSERT(planar < 2147483600.0f);
+		RBXASSERT(planar > 0.0f);
+		this->surfaceAreaJoints = G3D::iRound(floor(planar)) * p->getNumJoints2();
+		this->anchored = p->getAnchor();
 	}
 
 	PrimitiveEntry::PrimitiveEntry(Primitive* primitive, PrimitiveSort power)
@@ -61,13 +64,13 @@ namespace RBX
 
 	void ClumpStage::anchorsInsert(Anchor* a)
 	{
-		int size = calculateAnchorSize(a->getPrimitive()->getGridSize());
+		int planar = G3D::iRound(floor(calculatePlanar(a->getPrimitive()->getGridSize())));
 
 		bool inserted;
-		inserted = anchorSizeMap.insert(std::pair<Anchor*, int>(a, size)).second;
+		inserted = anchorSizeMap.insert(std::pair<Anchor*, int>(a, planar)).second;
 		RBXASSERT(inserted);
 
-		inserted = anchors.insert(AnchorEntry(a, size)).second;
+		inserted = anchors.insert(AnchorEntry(a, planar)).second;
 		RBXASSERT(inserted);
 	}
 
@@ -82,12 +85,7 @@ namespace RBX
 
 	void ClumpStage::rigidOnesInsert(RigidJoint* r)
 	{
-		PrimitiveSort sort;
-		{
-			// WTF? why does this result in a better match???
-			PrimitiveSort sortTemp = getRigidPower(r);
-			sort = sortTemp;
-		}
+		PrimitiveSort sort = getRigidPower(r);
 
 		bool inserted;
 		inserted = rigidJointPowerMap.insert(std::pair<RigidJoint*, PrimitiveSort>(r, sort)).second;
@@ -105,13 +103,7 @@ namespace RBX
 
 	void ClumpStage::primitivesInsert(Primitive* p)
 	{
-		//PrimitiveSort sort(p);
-		PrimitiveSort sort;
-		{
-			// WTF? why does this result in a better match???
-			PrimitiveSort sortTemp(p);
-			sort = sortTemp;
-		}
+		PrimitiveSort sort(p);
 
 		bool inserted;
 		inserted = primitiveSizeMap.insert(std::pair<Primitive*, PrimitiveSort>(p, sort)).second;
@@ -301,15 +293,17 @@ namespace RBX
 		else
 		{
 			// NOTE: if you get this matching, you will also be able to match processMotors
-			Primitive* p1 = clump1->getRootPrimitive();
-			Primitive* p0 = clump0->getRootPrimitive();
-			PrimitiveSort ps1 = PrimitiveSort(p1);
-			PrimitiveSort ps0 = PrimitiveSort(p0);
+			Primitive* c1Root = clump1->getRootPrimitive();
+			Primitive* c0Root = clump0->getRootPrimitive();
+			PrimitiveSort s1 = PrimitiveSort(c1Root);
+			PrimitiveSort s0 = PrimitiveSort(c0Root);
+			//PrimitiveSort* selectedSort = &s1;
 
-			if (ps1 < ps0)
-				return ps0;
-			else
-				return ps1;
+			//if (s0 > s1)
+			//	selectedSort = &s0;
+
+			//return *selectedSort;
+			return s0 < s1 ? s1 : s0;
 		}
 	}
 

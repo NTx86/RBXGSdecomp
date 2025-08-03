@@ -148,7 +148,10 @@ namespace RBX
 			return dragging;
 		}
 		void setAnchor(bool);
-		bool getAnchor() const;
+		bool getAnchor() const
+		{
+			return anchorObject != NULL;
+		}
 		Anchor* getAnchorObject()
 		{
 			return anchorObject;
@@ -204,7 +207,10 @@ namespace RBX
 			return JointK;
 		}
 		RigidJoint* getFirstRigidAt(Edge*);
-		int getNumJoints2() const;
+		int getNumJoints2() const
+		{
+			return joints.num;
+		}
 		int countNumJoints() const;
 		int getNumContacts() const;
 		int getNumEdges() const;

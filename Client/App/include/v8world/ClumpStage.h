@@ -31,24 +31,31 @@ namespace RBX
 	public:
 		bool operator==(const PrimitiveSort& other) const
 		{
-			return anchored == other.anchored && surfaceAreaJoints == other.surfaceAreaJoints;
+			return isEqual(*this, other);
 		}
 		bool operator!=(const PrimitiveSort& other) const
 		{
-			return anchored != other.anchored && surfaceAreaJoints != other.surfaceAreaJoints;
+			return !isEqual(*this, other);
 		}
 		bool operator<(const PrimitiveSort& other) const
 		{
-			return anchored != other.anchored && surfaceAreaJoints < other.surfaceAreaJoints;
+			return isLess(*this, other);
 		}
 		bool operator>(const PrimitiveSort& other) const
 		{
-			return anchored != other.anchored && surfaceAreaJoints > other.surfaceAreaJoints;
+			return !isLess(*this, other);
 		}
 	  
 	private:
-		static bool isEqual(const PrimitiveSort&, const PrimitiveSort&);
-		static bool isLess(const PrimitiveSort&, const PrimitiveSort&);
+		static bool isEqual(const PrimitiveSort& s0, const PrimitiveSort& s1)
+		{
+			// this is a guess
+			return s0.anchored == s1.anchored && s0.surfaceAreaJoints == s1.surfaceAreaJoints;
+		}
+		static bool isLess(const PrimitiveSort& s0, const PrimitiveSort& s1)
+		{
+			return s0.anchored != s1.anchored ? s1.anchored : (s0.surfaceAreaJoints < s1.surfaceAreaJoints);
+		}
 	};
 
 	class PrimitiveEntry
