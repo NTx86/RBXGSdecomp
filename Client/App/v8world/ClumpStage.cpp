@@ -304,14 +304,28 @@ namespace RBX
 		RBXASSERT(removed == 1);
 	}
 
-	__declspec(noinline) bool lessClump(const Clump& c0, const Clump& c1)
+	bool lessClump(const Clump& c0, const Clump& c1)
 	{
-		return false; // TODO
+		PrimitiveSort s1(c1.getRootPrimitive());
+		PrimitiveSort s0(c0.getRootPrimitive());
+		return s0 < s1;
 	}
 
 	bool lessMotor(const MotorJoint* m0, const MotorJoint* m1)
 	{
-		return false; // TODO
+		if (m0 == m1)
+			return false;
+
+		PrimitiveSort power0 = ClumpStage::getMotorPower(m0);
+		PrimitiveSort power1 = ClumpStage::getMotorPower(m1);
+
+		if (power0.anchored != power1.anchored)
+			return power1.anchored;
+
+		if (power0.surfaceAreaJoints == power1.surfaceAreaJoints)
+			return m0 < m1;
+
+		return power0.surfaceAreaJoints < power1.surfaceAreaJoints;
 	}
 
 	PrimitiveSort ClumpStage::getMotorPower(const MotorJoint* m)
