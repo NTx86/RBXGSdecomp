@@ -18,7 +18,7 @@ namespace RBX
 			if (gridSize.x < gridSize.z)
 				return gridSize.y * gridSize.z;
 			else
-				return gridSize.x * gridSize.y;
+				return gridSize.y * gridSize.x;
 		}
 		else
 		{
