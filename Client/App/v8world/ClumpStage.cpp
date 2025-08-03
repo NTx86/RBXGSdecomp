@@ -179,7 +179,7 @@ namespace RBX
 		return std::find(motors.begin(), motors.end(), m) != motors.end();
 	}
 
-	__forceinline bool ClumpStage::edgesFind(Edge* e)
+	bool ClumpStage::edgesFind(Edge* e)
 	{
 		return edges.find(e) != edges.end();
 	}
