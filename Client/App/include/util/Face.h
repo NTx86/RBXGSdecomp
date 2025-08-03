@@ -14,8 +14,14 @@ namespace RBX
 
 	public:
 		//Face(const Face&);
-		Face();
-		Face(const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector3&);
+		Face()
+			: c0(), c1(), c2(), c3()
+		{
+		}
+		Face(const G3D::Vector3& c0, const G3D::Vector3& c1, const G3D::Vector3& c2, const G3D::Vector3& c3)
+			: c0(c0), c1(c1), c2(c2), c3(c3)
+		{
+		}
 	private:
 		G3D::Vector3 getAxis(int) const;
 		void minMax(const G3D::Vector3&, const G3D::Vector3&, float&, float&) const;
