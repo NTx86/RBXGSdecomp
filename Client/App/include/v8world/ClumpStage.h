@@ -49,7 +49,6 @@ namespace RBX
 	private:
 		static bool isEqual(const PrimitiveSort& s0, const PrimitiveSort& s1)
 		{
-			// this is a guess
 			return s0.anchored == s1.anchored && s0.surfaceAreaJoints == s1.surfaceAreaJoints;
 		}
 		static bool isLess(const PrimitiveSort& s0, const PrimitiveSort& s1)
