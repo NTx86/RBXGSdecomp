@@ -79,4 +79,10 @@ namespace RBX
 		RBXASSERT(0);
 		return NORM_UNDEFINED;
 	}
+
+	// TODO: check
+	NormalId Matrix3ToNormalId(const G3D::Matrix3& m)
+	{
+		return Vector3ToNormalId(m.getColumn(2));
+	}
 }

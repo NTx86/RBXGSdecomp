@@ -73,9 +73,9 @@ namespace RBX
 	protected:
 		void forceToPoints(const G3D::Vector3&);
 	public:
-		PointToPointBreakConnector(const RBX::PointToPointBreakConnector&);
+		//PointToPointBreakConnector(const PointToPointBreakConnector&);
 		// TODO:: check if the ctor matches
-		PointToPointBreakConnector(RBX::Point* _point0, RBX::Point* _point1, float _k, float _breakForce)
+		PointToPointBreakConnector(Point* _point0, Point* _point1, float _k, float _breakForce)
 			: point0(_point0),
 			  point1(_point1),
 			  k(_k),
@@ -88,7 +88,25 @@ namespace RBX
 		virtual float potentialEnergy();
 		void setBroken() {this->broken = true;}
 		virtual ~PointToPointBreakConnector() {};
-		PointToPointBreakConnector& operator=(const PointToPointBreakConnector&);
+		//PointToPointBreakConnector& operator=(const PointToPointBreakConnector&);
+	};
+
+	class NormalBreakConnector : public PointToPointBreakConnector
+	{
+	private:
+		NormalId normalIdBody0;
+
+	public:
+		//NormalBreakConnector(const NormalBreakConnector&);
+		NormalBreakConnector(Point* _point0, Point* _point1, float _k, float _breakForce, NormalId _normalIdBody0)
+			: PointToPointBreakConnector(_point0, _point1, _k, _breakForce),
+			  normalIdBody0(_normalIdBody0)
+		{
+		}
+		virtual ~NormalBreakConnector() {}
+	public:
+		virtual void computeForce(const float dt, bool throttling);
+		//NormalBreakConnector& operator=(const NormalBreakConnector&);
 	};
 
 	class RotateConnector : public Connector
@@ -112,16 +130,4 @@ namespace RBX
 		virtual ~RotateConnector() {}
 		RBX::RotateConnector& operator=(const RotateConnector& other);
 	};
-
-	class NormalBreakConnector : public PointToPointBreakConnector {
-		private:
-			NormalId normalIdBody0;
-		public:
-			NormalBreakConnector(const NormalBreakConnector&);
-			NormalBreakConnector(RBX::Point*, RBX::Point*, float, float, RBX::NormalId);
-			virtual void computeForce(const float dt, bool throttling);
-			virtual ~NormalBreakConnector();
-			RBX::NormalBreakConnector& operator=(const NormalBreakConnector&);
-	};
-
 }
