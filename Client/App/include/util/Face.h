@@ -27,25 +27,23 @@ namespace RBX
 		G3D::Vector3 getAxis(int i) const
 		{
 			RBXASSERT((i == 0) || (i==1));
-
-			if (i == 0)
-			{
-				return (c1 - c0).direction();
-			}
-			else
-			{
-				return (c3 - c0).direction();
-			}
+			return i == 0 ? getU() : getV();
 		}
 		void minMax(const G3D::Vector3& point, const G3D::Vector3& normal, float& min, float& max) const;
 		Face operator*(const G3D::Vector3&) const;
 		Face operator*(float) const;
 	public:
-		void snapToGrid(float);
+		void snapToGrid(float grid);
 		const G3D::Vector3& operator[](int i) const;
 		G3D::Vector3& operator[](int i);
-		G3D::Vector3 getU() const;
-		G3D::Vector3 getV() const;
+		G3D::Vector3 getU() const
+		{
+			return (c1 - c0).direction();
+		}
+		G3D::Vector3 getV() const
+		{
+			return (c3 - c0).direction();
+		}
 		G3D::Vector3 getNormal() const;
 		G3D::Vector2 size() const;
 		G3D::Vector3 center() const

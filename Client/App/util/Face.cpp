@@ -128,8 +128,8 @@ namespace RBX
 
 	Face Face::projectOverlapOnMe(const Face& other) const
 	{
-		G3D::Vector3 normal = (c1 - c0).direction();
-		G3D::Vector3 v2 = (c3 - c0).direction();
+		G3D::Vector3 normal = getU();
+		G3D::Vector3 v2 = getV();
 
 		float minL[2];
 		float maxL[2];
