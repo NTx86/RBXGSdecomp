@@ -17,7 +17,7 @@ namespace RBX
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			G3D::Vector3& v = this->operator[](i);
+			G3D::Vector3& v = (*this)[i];
 			v = Math::toGrid(v, grid);
 		}
 	}
@@ -53,8 +53,8 @@ namespace RBX
 
 		for (int i = 0; i < 4; ++i)
 		{
-			const G3D::Vector3& v1 = this->operator[](i);
-			const G3D::Vector3& v2 = this->operator[]((i + 1) % 4);
+			const G3D::Vector3& v1 = (*this)[i];
+			const G3D::Vector3& v2 = (*this)[(i + 1) % 4];
 
 			if ((v2 - v1).dot(point - v1) < -tolerance)
 				return false;
@@ -70,7 +70,7 @@ namespace RBX
 
 		for (int i = 0; i < 4; ++i)
 		{
-			const G3D::Vector3& v = this->operator[](i);
+			const G3D::Vector3& v = (*this)[i];
 			float temp = (v - point).dot(normal);
 			min = G3D::min(min, temp);
 			max = G3D::max(max, temp);
@@ -163,7 +163,7 @@ namespace RBX
 		Face face;
 		for (int i = 0; i < 4; ++i)
 		{
-			face[i] = objectCoord.pointToWorldSpace(this->operator[](i));
+			face[i] = objectCoord.pointToWorldSpace((*this)[i]);
 		}
 		return face;
 	}
@@ -173,7 +173,7 @@ namespace RBX
 		Face face;
 		for (int i = 0; i < 4; ++i)
 		{
-			face[i] = objectCoord.pointToObjectSpace(this->operator[](i));
+			face[i] = objectCoord.pointToObjectSpace((*this)[i]);
 		}
 		return face;
 	}
