@@ -12,7 +12,7 @@ namespace RBX
 		Vector3 high;
 
 	public:
-		Extents(const Vector3int32& low, const Vector3int32& high);
+		Extents(const Vector3int32& low, const Vector3int32& high) : low(low.toVector3()), high(high.toVector3()) {}
 		Extents(const Vector3& low, const Vector3& high) : low(low), high(high) {}
 		Extents() : low(Vector3::inf()), high(-Vector3::inf()) {}
 

@@ -48,7 +48,7 @@ namespace RBX
 		void addNode(Primitive* p, const Vector3int32& grid);
 		void destroyNode(SpatialNode* destroy);
 		void changeMinMax(Primitive* p, const Extents& change, const Extents& oldBox, const Extents& newBox);
-		void primitiveExtentsChanged(Primitive*);
+		void primitiveExtentsChanged(Primitive* p);
 		unsigned int numNodes(unsigned int) const;
 	public:
 		//SpatialHash(const SpatialHash&);
@@ -57,7 +57,7 @@ namespace RBX
 	public:
 		void onPrimitiveAdded(Primitive* p);
 		void onPrimitiveRemoved(Primitive* p);
-		void onPrimitiveExtentsChanged(Primitive*);
+		void onPrimitiveExtentsChanged(Primitive* p);
 		void onAllPrimitivesMoved();
 		void getPrimitivesInGrid(const Vector3int32&, G3D::Array<Primitive*>&);
 		bool getNextGrid(Vector3int32&, const G3D::Ray&, float);
