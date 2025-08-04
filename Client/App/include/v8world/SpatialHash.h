@@ -55,7 +55,7 @@ namespace RBX
 		SpatialHash(World*, ContactManager*);
 		~SpatialHash();
 	public:
-		void onPrimitiveAdded(Primitive*);
+		void onPrimitiveAdded(Primitive* p);
 		void onPrimitiveRemoved(Primitive* p);
 		void onPrimitiveExtentsChanged(Primitive*);
 		void onAllPrimitivesMoved();

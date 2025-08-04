@@ -185,6 +185,27 @@ namespace RBX
 		}
 	}
 
+	void SpatialHash::onPrimitiveAdded(Primitive* p)
+	{
+		RBXASSERT(!p->spatialNodes);
+		Vector3int32 newMin;
+		Vector3int32 newMax;
+		const Extents& fuzzyExtents = p->getFastFuzzyExtents();
+		SpatialHash::computeMinMax(fuzzyExtents, newMin, newMax);
+		p->oldSpatialMin = newMin;
+		p->oldSpatialMax = newMax;
+		for (int i = newMin.x; i <= newMax.x; i++)
+		{
+			for (int j = newMin.y; j <= newMax.y; j++)
+			{
+				for (int k = newMin.z; k <= newMax.z; k++)
+				{
+					this->addNode(p, Vector3int32(i, j, k));
+				}
+			}
+		}
+	}
+
 	void SpatialHash::onPrimitiveRemoved(Primitive* p)
 	{
 		for (SpatialNode* node = p->spatialNodes; node != NULL; node = p->spatialNodes)
