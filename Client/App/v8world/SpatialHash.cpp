@@ -12,6 +12,31 @@ namespace RBX
 		return 0x10000;
 	}
 
+	SpatialHash::SpatialHash(World* world, ContactManager* contactManager) : world(world), contactManager(contactManager)
+	{
+		std::vector<SpatialNode*> temp(numBuckets());
+		this->nodes = temp;
+	}
+	SpatialHash::~SpatialHash()
+	{
+		RBXASSERT(this->nodes.size() != numBuckets()); //is this correct?
+		for (size_t i = 0; i < numBuckets(); i++)
+		{
+			SpatialNode* curr =  this->nodes[i];
+			//todo finish
+		}
+
+		//not checked if matches
+		while(this->extraNodes)
+		{
+			SpatialNode* curr = this->extraNodes;
+			this->extraNodes = curr->nextHashLink;
+			delete curr;
+		}
+
+		RBXASSERT(!this->nodesOut);
+	}
+
 	int SpatialHash::getHash(const Vector3int32& grid)
 	{
 		int result = grid.x * -0xba3 ^ grid.y * 0x409f ^ grid.z * -0x49;
