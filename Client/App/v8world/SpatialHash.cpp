@@ -1,6 +1,8 @@
 #include "v8world/SpatialHash.h"
 #include "v8world/Primitive.h"
 #include "v8world/ContactManager.h"
+#include "v8world/World.h"
+#include "v8world/Assembly.h"
 #include "util/debug.h"
 
 namespace RBX
@@ -243,5 +245,18 @@ namespace RBX
 	{
 		for (SpatialNode* node = p->spatialNodes; node != NULL; node = p->spatialNodes)
 			destroyNode(node);
+	}
+
+	void SpatialHash::onAllPrimitivesMoved()
+	{
+		const G3D::Array<Primitive*>& primitives = this->world->getPrimitives();
+		for (int i = 0; i < primitives.size(); i++)
+		{
+			Primitive* primitive = primitives[i];
+			RBXASSERT(primitive);
+			RBXASSERT(primitive->getClump());
+			if (primitive->getAssembly()->moving())
+				this->primitiveExtentsChanged(primitive);
+		}
 	}
 }
