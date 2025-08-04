@@ -1,6 +1,5 @@
 #include "util/Face.h"
 #include "util/Math.h"
-#include "util/Debug.h"
 
 namespace RBX
 {
