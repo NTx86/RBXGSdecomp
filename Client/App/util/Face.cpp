@@ -23,6 +23,31 @@ namespace RBX
 		}
 	}
 
+	bool Face::overlapWithinPlanes(const Face& f0, const Face& f1, float tolerance)
+	{
+		for (int i = 0; i < 2; ++i)
+		{
+			const Face& face = i == 0 ? f0 : f1;
+			const Face& otherFace = i == 0 ? f1 : f0;
+
+			G3D::Plane p0(face.c0, face.c1, face.c3);
+			
+			G3D::Vector3 normal;
+			double distance;
+			p0.getEquation(normal, distance);
+
+			Face overlapOn1 = otherFace.projectOverlapOnMe(face);
+
+			for (int j = 0; j < 4; ++j)
+			{
+				if (overlapOn1[j].dot(normal) > tolerance)
+					return false;
+			}
+		}
+
+		return true;
+	}
+
 	bool Face::fuzzyContainsInExtrusion(const G3D::Vector3& point, float tolerance) const
 	{
 		RBXASSERT(tolerance >= 0.0);
@@ -37,76 +62,6 @@ namespace RBX
 		}
 
 		return true;
-	}
-
-	bool Face::cornersAligned(const Face& f0, const Face& f1, float tolerance)
-	{
-		RBXASSERT(tolerance > 0.0);
-
-		float toleranceSquared = tolerance*tolerance;
-
-		for (int i = 0; i < 4; ++i)
-		{
-			bool aligned = false;
-
-			for (int j = 0; j < 4; ++j)
-			{
-				const G3D::Vector3& v1 = f0[i];
-				const G3D::Vector3& v2 = f1[j];
-
-				if ((v1 - v2).squaredMagnitude() < toleranceSquared)
-				{
-					aligned = true;
-					break;
-				}
-			}
-
-			if (!aligned)
-				return false;
-		}
-
-		return true;
-	}
-
-	Face Face::fromExtentsSide(const Extents& e, NormalId faceId)
-	{
-		Face face;
-		e.getFaceCorners(faceId, face.c0, face.c1, face.c2, face.c3);
-		return face;
-	}
-
-	Face Face::toWorldSpace(const G3D::CoordinateFrame& objectCoord) const
-	{
-		Face face;
-		for (int i = 0; i < 4; ++i)
-		{
-			face[i] = objectCoord.pointToWorldSpace(this->operator[](i));
-		}
-		return face;
-	}
-
-	Face Face::toObjectSpace(const G3D::CoordinateFrame& objectCoord) const
-	{
-		Face face;
-		for (int i = 0; i < 4; ++i)
-		{
-			face[i] = objectCoord.pointToObjectSpace(this->operator[](i));
-		}
-		return face;
-	}
-
-	G3D::Vector3 Face::getAxis(int i) const
-	{
-		RBXASSERT((i == 0) || (i==1));
-
-		if (i == 0)
-		{
-			return (c1 - c0).direction();
-		}
-		else
-		{
-			return (c3 - c0).direction();
-		}
 	}
 
 	void Face::minMax(const G3D::Vector3& point, const G3D::Vector3& normal, float& min, float& max) const
@@ -142,6 +97,35 @@ namespace RBX
 		return true;
 	}
 
+	bool Face::cornersAligned(const Face& f0, const Face& f1, float tolerance)
+	{
+		RBXASSERT(tolerance > 0.0);
+
+		float toleranceSquared = tolerance*tolerance;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			bool aligned = false;
+
+			for (int j = 0; j < 4; ++j)
+			{
+				const G3D::Vector3& v1 = f0[i];
+				const G3D::Vector3& v2 = f1[j];
+
+				if ((v1 - v2).squaredMagnitude() < toleranceSquared)
+				{
+					aligned = true;
+					break;
+				}
+			}
+
+			if (!aligned)
+				return false;
+		}
+
+		return true;
+	}
+
 	Face Face::projectOverlapOnMe(const Face& other) const
 	{
 		G3D::Vector3 normal = (c1 - c0).direction();
@@ -168,28 +152,30 @@ namespace RBX
 			(normal * maxL[1]) + (v2 * minL[1]) + this->c0);
 	}
 
-	bool Face::overlapWithinPlanes(const Face& f0, const Face& f1, float tolerance)
+	Face Face::fromExtentsSide(const Extents& e, NormalId faceId)
 	{
-		for (int i = 0; i < 2; ++i)
+		Face face;
+		e.getFaceCorners(faceId, face.c0, face.c1, face.c2, face.c3);
+		return face;
+	}
+
+	Face Face::toWorldSpace(const G3D::CoordinateFrame& objectCoord) const
+	{
+		Face face;
+		for (int i = 0; i < 4; ++i)
 		{
-			const Face& face = i == 0 ? f0 : f1;
-			const Face& otherFace = i == 0 ? f1 : f0;
-
-			G3D::Plane p0(face.c0, face.c1, face.c3);
-			
-			G3D::Vector3 normal;
-			double distance;
-			p0.getEquation(normal, distance);
-
-			Face overlapOn1 = otherFace.projectOverlapOnMe(face);
-
-			for (int j = 0; j < 4; ++j)
-			{
-				if (overlapOn1[j].dot(normal) > tolerance)
-					return false;
-			}
+			face[i] = objectCoord.pointToWorldSpace(this->operator[](i));
 		}
+		return face;
+	}
 
-		return true;
+	Face Face::toObjectSpace(const G3D::CoordinateFrame& objectCoord) const
+	{
+		Face face;
+		for (int i = 0; i < 4; ++i)
+		{
+			face[i] = objectCoord.pointToObjectSpace(this->operator[](i));
+		}
+		return face;
 	}
 }
