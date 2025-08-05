@@ -19,22 +19,30 @@ namespace RBX
 	}
 	SpatialHash::~SpatialHash()
 	{
-		RBXASSERT(this->nodes.size() != numBuckets()); //is this correct?
+		RBXASSERT(this->nodes.size() == numBuckets());
+
 		for (size_t i = 0; i < numBuckets(); i++)
 		{
-			SpatialNode* curr =  this->nodes[i];
-			//todo finish
+			if (this->nodes[i])
+			{
+				while(this->nodes[i])
+				{
+					SpatialNode* backup = this->nodes[i];
+					this->nodes[i] = this->nodes[i]->nextHashLink;
+					delete backup;
+					this->nodesOut--;
+				}
+			}
 		}
 
-		//not checked if matches
 		while(this->extraNodes)
 		{
-			SpatialNode* curr = this->extraNodes;
-			this->extraNodes = curr->nextHashLink;
-			delete curr;
+			SpatialNode* node = this->extraNodes;
+			this->extraNodes = node->nextHashLink;
+			delete node;
 		}
 
-		RBXASSERT(!this->nodesOut);
+		RBXASSERT(this->nodesOut == 0);
 	}
 
 	int SpatialHash::getHash(const Vector3int32& grid)
