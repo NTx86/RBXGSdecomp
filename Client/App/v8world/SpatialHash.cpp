@@ -292,4 +292,18 @@ namespace RBX
 				this->primitiveExtentsChanged(primitive);
 		}
 	}
+
+	void SpatialHash::getPrimitivesInGrid(const Vector3int32& grid, G3D::Array<Primitive*>& found)
+	{
+		RBXASSERT(found.size() == 0);
+		int hash = SpatialHash::getHash(grid);
+		SpatialNode* node = this->nodes[hash];
+		while (node)
+		{
+			if (node->gridId == grid)
+				found.append(node->primitive);
+
+			node = node->nextHashLink;
+		}
+	}
 }

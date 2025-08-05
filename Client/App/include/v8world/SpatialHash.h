@@ -59,7 +59,7 @@ namespace RBX
 		void onPrimitiveRemoved(Primitive* p);
 		void onPrimitiveExtentsChanged(Primitive* p);
 		void onAllPrimitivesMoved();
-		void getPrimitivesInGrid(const Vector3int32&, G3D::Array<Primitive*>&);
+		void getPrimitivesInGrid(const Vector3int32& grid, G3D::Array<Primitive*>& found);
 		bool getNextGrid(Vector3int32&, const G3D::Ray&, float);
 		void getPrimitivesTouchingExtents(const Extents&, const Primitive*, G3D::Array<Primitive*>&);
 		int getNodesOut() const;
