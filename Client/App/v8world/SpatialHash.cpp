@@ -306,4 +306,35 @@ namespace RBX
 			node = node->nextHashLink;
 		}
 	}
+
+	void SpatialHash::getPrimitivesTouchingExtents(const Extents& extents, const Primitive* ignore, G3D::Array<Primitive*>& answer)
+	{
+		RBXASSERT(answer.size() == 0);
+		Vector3int32 min;
+		Vector3int32 max;
+		SpatialHash::computeMinMax(extents, min, max);
+		G3D::Array<Primitive*> foundThisGrid;
+
+		for (int i = min.x; i <= max.x; i++)
+		{
+			for (int j = min.y; j <= max.y; j++)
+			{
+				for (int k = min.z; k <= max.z; k++)
+				{
+					foundThisGrid.fastClear();
+					this->getPrimitivesInGrid(Vector3int32(i, j, k), foundThisGrid);
+					for (int l = 0; l < foundThisGrid.size(); l++)
+					{
+						Primitive* primitive = foundThisGrid[l];
+						if (primitive != ignore && !answer.contains(primitive))
+						{
+							if (extents.overlapsOrTouches(primitive->getFastFuzzyExtents()))
+								answer.append(primitive);
+						}
+					}
+				}
+			}
+		}
+		RBXASSERT(foundThisGrid.size() < 200);
+	}
 }
