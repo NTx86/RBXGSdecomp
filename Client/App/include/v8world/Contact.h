@@ -1,6 +1,7 @@
 #pragma once
 #include "v8kernel/Connector.h"
 #include "v8world/Edge.h"
+#include "v8world/Primitive.h"
 
 namespace RBX
 {

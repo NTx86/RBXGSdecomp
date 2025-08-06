@@ -26,7 +26,54 @@ namespace RBX
 		IPipelined::removeFromKernel();
 	}
 
-	Contact::~Contact()
+	ContactConnector* Contact::createConnector()
 	{
+		ContactConnector* contact = new ContactConnector(this->jointK, this->elasticJointK, this->kFriction);
+		this->getKernel()->insertConnector(contact);
+
+		return contact;
+	}
+
+	void Contact::deleteConnector(ContactConnector*& c)
+	{
+		if (c)
+		{
+			this->getKernel()->removeConnector(c);
+			delete c;
+			c = NULL;
+		}
+	}
+
+	bool Contact::computeIsAdjacent(float spaceAllowed)
+	{
+		if (this->computeIsColliding(spaceAllowed))
+		{ 
+			return 0;
+		} 
+		else
+		{
+			return this->computeIsColliding(-spaceAllowed);
+		};
+	}
+
+	bool Contact::step(int uiStepId)
+	{
+		RBXASSERT(uiStepId >= 0);
+		
+		bool result = this->stepContact();
+		
+		if (result)
+		{
+			if (this->lastContactStep == -1 ) 
+				Primitive::onNewTouch(Edge::getPrimitive(0), Edge::getPrimitive(1));
+
+			this->lastContactStep = uiStepId;
+		}
+		else if (this->lastContactStep < uiStepId)
+		{
+			this->lastContactStep = -1;
+		}
+
+		return result;
 	}
 }
