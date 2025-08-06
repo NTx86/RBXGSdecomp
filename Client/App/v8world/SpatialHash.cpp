@@ -345,4 +345,52 @@ namespace RBX
 		}
 		RBXASSERT(foundThisGrid.size() < 200);
 	}
+
+	bool SpatialHash::getNextGrid(Vector3int32& grid, const G3D::Ray& unitRay, float maxDistance)
+	{
+		Vector3int32 min;
+		Vector3int32 max;
+
+		for (int i = 0; i < 3; i++)
+		{
+			min[i] = unitRay.direction[i] < 0.0f ? -1 : 0;
+			max[i] = unitRay.direction[i] > 0.0f ? 1 : 0;
+		}
+
+		Vector3 gridF = grid.toVector3();
+		float distanceSquared = square(maxDistance + 16.0f);
+
+		for (int idfk = 1; idfk <= 3; idfk++)
+		{
+			for (int i = min.x; i <= max.x; i++)
+			{
+				for (int j = min.y; j <= max.y; j++)
+				{
+					for (int k = min.z; k <= max.z; k++)
+					{
+						if (abs(i)+abs(j)+abs(k) == idfk)
+						{
+							Vector3 offset(i, j, k);
+							Vector3 offsetGridF = (offset + gridF);
+							G3D::AABox box(offsetGridF * 8.0f, (offsetGridF + Vector3(1,1,1)) * 8.0f);
+							G3D::Vector3 location;
+
+							bool hit = G3D::CollisionDetection::collisionLocationForMovingPointFixedAABox(
+								unitRay.origin,
+								unitRay.direction,
+								box,
+								location);
+
+							if (hit && (location - unitRay.origin).squaredMagnitude() < distanceSquared)
+							{
+									grid = Vector3int32::floor(offset + gridF);
+									return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 }
