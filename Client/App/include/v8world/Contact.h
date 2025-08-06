@@ -2,6 +2,8 @@
 #include "v8kernel/Connector.h"
 #include "v8world/Edge.h"
 #include "v8world/Primitive.h"
+#include "v8world/Ball.h"
+#include "v8world/Block.h"
 
 namespace RBX
 {
@@ -46,5 +48,76 @@ namespace RBX
   
 	public:
 		static bool isContact(Edge*);
+	};
+
+	class BallBallContact : public Contact
+	{
+	private:
+		ContactConnector* ballBallConnector;
+
+		Ball* ball(int);
+		virtual void deleteAllConnectors();
+		virtual bool computeIsColliding(float overlapIgnored);
+		virtual bool stepContact();
+	public:
+		//void BallBallContact(const BallBallContact&);
+		BallBallContact(Primitive* p0, Primitive* p1);
+		virtual ~BallBallContact();
+		//BallBallContact& operator=(const BallBallContact&);
+	};
+
+	class BallBlockContact : public Contact
+	{
+	private:
+		ContactConnector* ballBlockConnector;
+
+		Primitive* ballPrim();
+		Primitive* blockPrim();
+		Ball* ball();
+		Block* block();
+		virtual bool computeIsColliding(float overlapIgnored);
+		bool computeIsColliding(int& onBoarder, G3D::Vector3int16& clip, G3D::Vector3& projectionInBlock, float overlapIgnored);
+		virtual void deleteAllConnectors();
+		virtual bool stepContact();
+	public:
+		//void BallBlockContact(const BallBlockContact&);
+		BallBlockContact(Primitive* p0, Primitive* p1);
+		virtual ~BallBlockContact();
+		//BallBlockContact& operator=(const BallBlockContact&);
+	};
+
+
+	class BlockBlockContact : public Contact
+	{
+	private:
+		std::vector<ContactConnector *,std::allocator<ContactConnector *> > connectors;
+		std::vector<bool,std::allocator<bool> > matched;
+		int separatingAxisId;
+		int separatingBodyId;
+		int feature[2];
+		int bPlane;
+		int bOther;
+		NormalId planeID;
+		NormalId otherPlaneID;
+
+		ContactConnector* matchContactConnector(Body* b0, Body* b1, GeoPairType _pairType, int param0, int param1);
+		void deleteUnmatchedConnectors();
+		void loadGeoPairEdgeEdge(int b0, int b1, int edge0, int edge1);
+		Block* block(int);
+		bool getBestPlaneEdge(bool& planeContact, float overlapIgnored);
+		int computePlaneContact();
+		int intersectRectQuad(G3D::Vector2& planeRect, G3D::Vector2* otherQuad[4]); //might not be correct?
+		void loadGeoPairPointPlane(int pointBody, int planeBody, int pointID, NormalId pointFaceID, NormalId planeFaceID);
+		void loadGeoPairEdgeEdgePlane(int edgeBody, int planeBody, int edge0, int edge1);
+		virtual bool computeIsColliding(float overlapIgnored);
+		bool computeIsColliding(bool&, float);
+		virtual void deleteAllConnectors();
+		virtual bool stepContact();
+	public:
+		//void BlockBlockContact(const BlockBlockContact&);
+		BlockBlockContact(Primitive* p0, Primitive* p1);
+		virtual ~BlockBlockContact();
+		//BlockBlockContact& operator=(const BlockBlockContact&);
+		static float contactPairHitRatio();
 	};
 }
