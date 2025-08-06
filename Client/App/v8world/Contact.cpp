@@ -47,13 +47,9 @@ namespace RBX
 	bool Contact::computeIsAdjacent(float spaceAllowed)
 	{
 		if (this->computeIsColliding(spaceAllowed))
-		{ 
 			return 0;
-		} 
 		else
-		{
 			return this->computeIsColliding(-spaceAllowed);
-		};
 	}
 
 	bool Contact::step(int uiStepId)
