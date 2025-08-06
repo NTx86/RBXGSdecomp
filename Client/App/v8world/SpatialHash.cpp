@@ -12,11 +12,17 @@ namespace RBX
 		return 0x10000;
 	}
 
-	SpatialHash::SpatialHash(World* world, ContactManager* contactManager) : world(world), contactManager(contactManager)
+	SpatialHash::SpatialHash(World* world, ContactManager* contactManager) 
+		:world(world), 
+		contactManager(contactManager), 
+		extraNodes(0), 
+		nodesOut(0), 
+		maxBucket(0)
 	{
 		std::vector<SpatialNode*> temp(numBuckets());
-		this->nodes = temp;
+		this->nodes.swap(temp);
 	}
+
 	SpatialHash::~SpatialHash()
 	{
 		RBXASSERT(this->nodes.size() == numBuckets());
