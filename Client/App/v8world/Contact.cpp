@@ -47,7 +47,7 @@ namespace RBX
 	bool Contact::computeIsAdjacent(float spaceAllowed)
 	{
 		if (this->computeIsColliding(spaceAllowed))
-			return 0;
+			return false;
 		else
 			return this->computeIsColliding(-spaceAllowed);
 	}
