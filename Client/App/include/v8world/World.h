@@ -94,7 +94,7 @@ namespace RBX
 		void computeFallen(G3D::Array<Primitive*>&) const;
 		const G3D::Array<Primitive*>& getPrimitives() const 
 		{
-			return this->primitives.array;
+			return this->primitives.underlyingArray();
 		}
 		float step(float);
 		void update();
