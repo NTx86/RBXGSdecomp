@@ -169,9 +169,15 @@ namespace RBX
 			return canSleep;
 		}
 		void setFriction(float);
-		float getFriction() const;
+		float getFriction() const
+		{
+			return this->friction;
+		}
 		void setElasticity(float);
-		float getElasticity() const;
+		float getElasticity() const
+		{
+			return this->elasticity;
+		}
 		void setGridSize(const G3D::Vector3&);
 		const G3D::Vector3& getGridSize() const
 		{

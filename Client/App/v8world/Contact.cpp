@@ -72,4 +72,16 @@ namespace RBX
 
 		return result;
 	}
+
+	void Contact::onPrimitiveContactParametersChanged()
+	{
+		Primitive* prim0 = Edge::getPrimitive(0);
+		Primitive* prim1 = Edge::getPrimitive(1);
+		
+		this->kFriction = std::min(prim0->getFriction(), prim1->getFriction());
+		float elasticity = std::min(prim0->getElasticity(), prim1->getElasticity());
+
+		this->jointK = std::min(prim0->getJointK(), prim1->getJointK());
+		this->elasticJointK = Constants::getElasticMultiplier(elasticity) * this->jointK;
+	}
 }
