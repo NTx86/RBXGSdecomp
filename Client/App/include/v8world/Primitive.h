@@ -44,6 +44,8 @@ namespace RBX
 
 	class Primitive : public IPipelined
 	{
+		friend class SpatialHash;
+
 	private:
 		Guid guid;
 		bool guidSetExternally;
