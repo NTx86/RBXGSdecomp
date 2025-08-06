@@ -161,6 +161,7 @@ namespace RBX
 		node->hashId = hash;
 
 		SpatialNode* oldNodes = p->spatialNodes;
+		p->spatialNodes = node;
 		node->nextPrimitiveLink = oldNodes;
 		node->prevPrimitiveLink = NULL;
 		if (oldNodes)
@@ -171,7 +172,7 @@ namespace RBX
 		this->nodes[hash] = node;
 
 		int numNodes = 1;
-		for (; linkedNode != NULL; linkedNode = linkedNode->nextHashLink)
+		while (linkedNode)
 		{
 			++numNodes;
 
@@ -185,10 +186,11 @@ namespace RBX
 			{
 				RBXASSERT(grid != linkedNode->gridId);
 			}
+
+			linkedNode = linkedNode->nextHashLink;
 		}
 
-		int newMaxBucket = (this->maxBucket < numNodes) ? numNodes : this->maxBucket;
-		this->maxBucket = newMaxBucket;
+		this->maxBucket = std::max(this->maxBucket, numNodes);
 	}
 
 	void SpatialHash::changeMinMax(Primitive* p, const Extents& change, const Extents& oldBox, const Extents& newBox)
