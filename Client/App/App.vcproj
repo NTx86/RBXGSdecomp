@@ -352,6 +352,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\GlueJoint.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\IMoving.h"
 					>
 				</File>
@@ -570,6 +574,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\Edge.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\GlueJoint.cpp"
 				>
 			</File>
 			<File
