@@ -144,4 +144,9 @@ namespace RBX
 	BallBlockContact::BallBlockContact(Primitive* p0, Primitive* p1)
 		:Contact(p0, p1),
 		ballBlockConnector(NULL) {}
+
+	BallBlockContact::~BallBlockContact()
+	{
+		RBXASSERT(!this->ballBlockConnector);
+	}
 }
