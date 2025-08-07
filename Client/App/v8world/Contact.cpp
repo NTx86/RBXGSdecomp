@@ -140,4 +140,8 @@ namespace RBX
 
 		return false;
 	}
+
+	BallBlockContact::BallBlockContact(Primitive* p0, Primitive* p1)
+		:Contact(p0, p1),
+		ballBlockConnector(NULL) {}
 }
