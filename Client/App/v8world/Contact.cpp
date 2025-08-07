@@ -205,4 +205,45 @@ namespace RBX
 		Vector3 projectionInBlock;
 		return this->computeIsColliding(*(int*)&overlapIgnored, clip, projectionInBlock, overlapIgnored);
 	}
+
+	bool BallBlockContact::stepContact()
+	{
+		Vector3int16 clip;
+		Vector3 projectionInBlock;
+		int onBoarder;
+
+		if (BallBlockContact::computeIsColliding(onBoarder, clip, projectionInBlock, 0.0f))
+		{
+			if (this->inStage(IStage::KERNEL_STAGE))
+			{
+				if (!this->ballBlockConnector)
+					this->ballBlockConnector = this->createConnector();
+
+				const Vector3* offset;
+				NormalId normId;
+				GeoPairType ballInsideType;
+
+				if (onBoarder)
+					ballInsideType = this->block()->getBallBlockInfo(onBoarder, clip, offset, normId);
+				else
+					ballInsideType = this->block()->getBallInsideInfo(projectionInBlock, offset, normId);
+
+				this->ballBlockConnector->setBallBlock(
+					this->ballPrim()->getBody(),
+					this->blockPrim()->getBody(),
+					this->ball()->getRadius(),
+					offset,
+					normId,
+					ballInsideType
+					);
+			}
+			return true;
+		}
+		else
+		{
+			this->deleteAllConnectors();
+		}
+
+		return false;
+	}
 }

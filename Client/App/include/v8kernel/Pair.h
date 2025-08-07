@@ -116,7 +116,16 @@ namespace RBX
 			this->pairData.radiusSum = radius0 + radius1;
 			this->geoPairType = BALL_BALL_PAIR;
 		}
-		void setBallBlock(Body*, Body*, float, const G3D::Vector3*, NormalId, GeoPairType);
+		void setBallBlock(Body* b0, Body* b1, float radius0, const G3D::Vector3* offset1 , NormalId normId, GeoPairType pairType)
+		{
+			this->body0 = b0;
+			this->body1 = b1;
+			this->pairData.radius0 = radius0;
+			this->offset1 = offset1;
+			this->pairData.normalID1 = normId;
+			this->geoPairType = pairType;
+
+		}
 		void setPointPlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
 		void setEdgeEdgePlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, NormalId, NormalId, NormalId, float);
 		void setEdgeEdge(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, NormalId, NormalId);
