@@ -36,7 +36,7 @@ namespace RBX
 		return contact;
 	}
 
-	void Contact::deleteConnector(ContactConnector*& c)
+	__declspec(noinline) void Contact::deleteConnector(ContactConnector*& c)
 	{
 		if (c)
 		{
@@ -245,5 +245,10 @@ namespace RBX
 		}
 
 		return false;
+	}
+
+	void BallBlockContact::deleteAllConnectors()
+	{
+		this->deleteConnector(this->ballBlockConnector);
 	}
 }
