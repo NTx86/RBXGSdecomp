@@ -1,8 +1,10 @@
 #include "v8world/Contact.h"
+#include "util/PV.h"
+#include "util/Math.h"
 
 namespace RBX
 {
-	Contact::Contact(Primitive* prim0, Primitive* prim1)
+	__declspec(noinline) Contact::Contact(Primitive* prim0, Primitive* prim1)
 		: Edge(prim0, prim1),
 		jointK(0),
 		elasticJointK(0),
@@ -83,5 +85,35 @@ namespace RBX
 
 		this->jointK = std::min(prim0->getJointK(), prim1->getJointK());
 		this->elasticJointK = Constants::getElasticMultiplier(elasticity) * this->jointK;
+	}
+
+	BallBallContact::BallBallContact(Primitive* p0, Primitive* p1)
+		:Contact(p0, p1),
+		ballBallConnector(NULL) {}
+
+	BallBallContact::~BallBallContact()
+	{
+		RBXASSERT(!this->ballBallConnector);
+	}
+
+	void BallBallContact::deleteAllConnectors()
+	{
+		this->deleteConnector(this->ballBallConnector);
+	}
+
+	bool BallBallContact::computeIsColliding(float overlapIgnored)
+	{
+		Ball* b0 = this->ball(0);
+		float b0Radius = b0->getRadius();
+		Ball* b1 = this->ball(1);
+		float b1Radius = b1->getRadius();
+
+		Vector3 delta = this->getPrimitive(1)->getBody()->getPV().position.translation - this->getPrimitive(0)->getBody()->getPV().position.translation;
+		float b0b1RadiusSum = b0Radius + b1Radius;
+
+		if (b0b1RadiusSum > Math::longestVector3Component(delta))
+			return delta.magnitude() < (b0b1RadiusSum - overlapIgnored);
+		else
+			return false;
 	}
 }

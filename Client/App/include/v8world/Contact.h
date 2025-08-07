@@ -32,9 +32,8 @@ namespace RBX
 		virtual void deleteAllConnectors();
 		virtual bool stepContact();
 	public:
-		//Contact(const Contact&);
 		Contact(Primitive* prim0, Primitive* prim1);
-		virtual ~Contact();
+		virtual ~Contact() {}
 	public:
 		int& steppingIndexFunc()
 		{
@@ -44,7 +43,6 @@ namespace RBX
 		bool computeIsAdjacent(float spaceAllowed);
 		void onPrimitiveContactParametersChanged();
 		bool step(int uiStepId);
-		//Contact& operator=(const Contact&);
   
 	public:
 		static bool isContact(Edge*);
@@ -55,15 +53,16 @@ namespace RBX
 	private:
 		ContactConnector* ballBallConnector;
 
-		Ball* ball(int);
+		Ball* ball(int i)
+		{
+			return rbx_static_cast<Ball*, Geometry*>(this->getPrimitive(i)->getGeometry());
+		}
 		virtual void deleteAllConnectors();
 		virtual bool computeIsColliding(float overlapIgnored);
 		virtual bool stepContact();
 	public:
-		//void BallBallContact(const BallBallContact&);
 		BallBallContact(Primitive* p0, Primitive* p1);
 		virtual ~BallBallContact();
-		//BallBallContact& operator=(const BallBallContact&);
 	};
 
 	class BallBlockContact : public Contact
@@ -80,10 +79,8 @@ namespace RBX
 		virtual void deleteAllConnectors();
 		virtual bool stepContact();
 	public:
-		//void BallBlockContact(const BallBlockContact&);
 		BallBlockContact(Primitive* p0, Primitive* p1);
 		virtual ~BallBlockContact();
-		//BallBlockContact& operator=(const BallBlockContact&);
 	};
 
 
@@ -114,10 +111,8 @@ namespace RBX
 		virtual void deleteAllConnectors();
 		virtual bool stepContact();
 	public:
-		//void BlockBlockContact(const BlockBlockContact&);
 		BlockBlockContact(Primitive* p0, Primitive* p1);
 		virtual ~BlockBlockContact();
-		//BlockBlockContact& operator=(const BlockBlockContact&);
 		static float contactPairHitRatio();
 	};
 }
