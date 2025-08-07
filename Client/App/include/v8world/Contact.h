@@ -53,10 +53,7 @@ namespace RBX
 	private:
 		ContactConnector* ballBallConnector;
 
-		Ball* ball(int i)
-		{
-			return rbx_static_cast<Ball*, Geometry*>(this->getPrimitive(i)->getGeometry());
-		}
+		Ball* ball(int i);
 		virtual void deleteAllConnectors();
 		virtual bool computeIsColliding(float overlapIgnored);
 		virtual bool stepContact();

@@ -96,6 +96,11 @@ namespace RBX
 		RBXASSERT(!this->ballBallConnector);
 	}
 
+	Ball* BallBallContact::ball(int i)
+	{
+		return rbx_static_cast<Ball*>(this->getPrimitive(i)->getGeometry());
+	}
+
 	void BallBallContact::deleteAllConnectors()
 	{
 		this->deleteConnector(this->ballBallConnector);
@@ -148,5 +153,49 @@ namespace RBX
 	BallBlockContact::~BallBlockContact()
 	{
 		RBXASSERT(!this->ballBlockConnector);
+	}
+
+	Primitive* BallBlockContact::ballPrim()
+	{	
+		return this->getPrimitive(0);
+	}
+
+	Primitive* BallBlockContact::blockPrim()
+	{
+		return this->getPrimitive(1);
+	}
+
+	Ball* BallBlockContact::ball()
+	{
+		return rbx_static_cast<Ball*>(this->ballPrim()->getGeometry());
+	}
+
+	Block* BallBlockContact::block()
+	{
+		return rbx_static_cast<Block*>(this->blockPrim()->getGeometry());
+	}
+
+	bool BallBlockContact::computeIsColliding(int& onBoarder, G3D::Vector3int16& clip, G3D::Vector3& projectionInBlock, float overlapIgnored)
+	{
+		if (Primitive::aaBoxCollide(*this->ballPrim(), *this->blockPrim()))
+		{
+			Body* b0 = this->ballPrim()->getBody();
+			Body* b1 = this->blockPrim()->getBody();
+
+			//const CoordinateFrame& prim0Coord = b0->getPV().position;
+			//const CoordinateFrame& prim1Coord = b1->getPV().position;
+			const PV& prim0Coord = b0->getPV();
+			const PV& prim1Coord = b1->getPV();
+
+			Vector3& blockToBall = prim0Coord.position.translation - prim1Coord.position.translation;
+			projectionInBlock = prim1Coord.position.rotation.transpose() * blockToBall; //could be some sort to objectSpace inline but operator* inlines when it shouldn't
+			
+			this->block()->projectToFace(projectionInBlock, clip, onBoarder);
+			Vector3& unkVec = prim0Coord.position.pointToObjectSpace(projectionInBlock);
+			Vector3& unkVec2 = unkVec - prim0Coord.position.translation;
+
+			return unkVec2.magnitude() < (this->ball()->getRadius() - overlapIgnored);
+		}
+		return false;
 	}
 }
