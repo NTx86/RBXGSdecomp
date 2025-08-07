@@ -198,4 +198,11 @@ namespace RBX
 		}
 		return false;
 	}
+
+	bool BallBlockContact::computeIsColliding(float overlapIgnored)
+	{
+		Vector3int16 clip;
+		Vector3 projectionInBlock;
+		return this->computeIsColliding(*(int*)&overlapIgnored, clip, projectionInBlock, overlapIgnored);
+	}
 }
