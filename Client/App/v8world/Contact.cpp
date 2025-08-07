@@ -103,10 +103,8 @@ namespace RBX
 
 	bool BallBallContact::computeIsColliding(float overlapIgnored)
 	{
-		Ball* b0 = this->ball(0);
-		float b0Radius = b0->getRadius();
-		Ball* b1 = this->ball(1);
-		float b1Radius = b1->getRadius();
+		float b0Radius = this->ball(0)->getRadius();
+		float b1Radius = this->ball(1)->getRadius();
 
 		Vector3 delta = this->getPrimitive(1)->getBody()->getPV().position.translation - this->getPrimitive(0)->getBody()->getPV().position.translation;
 		float b0b1RadiusSum = b0Radius + b1Radius;
@@ -115,5 +113,31 @@ namespace RBX
 			return delta.magnitude() < (b0b1RadiusSum - overlapIgnored);
 		else
 			return false;
+	}
+
+	bool BallBallContact::stepContact()
+	{
+		if (BallBallContact::computeIsColliding(0.0f))
+		{
+			if (this->inStage(IStage::KERNEL_STAGE))
+			{
+				if (!this->ballBallConnector)
+					this->ballBallConnector = this->createConnector();
+
+				this->ballBallConnector->setBallBall(
+					this->getPrimitive(0)->getBody(), 
+					this->getPrimitive(1)->getBody(), 
+					this->ball(0)->getRadius(), 
+					this->ball(1)->getRadius()
+					);
+			}
+			return true;
+		}
+		else
+		{
+			this->deleteAllConnectors();
+		}
+
+		return false;
 	}
 }

@@ -108,7 +108,14 @@ namespace RBX
 
 		void computeNormalPerpVel(float& normalVel, G3D::Vector3& perpVel, const PairParams& _params);
 		void forceToBodies(const G3D::Vector3&, const G3D::Vector3&);
-		void setBallBall(Body*, Body*, float, float);
+		void setBallBall(Body* b0, Body* b1, float radius0, float radius1)
+		{
+			this->body0 = b0;
+			this->body1 = b1;
+			this->pairData.radius0 = radius0;
+			this->pairData.radiusSum = radius0 + radius1;
+			this->geoPairType = BALL_BALL_PAIR;
+		}
 		void setBallBlock(Body*, Body*, float, const G3D::Vector3*, NormalId, GeoPairType);
 		void setPointPlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
 		void setEdgeEdgePlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, NormalId, NormalId, NormalId, float);

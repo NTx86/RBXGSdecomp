@@ -50,7 +50,10 @@ namespace RBX
 		}
 
 		void reset();
-		void setBallBall(RBX::Body*, RBX::Body*, float, float);
+		void setBallBall(RBX::Body* b0, RBX::Body* b1, float radius0, float radius1)
+		{
+			this->geoPair.setBallBall(b0, b1, radius0, radius1);
+		}
 		void setBallBlock(RBX::Body*, RBX::Body*, float, const G3D::Vector3*, RBX::NormalId, RBX::GeoPairType);
 		void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
 		void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
