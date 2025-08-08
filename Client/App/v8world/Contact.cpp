@@ -251,4 +251,16 @@ namespace RBX
 	{
 		this->deleteConnector(this->ballBlockConnector);
 	}
+
+	BlockBlockContact::BlockBlockContact(Primitive* p0, Primitive* p1)
+		:Contact(p0, p1),
+		separatingAxisId(0),
+		separatingBodyId(0)
+	{
+		this->feature[0] = -1;
+		this->feature[1] = -1;
+	}
+	
+	BlockBlockContact::~BlockBlockContact() {}
+
 }
