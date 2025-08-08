@@ -1,6 +1,7 @@
 #include "v8world/Contact.h"
 #include "util/PV.h"
 #include "util/Math.h"
+#include "util/StlExtra.h"
 
 namespace RBX
 {
@@ -293,5 +294,22 @@ namespace RBX
 
 		this->connectors.resize(0);
 		this->matched.resize(0);
+	}
+
+	void BlockBlockContact::deleteUnmatchedConnectors()
+	{
+		RBXASSERT(this->matched.size() == this->connectors.size());
+
+		for (int i = this->connectors.size()-1; i >= 0; i--)
+		{
+			bool match = this->matched[i];
+			if (match == false)
+			{
+				ContactConnector* connector = this->connectors[i];
+				fastRemoveIndex<ContactConnector*>(this->connectors, i);
+				fastRemoveIndex<bool>(this->matched, i);
+				this->deleteConnectorInline(connector);
+			}
+		}
 	}
 }
