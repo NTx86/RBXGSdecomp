@@ -263,4 +263,12 @@ namespace RBX
 	
 	BlockBlockContact::~BlockBlockContact() {}
 
+	float BlockBlockContact::contactPairHitRatio()
+	{
+		int sum = Contact::contactPairMatches + Contact::contactPairMisses;
+		if (sum == 0)
+			return -1.0f;
+		else
+			return (float)Contact::contactPairMatches / sum;
+	}
 }
