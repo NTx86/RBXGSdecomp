@@ -29,6 +29,7 @@ namespace RBX
 		Body* getBody(int) const;
 		ContactConnector* createConnector();
 		void deleteConnector(ContactConnector*& c);
+		void deleteConnectorInline(ContactConnector*& c); //for matching only
 		virtual void deleteAllConnectors();
 		virtual bool stepContact();
 	public:

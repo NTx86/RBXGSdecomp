@@ -46,6 +46,17 @@ namespace RBX
 		}
 	}
 
+	//needed because of header inlining bullshit
+	void Contact::deleteConnectorInline(ContactConnector*& c)
+	{
+		if (c)
+		{
+			this->getKernel()->removeConnector(c);
+			delete c;
+			c = NULL;
+		}
+	}
+
 	bool Contact::computeIsAdjacent(float spaceAllowed)
 	{
 		if (this->computeIsColliding(spaceAllowed))
@@ -266,9 +277,21 @@ namespace RBX
 	float BlockBlockContact::contactPairHitRatio()
 	{
 		int sum = Contact::contactPairMatches + Contact::contactPairMisses;
+
 		if (sum == 0)
 			return -1.0f;
 		else
 			return (float)Contact::contactPairMatches / sum;
+	}
+
+	void BlockBlockContact::deleteAllConnectors()
+	{
+		for (size_t i = 0; i < this->connectors.size(); i++)
+		{
+			this->deleteConnectorInline(this->connectors[i]);
+		}
+
+		this->connectors.resize(0);
+		this->matched.resize(0);
 	}
 }
