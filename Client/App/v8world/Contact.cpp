@@ -300,7 +300,7 @@ namespace RBX
 	{
 		RBXASSERT(this->matched.size() == this->connectors.size());
 
-		for (int i = this->connectors.size()-1; i >= 0; i--)
+		for (int i = (int)this->connectors.size()-1; i >= 0; i--)
 		{
 			bool match = this->matched[i];
 			if (match == false)
@@ -311,5 +311,29 @@ namespace RBX
 				this->deleteConnectorInline(connector);
 			}
 		}
+	}
+
+	ContactConnector* BlockBlockContact::matchContactConnector(Body* b0, Body* b1, GeoPairType _pairType, int param0, int param1)
+	{
+		RBXASSERT(this->matched.size() == this->connectors.size());
+
+		for (size_t i = 0; i < this->matched.size(); i++)
+		{
+			if (this->matched[i] == false)
+			{
+				if (this->connectors[i]->match(b0, b1, _pairType, param0, param1))
+				{
+					this->matched[i] = true;
+					Contact::contactPairMatches++;
+					return this->connectors[i];
+				}
+			}
+		}
+
+		Contact::contactPairMisses++;
+		ContactConnector* connector = this->createConnector();
+		this->connectors.push_back(connector);
+		this->matched.push_back(true);
+		return connector;
 	}
 }

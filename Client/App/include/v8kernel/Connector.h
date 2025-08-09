@@ -61,7 +61,10 @@ namespace RBX
 		void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
 		void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
 		void setEdgeEdge(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId);
-		bool match(RBX::Body*, RBX::Body*, RBX::GeoPairType, int, int);
+		bool match(RBX::Body* _b0, RBX::Body* _b1, RBX::GeoPairType _pairType, int param0, int param1)
+		{
+			return this->geoPair.match(_b0, _b1, _pairType, param0, param1);
+		}
 		virtual void computeForce(const float, bool);
 		virtual bool canThrottle() const;
 		virtual ~ContactConnector() {};
