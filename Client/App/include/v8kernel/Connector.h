@@ -58,7 +58,10 @@ namespace RBX
 		{
 			this->geoPair.setBallBlock(b0, b1, radius0, offset1, normId, pairType);
 		}
-		void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
+		void setPointPlane(RBX::Body* b0, RBX::Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, int point0ID, RBX::NormalId norm1)
+		{
+			this->geoPair.setPointPlane(b0, b1, offset0, offset1, point0ID, norm1);
+		}
 		void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
 		void setEdgeEdge(RBX::Body* b0, RBX::Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, RBX::NormalId norm0, RBX::NormalId norm1)
 		{

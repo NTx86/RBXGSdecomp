@@ -344,15 +344,15 @@ namespace RBX
 
 	void BlockBlockContact::loadGeoPairEdgeEdge(int b0, int b1, int edge0, int edge1)
 	{
-		NormalId edgeidk0 = this->block(b0)->getEdgeNormal(edge0);
-		NormalId edgeidk1 = this->block(b1)->getEdgeNormal(edge1);
+		NormalId edgeNormal0 = this->block(b0)->getEdgeNormal(edge0);
+		NormalId edgeNormal1 = this->block(b1)->getEdgeNormal(edge1);
 		
 		ContactConnector* matched = this->matchContactConnector(
 											this->getPrimitive(b0)->getBody(), 
 											this->getPrimitive(b1)->getBody(), 
 											EDGE_EDGE_PAIR, 
-											edgeidk0, 
-											edgeidk1
+											edgeNormal0, 
+											edgeNormal1
 											);
 
 		matched->setEdgeEdge(
@@ -360,8 +360,28 @@ namespace RBX
 			this->getPrimitive(b1)->getBody(), 
 			this->block(b0)->getEdgeVertex(edge0), 
 			this->block(b1)->getEdgeVertex(edge1), 
-			edgeidk0, 
-			edgeidk1)
-			;
+			edgeNormal0, 
+			edgeNormal1
+			);
+	}
+
+	void BlockBlockContact::loadGeoPairPointPlane(int pointBody, int planeBody, int pointID, NormalId pointFaceID, NormalId planeFaceID)
+	{
+		ContactConnector* matched = this->matchContactConnector(
+											this->getPrimitive(pointBody)->getBody(), 
+											this->getPrimitive(planeBody)->getBody(), 
+											POINT_PLANE_PAIR, 
+											pointID, 
+											planeFaceID
+											);
+
+		matched->setPointPlane(
+			this->getPrimitive(pointBody)->getBody(),
+			this->getPrimitive(planeBody)->getBody(),
+			this->block(pointBody)->getFaceVertex(pointFaceID, pointID),
+			this->block(planeBody)->getFaceVertex(planeFaceID, 0),
+			pointID,
+			planeFaceID
+			);
 	}
 }

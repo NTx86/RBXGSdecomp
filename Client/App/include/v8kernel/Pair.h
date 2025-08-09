@@ -126,7 +126,16 @@ namespace RBX
 			this->geoPairType = pairType;
 
 		}
-		void setPointPlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
+		void setPointPlane(Body* b0, Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, int point0ID, RBX::NormalId norm1)
+		{
+			this->body0 = b0;
+			this->body1 = b1;
+			this->offset0 = offset0;
+			this->offset1 = offset1;
+			this->pairData.point0ID = point0ID;
+			this->pairData.normalID1 = norm1;
+			this->geoPairType = POINT_PLANE_PAIR;
+		}
 		void setEdgeEdgePlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, NormalId, NormalId, NormalId, float);
 		void setEdgeEdge(Body* b0, Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, NormalId norm0, NormalId norm1)
 		{
