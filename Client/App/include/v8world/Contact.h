@@ -98,7 +98,7 @@ namespace RBX
 		ContactConnector* matchContactConnector(Body* b0, Body* b1, GeoPairType _pairType, int param0, int param1);
 		void deleteUnmatchedConnectors();
 		void loadGeoPairEdgeEdge(int b0, int b1, int edge0, int edge1);
-		Block* block(int);
+		Block* block(int i);
 		bool getBestPlaneEdge(bool& planeContact, float overlapIgnored);
 		int computePlaneContact();
 		int intersectRectQuad(G3D::Vector2& planeRect, G3D::Vector2* otherQuad[4]); //might not be correct?

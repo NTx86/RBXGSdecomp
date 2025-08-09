@@ -39,10 +39,17 @@ namespace RBX
 		const G3D::Vector3& getExtent() const;
 		const G3D::Vector3* getFaceVertex(NormalId, int) const;
 		int getClosestEdge(const G3D::Matrix3& rotation, NormalId normalID, G3D::Vector3& crossAxis);
-		int faceVertexToEdge(NormalId, int);
+		int faceVertexToEdge(NormalId normId, int edge);
 		int faceVertexToClockwiseEdge(NormalId, int);
 		const G3D::Vector3* getEdgeVertex(int edgeId) const;
-		NormalId getEdgeNormal(int);
+		NormalId getEdgeNormal(int edge)
+		{
+			int answer = edge / 4 + 3 * (edge % 2);
+			if (edge > 12)
+				answer = (answer + 3) % 6;
+			return (NormalId)answer;
+			//return (NormalId)(edge > 12 ? edge / 4 + 4 * (edge % 2) : (edge + 3) & 6);
+		}
 		G3D::Vector2 getProjectedVertex(const G3D::Vector3& vertex, NormalId normalID);
 		Block& operator=(const Block& other);
 

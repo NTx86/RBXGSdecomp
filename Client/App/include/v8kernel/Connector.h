@@ -60,7 +60,10 @@ namespace RBX
 		}
 		void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
 		void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
-		void setEdgeEdge(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId);
+		void setEdgeEdge(RBX::Body* b0, RBX::Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, RBX::NormalId norm0, RBX::NormalId norm1)
+		{
+			this->geoPair.setEdgeEdge(b0, b1, offset0, offset1, norm0, norm1);
+		}
 		bool match(RBX::Body* _b0, RBX::Body* _b1, RBX::GeoPairType _pairType, int param0, int param1)
 		{
 			return this->geoPair.match(_b0, _b1, _pairType, param0, param1);

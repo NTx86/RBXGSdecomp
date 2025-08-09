@@ -275,6 +275,11 @@ namespace RBX
 	
 	BlockBlockContact::~BlockBlockContact() {}
 
+	Block* BlockBlockContact::block(int i)
+	{
+		return rbx_static_cast<Block*>(this->getPrimitive(i)->getGeometry());
+	}
+
 	float BlockBlockContact::contactPairHitRatio()
 	{
 		int sum = Contact::contactPairMatches + Contact::contactPairMisses;
@@ -335,5 +340,28 @@ namespace RBX
 		this->connectors.push_back(connector);
 		this->matched.push_back(true);
 		return connector;
+	}
+
+	void BlockBlockContact::loadGeoPairEdgeEdge(int b0, int b1, int edge0, int edge1)
+	{
+		NormalId edgeidk0 = this->block(b0)->getEdgeNormal(edge0);
+		NormalId edgeidk1 = this->block(b1)->getEdgeNormal(edge1);
+		
+		ContactConnector* matched = this->matchContactConnector(
+											this->getPrimitive(b0)->getBody(), 
+											this->getPrimitive(b1)->getBody(), 
+											EDGE_EDGE_PAIR, 
+											edgeidk0, 
+											edgeidk1
+											);
+
+		matched->setEdgeEdge(
+			this->getPrimitive(b0)->getBody(), 
+			this->getPrimitive(b1)->getBody(), 
+			this->block(b0)->getEdgeVertex(edge0), 
+			this->block(b1)->getEdgeVertex(edge1), 
+			edgeidk0, 
+			edgeidk1)
+			;
 	}
 }
