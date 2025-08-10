@@ -116,7 +116,7 @@ namespace RBX
 			this->pairData.radiusSum = radius0 + radius1;
 			this->geoPairType = BALL_BALL_PAIR;
 		}
-		void setBallBlock(Body* b0, Body* b1, float radius0, const G3D::Vector3* offset1 , NormalId normId, GeoPairType pairType)
+		void setBallBlock(Body* b0, Body* b1, float radius0, const G3D::Vector3* offset1, NormalId normId, GeoPairType pairType)
 		{
 			this->body0 = b0;
 			this->body1 = b1;
@@ -136,7 +136,18 @@ namespace RBX
 			this->pairData.normalID1 = norm1;
 			this->geoPairType = POINT_PLANE_PAIR;
 		}
-		void setEdgeEdgePlane(Body*, Body*, const G3D::Vector3*, const G3D::Vector3*, NormalId, NormalId, NormalId, float);
+		void setEdgeEdgePlane(Body* b0, Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, NormalId norm0, NormalId norm1, NormalId planeID, float edgeLength)
+		{
+			this->body0 = b0;
+			this->body1 = b1;
+			this->offset0 = offset0;
+			this->offset1 = offset1;
+			this->pairData.planeID = planeID;
+			this->pairData.normalID0 = norm0;
+			this->pairData.normalID1 = norm1;
+			this->edgeLength0 = edgeLength;
+			this->geoPairType = EDGE_EDGE_PLANE_PAIR;
+		}
 		void setEdgeEdge(Body* b0, Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, NormalId norm0, NormalId norm1)
 		{
 			this->offset0 = offset0;

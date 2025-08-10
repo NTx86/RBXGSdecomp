@@ -384,4 +384,31 @@ namespace RBX
 			planeFaceID
 			);
 	}
+
+	void BlockBlockContact::loadGeoPairEdgeEdgePlane(int edgeBody, int planeBody, int edge0, int edge1)
+	{
+		NormalId edgeNormal0 = this->block(edgeBody)->getEdgeNormal(edge0);
+		NormalId edgeNormal1 = this->block(planeBody)->getEdgeNormal(edge1);
+
+		ContactConnector* matched = this->matchContactConnector(
+											this->getPrimitive(edgeBody)->getBody(), 
+											this->getPrimitive(planeBody)->getBody(), 
+											EDGE_EDGE_PLANE_PAIR, 
+											edgeNormal0, 
+											edgeNormal1
+											);
+
+		const Vector3& gridSize = this->getPrimitive(edgeBody)->getGeometry()->getGridSize();
+
+		matched->setEdgeEdgePlane(
+			this->getPrimitive(edgeBody)->getBody(),
+			this->getPrimitive(planeBody)->getBody(),
+			this->block(edgeBody)->getEdgeVertex(edge0),
+			this->block(planeBody)->getEdgeVertex(edge1),
+			edgeNormal0,
+			edgeNormal1,
+			this->planeID,
+			gridSize[edgeNormal0 % 3]
+			);
+	}
 }
