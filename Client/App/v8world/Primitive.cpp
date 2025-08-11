@@ -18,7 +18,7 @@ namespace RBX
 		return extent.toWorldSpace(getCoordinateFrame());
 	}
 
-	void Primitive::setGuid(const RBX::Guid &value)
+	void Primitive::setGuid(const Guid& value)
 	{
 		RBXASSERT(!world);
 		guid.assign(value.getData());
@@ -47,7 +47,7 @@ namespace RBX
 		return result;
 	}
 
-	void Primitive::setClump(Clump *clump)
+	void Primitive::setClump(Clump* clump)
 	{
 		if (clump != this->clump)
 			this->clump = clump;
@@ -134,12 +134,12 @@ namespace RBX
 		return Face::fromExtentsSide(extent, objectFace);
 	}
 	
-	void Primitive::setVelocity(const Velocity &vel)
+	void Primitive::setVelocity(const Velocity& vel)
 	{
 		body->setVelocity(vel);
 	}
 
-	void Primitive::setSurfaceData(NormalId id, const SurfaceData &newSurfaceData)
+	void Primitive::setSurfaceData(NormalId id, const SurfaceData& newSurfaceData)
 	{
 		if (!surfaceData[id] && newSurfaceData.isEmpty())
 			return;
@@ -216,7 +216,7 @@ namespace RBX
 		return rbx_static_cast<Joint*>(this->joints.first);
 	}
 
-	Joint* Primitive::getNextJoint(Joint *prev) const
+	Joint* Primitive::getNextJoint(Joint* prev) const
 	{
 		return rbx_static_cast<Joint*>(prev->getNext(this));
 	}
@@ -226,12 +226,12 @@ namespace RBX
 		return rbx_static_cast<Contact*>(this->contacts.first);
 	}
 
-	Contact* Primitive::getNextContact(Contact *prev)
+	Contact* Primitive::getNextContact(Contact* prev)
 	{
 		return rbx_static_cast<Contact*>(prev->getNext(this));
 	}
 
-	RigidJoint* Primitive::getFirstRigidAt(Edge *edge)
+	RigidJoint* Primitive::getFirstRigidAt(Edge* edge)
 	{
 		if (edge)
 		{
@@ -264,7 +264,7 @@ namespace RBX
 		return rigidJoint;
 	}
 	
-	RigidJoint* Primitive::getNextRigid(RigidJoint *prev)
+	RigidJoint* Primitive::getNextRigid(RigidJoint* prev)
 	{
 		Edge *next = prev->getNext(this);
 
@@ -279,7 +279,7 @@ namespace RBX
 		return getFirstRigidAt(next);
 	}
 
-	Joint* Primitive::getJoint(Primitive *p0, Primitive *p1)
+	Joint* Primitive::getJoint(Primitive* p0, Primitive* p1)
 	{
 		Primitive *prim = p0;
 		if (p0->joints.num >= p1->joints.num)
@@ -300,7 +300,7 @@ namespace RBX
 		return firstJoint;
 	}
 
-	Contact* Primitive::getContact(Primitive *p0, Primitive *p1)
+	Contact* Primitive::getContact(Primitive* p0, Primitive* p1)
 	{
 		Primitive *prim = p0;
 		if (p0->contacts.num >= p1->contacts.num)
@@ -367,7 +367,7 @@ namespace RBX
 		return this->geometry->getRadius();
 	}
 
-	bool Primitive::hitTest(const Ray &worldRay, Vector3 &worldHitPoint, bool &inside)
+	bool Primitive::hitTest(const Ray& worldRay, Vector3& worldHitPoint, bool& inside)
 	{
 		Vector3 localHitPoint(0, 0, 0); 
 
@@ -416,7 +416,7 @@ namespace RBX
 		return this->getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
 	}
 
-	void Primitive::setCoordinateFrame(const CoordinateFrame &cFrame)
+	void Primitive::setCoordinateFrame(const CoordinateFrame& cFrame)
 	{
 		bool ifcFrame = cFrame != body->getPV().position;
 		if (ifcFrame) 
@@ -475,7 +475,7 @@ namespace RBX
 		return numJoints;
 	}
 
-	void Primitive::setGridSize(const Vector3 &gridSize)
+	void Primitive::setGridSize(const Vector3& gridSize)
 	{
 		Vector3 protectedSize = this->clipToSafeSize(gridSize);
 
@@ -517,13 +517,13 @@ namespace RBX
 		}
 	}
 
-	void Primitive::setGridCorner(const CoordinateFrame &gridCorner)
+	void Primitive::setGridCorner(const CoordinateFrame& gridCorner)
 	{
 		this->setCoordinateFrame(CoordinateFrame(gridCorner.rotation, 
 			gridCorner.pointToWorldSpace(geometry->getGridSize() * 0.5f)));
 	}
 
-	void Primitive::setController(Controller *controller)
+	void Primitive::setController(Controller* controller)
 	{
 		if (!controller)
 			controller = NullController::getStaticNullController();
