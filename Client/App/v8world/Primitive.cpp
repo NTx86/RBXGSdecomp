@@ -47,14 +47,6 @@ namespace RBX
 		return result;
 	}
 
-	/*
-	void Primitive::onNewTouch(Primitive *p0, Primitive* p1)
-	{
-		newTouch(p0, p1);
-		newTouch(p1, p0);
-	}
-	*/
-
 	void Primitive::setClump(Clump *clump)
 	{
 		if (clump != this->clump)
@@ -196,19 +188,6 @@ namespace RBX
 		return Extents((body->getPV().position.translation - centerToCornerVector) - Vector3(0.01f, 0.01f, 0.01f), 
 			(body->getPV().position.translation + centerToCornerVector) + Vector3(0.01f, 0.01f, 0.01f));
 	}
-
-	/*
-	const Extents &Primitive::getFastFuzzyExtents() const
-	{
-		if (this->fuzzyExtentsStateId != body->getStateIndex()) 
-		{
-			Extents fuzzyExtents = computeFuzzyExtents();
-			this->fuzzyExtents = fuzzyExtents;
-			this->fuzzyExtentsStateId = body->getStateIndex();
-		}
-		return this->fuzzyExtents;
-	}
-	*/
 
 	void Primitive::removeEdge(Edge* e)
 	{
@@ -381,7 +360,6 @@ namespace RBX
 		RBXASSERT(this->joints.num == 0);
 		RBXASSERT(this->contacts.first);
 		RBXASSERT(this->contacts.num == 0);
-		//RBXASSERT(!this->currentStage);
 	}
 
 	float Primitive::getRadius() const
@@ -496,46 +474,6 @@ namespace RBX
 		}
 		return numJoints;
 	}
-
-	/*
-	Vector3 Primitive::clipToSafeSize(const Vector3 &newSize)
-	{
-		float fVar1;
-		float fVar2;
-		float fVar3;
-		float *pfVar4;
-		float10 fVar5;
-		Vector3 local_c;
-
-		local_c.x = 512.0;
-		pfVar4 = &param_1->z;
-		local_c.y = 512.0;
-		local_c.z = 512.0;
-		if (512.0 <= *pfVar4) {
-		pfVar4 = &local_c.z;
-		}
-		fVar1 = *pfVar4;
-		pfVar4 = &param_1->y;
-		if (512.0 <= *pfVar4) {
-		pfVar4 = &local_c.y;
-		}
-		fVar2 = *pfVar4;
-		if (512.0 <= param_1->x) {
-		param_1 = &local_c;
-		}
-		fVar3 = param_1->x;
-		__return_storage_ptr__->x = fVar3;
-		__return_storage_ptr__->y = fVar2;
-		__return_storage_ptr__->z = fVar1;
-		fVar2 = fVar3 * fVar2 * fVar1;
-		if (1e+06 < fVar2 != NAN(fVar2)) {
-		fVar5 = (float10)floor((double)(1e+06 / (fVar1 * fVar3)));
-		__return_storage_ptr__->y = (float)fVar5;
-		return __return_storage_ptr__;
-		}
-		return __return_storage_ptr__;
-	}
-	*/
 
 	void Primitive::setGridSize(const Vector3 &gridSize)
 	{
