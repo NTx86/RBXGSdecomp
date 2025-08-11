@@ -11,34 +11,37 @@
 
 namespace RBX
 {
-	__forceinline float calculateAnchorSize2(const Vector3& size)
+	float calculatePlanar(const Vector3& gridSize)
 	{
-		if (size.x >= size.y)
+		if (gridSize.x < gridSize.y)
 		{
-			if (size.y < size.z)
-				return size.x * size.z;
+			if (gridSize.x < gridSize.z)
+				return gridSize.y * gridSize.z;
 			else
-				return size.x * size.y;
-		}
-		else if (size.x < size.z)
-		{
-			return size.y * size.z;
+				return gridSize.y * gridSize.x;
 		}
 		else
 		{
-			return size.x * size.y;
+			if (gridSize.y < gridSize.z)
+				return gridSize.x * gridSize.z;
+			else
+				return gridSize.x * gridSize.y;
 		}
-	}
-
-	__forceinline int calculateAnchorSize(const Vector3& size)
-	{
-		return G3D::iRound(floor(calculateAnchorSize2(size)));
 	}
 
 	PrimitiveSort::PrimitiveSort()
 		: anchored(false),
 		  surfaceAreaJoints(0)
 	{
+	}
+
+	PrimitiveSort::PrimitiveSort(const Primitive* p)
+	{
+		float planar = calculatePlanar(p->getGeometry()->getGridSize());
+		RBXASSERT(planar < 2147483600.0f);
+		RBXASSERT(planar > 0.0f);
+		this->surfaceAreaJoints = G3D::iRound(floor(planar)) * p->getNumJoints2();
+		this->anchored = p->getAnchor();
 	}
 
 	PrimitiveEntry::PrimitiveEntry(Primitive* primitive, PrimitiveSort power)
@@ -59,15 +62,49 @@ namespace RBX
 	{
 	}
 
+	bool PrimitiveSortCriterion::operator()(const PrimitiveEntry& p0, const PrimitiveEntry& p1) const
+	{
+		if (p0.primitive == p1.primitive)
+			return false;
+
+		if (p0.power == p1.power)
+			return p0.primitive < p1.primitive;
+
+		return p1.power < p0.power;
+	}
+
+	// TODO: NOT CHECKED: this is inlined inside of various std::set functions
+	bool AnchorSortCriterion::operator()(const AnchorEntry& a0, const AnchorEntry& a1) const
+	{
+		if (a0.anchor == a1.anchor)
+			return false;
+
+		if (a0.size == a1.size)
+			return a0.anchor < a1.anchor;
+
+		return a0.size < a1.size;
+	}
+
+	bool RigidSortCriterion::operator()(const RigidEntry& r0, const RigidEntry& r1) const
+	{
+		if (r0.rigidJoint == r1.rigidJoint)
+			return false;
+
+		if (r0.power == r1.power)
+			return r0.rigidJoint < r1.rigidJoint;
+
+		return r0.power < r1.power;
+	}
+
 	void ClumpStage::anchorsInsert(Anchor* a)
 	{
-		int size = calculateAnchorSize(a->getPrimitive()->getGridSize());
+		int planar = G3D::iRound(floor(calculatePlanar(a->getPrimitive()->getGridSize())));
 
 		bool inserted;
-		inserted = anchorSizeMap.insert(std::pair<Anchor*, int>(a, size)).second;
+		inserted = anchorSizeMap.insert(std::pair<Anchor*, int>(a, planar)).second;
 		RBXASSERT(inserted);
 
-		inserted = anchors.insert(AnchorEntry(a, size)).second;
+		inserted = anchors.insert(AnchorEntry(a, planar)).second;
 		RBXASSERT(inserted);
 	}
 
@@ -82,12 +119,7 @@ namespace RBX
 
 	void ClumpStage::rigidOnesInsert(RigidJoint* r)
 	{
-		PrimitiveSort sort;
-		{
-			// WTF? why does this result in a better match???
-			PrimitiveSort sortTemp = getRigidPower(r);
-			sort = sortTemp;
-		}
+		PrimitiveSort sort = getRigidPower(r);
 
 		bool inserted;
 		inserted = rigidJointPowerMap.insert(std::pair<RigidJoint*, PrimitiveSort>(r, sort)).second;
@@ -105,13 +137,7 @@ namespace RBX
 
 	void ClumpStage::primitivesInsert(Primitive* p)
 	{
-		//PrimitiveSort sort(p);
-		PrimitiveSort sort;
-		{
-			// WTF? why does this result in a better match???
-			PrimitiveSort sortTemp(p);
-			sort = sortTemp;
-		}
+		PrimitiveSort sort(p);
 
 		bool inserted;
 		inserted = primitiveSizeMap.insert(std::pair<Primitive*, PrimitiveSort>(p, sort)).second;
@@ -187,7 +213,7 @@ namespace RBX
 		return std::find(motors.begin(), motors.end(), m) != motors.end();
 	}
 
-	__forceinline bool ClumpStage::edgesFind(Edge* e)
+	bool ClumpStage::edgesFind(Edge* e)
 	{
 		return edges.find(e) != edges.end();
 	}
@@ -278,14 +304,28 @@ namespace RBX
 		RBXASSERT(removed == 1);
 	}
 
-	__declspec(noinline) bool lessClump(const Clump& c0, const Clump& c1)
+	bool lessClump(const Clump& c0, const Clump& c1)
 	{
-		return false; // TODO
+		PrimitiveSort s1(c1.getRootPrimitive());
+		PrimitiveSort s0(c0.getRootPrimitive());
+		return s0 < s1;
 	}
 
 	bool lessMotor(const MotorJoint* m0, const MotorJoint* m1)
 	{
-		return false; // TODO
+		if (m0 == m1)
+			return false;
+
+		PrimitiveSort power0 = ClumpStage::getMotorPower(m0);
+		PrimitiveSort power1 = ClumpStage::getMotorPower(m1);
+
+		if (power0.anchored != power1.anchored)
+			return power1.anchored;
+
+		if (power0.surfaceAreaJoints == power1.surfaceAreaJoints)
+			return m0 < m1;
+
+		return power0.surfaceAreaJoints < power1.surfaceAreaJoints;
 	}
 
 	PrimitiveSort ClumpStage::getMotorPower(const MotorJoint* m)
@@ -301,15 +341,17 @@ namespace RBX
 		else
 		{
 			// NOTE: if you get this matching, you will also be able to match processMotors
-			Primitive* p1 = clump1->getRootPrimitive();
-			Primitive* p0 = clump0->getRootPrimitive();
-			PrimitiveSort ps1 = PrimitiveSort(p1);
-			PrimitiveSort ps0 = PrimitiveSort(p0);
+			Primitive* c1Root = clump1->getRootPrimitive();
+			Primitive* c0Root = clump0->getRootPrimitive();
+			PrimitiveSort s1 = PrimitiveSort(c1Root);
+			PrimitiveSort s0 = PrimitiveSort(c0Root);
+			//PrimitiveSort* selectedSort = &s1;
 
-			if (ps1 < ps0)
-				return ps0;
-			else
-				return ps1;
+			//if (s0 > s1)
+			//	selectedSort = &s0;
+
+			//return *selectedSort;
+			return s0 < s1 ? s1 : s0;
 		}
 	}
 

@@ -3,49 +3,80 @@
 #include <boost/noncopyable.hpp>
 #include "util/Debug.h"
 
-namespace RBX {
+namespace RBX
+{
 	template <typename tInstance, int& (tInstance::*getIndex)()>
-	class IndexArray : boost::noncopyable
+	class IndexArray : public boost::noncopyable
 	{
-		private:
-			int& indexOf(tInstance* instance) const
-			{
-				return (instance->*getIndex)();
-			}
-		public:
-			G3D::Array<tInstance *> array;
-			inline tInstance* operator[](int index){ 
-				RBXASSERT(indexOf(array[index]) == index);
-				return array[index]; 
-			}
+	private:
+		G3D::Array<tInstance*> array;
 
-			inline int size() const {return array.size();}
+	private:
+		int& indexOf(tInstance* instance) const
+		{
+			return (instance->*getIndex)();
+		}
 
-			// 100% match if G3D::Array<>::find has __declspec(noinline)
-			void fastRemove(tInstance* item)
-			{
-				RBXASSERT(array.find(item) != array.end());
+	public:
+		void fastAppend(tInstance* item)
+		{
+			RBXASSERT(item);
+			RBXASSERT(indexOf(item) == -1);
+			indexOf(item) = array.size();
+			array.append(item);
+		}
 
-				int removeIndex = indexOf(item);
-				RBXASSERT(removeIndex >= 0);
-				RBXASSERT(array[removeIndex] == item);
+		void fastRemove(tInstance* item)
+		{
+			RBXASSERT(array.find(item) != array.end());
 
-				// this does something similar to G3D::Array<>::fastRemove
-				tInstance* movedItem = array[size() - 1];
-				array[removeIndex] = movedItem;
-				indexOf(movedItem) = removeIndex;
-				array.resize(array.size() - 1, false);
+			int removeIndex = indexOf(item);
+			RBXASSERT(removeIndex >= 0);
+			RBXASSERT(array[removeIndex] == item);
 
-				indexOf(item) = -1;
-			}
+			// this does something similar to G3D::Array<>::fastRemove
+			tInstance* movedItem = array[size() - 1];
+			array[removeIndex] = movedItem;
+			indexOf(movedItem) = removeIndex;
+			array.resize(array.size() - 1, false);
 
-			void fastAppend(tInstance* item)
-			{
-				RBXASSERT(item);
-				RBXASSERT(indexOf(item) == -1);
-				indexOf(item) = array.size();
-				array.append(item);
-			}
+			indexOf(item) = -1;
+		}
 
+		bool fastContains(tInstance* item) const;
+
+		const G3D::Array<tInstance*>& underlyingArray() const
+		{
+			return array;
+		}
+
+		tInstance* operator[](G3D::uint32 index) const
+		{ 
+			RBXASSERT(indexOf(array[index]) == index);
+			return array[index]; 
+		}
+
+		tInstance* operator[](int index) const
+		{ 
+			RBXASSERT(indexOf(array[index]) == index);
+			return array[index]; 
+		}
+
+		tInstance* operator[](G3D::uint32 index)
+		{ 
+			RBXASSERT(indexOf(array[index]) == index);
+			return array[index]; 
+		}
+
+		tInstance* operator[](int index)
+		{ 
+			RBXASSERT(indexOf(array[index]) == index);
+			return array[index]; 
+		}
+
+		int size() const
+		{
+			return array.size();
+		}
 	};
 }

@@ -12,7 +12,7 @@ namespace RBX
 		Vector3 high;
 
 	public:
-		Extents(const Vector3int32& low, const Vector3int32& high);
+		Extents(const Vector3int32& low, const Vector3int32& high) : low(low.toVector3()), high(high.toVector3()) {}
 		Extents(const Vector3& low, const Vector3& high) : low(low), high(high) {}
 		Extents() : low(Vector3::inf()), high(-Vector3::inf()) {}
 
@@ -20,8 +20,8 @@ namespace RBX
 		bool operator==(const Extents&) const;
 		bool operator!=(const Extents&) const;
 		Extents& operator=(const Extents&);
-		const Vector3& min() const;
-		const Vector3& max() const;
+		const Vector3& min() const {return this->low;}
+		const Vector3& max() const {return this->high;}
 		Vector3 getCorner(int i) const;
 		Vector3 size() const { return this->high - this->low; }
 		Vector3 center() const { return (this->high + this->low) * 0.5f; }

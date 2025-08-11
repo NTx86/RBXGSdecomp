@@ -44,6 +44,8 @@ namespace RBX
 
 	class Primitive : public IPipelined
 	{
+		friend class SpatialHash;
+
 	private:
 		Guid guid;
 		bool guidSetExternally;
@@ -148,7 +150,10 @@ namespace RBX
 			return dragging;
 		}
 		void setAnchor(bool);
-		bool getAnchor() const;
+		bool getAnchor() const
+		{
+			return anchorObject != NULL;
+		}
 		Anchor* getAnchorObject()
 		{
 			return anchorObject;
@@ -164,9 +169,15 @@ namespace RBX
 			return canSleep;
 		}
 		void setFriction(float);
-		float getFriction() const;
+		float getFriction() const
+		{
+			return this->friction;
+		}
 		void setElasticity(float);
-		float getElasticity() const;
+		float getElasticity() const
+		{
+			return this->elasticity;
+		}
 		void setGridSize(const G3D::Vector3&);
 		const G3D::Vector3& getGridSize() const
 		{
@@ -204,7 +215,10 @@ namespace RBX
 			return JointK;
 		}
 		RigidJoint* getFirstRigidAt(Edge*);
-		int getNumJoints2() const;
+		int getNumJoints2() const
+		{
+			return joints.num;
+		}
 		int countNumJoints() const;
 		int getNumContacts() const;
 		int getNumEdges() const;

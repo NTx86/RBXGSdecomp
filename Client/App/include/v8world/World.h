@@ -92,7 +92,10 @@ namespace RBX
 		const G3D::Array<Primitive*>& getTouch() const;
 		const G3D::Array<Primitive*>& getTouchOther() const;
 		void computeFallen(G3D::Array<Primitive*>&) const;
-		const G3D::Array<Primitive*>& getPrimitives() const;
+		const G3D::Array<Primitive*>& getPrimitives() const 
+		{
+			return this->primitives.underlyingArray();
+		}
 		float step(float);
 		void update();
 		void reset();
