@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;_LIBCPP_VERSION"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
