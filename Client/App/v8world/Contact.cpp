@@ -411,4 +411,117 @@ namespace RBX
 			gridSize[edgeNormal0 % 3]
 			);
 	}
+
+	//this is hell (85% match)
+	//PLEASE NOTE THAT MOST VARIABLE NAMES ARE MOST LIKELY NOT ACCURATE OF THEIR FUNCTIONALITY
+	bool BlockBlockContact::getBestPlaneEdge(bool& planeContact, float overlapIgnored)
+	{
+		float bestPlaneLength = Math::inf();
+		float bestEdgeLength = Math::inf();
+		float unkMathInf = Math::inf();
+		int featureSave[2] = {this->feature[0], this->feature[1]};
+		bool checkLastFeature = (featureSave[0] >= 0 && featureSave[0] < 6) || featureSave[1] <= 5;
+
+		int sepIdCounter = this->separatingBodyId + 1;
+
+		for (int i = this->separatingBodyId; i < this->separatingBodyId + 2; i++)
+		{
+			int baseId = this->separatingBodyId % 2;
+			int testId = sepIdCounter % 2;
+			const CoordinateFrame& primPV0 = this->getPrimitive(baseId)->getBody()->getPV().position;
+			const CoordinateFrame& primPV1 = this->getPrimitive(testId)->getBody()->getPV().position;
+			Vector3* vertices0 = (Vector3*)this->block(0)->getVertices();
+			Vector3* vertices1 = (Vector3*)this->block(1)->getVertices();
+
+			Vector3 delta = primPV1.translation - primPV0.translation;
+
+			Vector3 rotTransMul = primPV0.rotation * delta;
+
+			for (int j = this->separatingAxisId; j < this->separatingAxisId + 3; j++)
+			{
+				int jRemain = j % 3;
+
+				float what = Math::taxiCabMagnitude(primPV1.rotation * primPV0.rotation.getColumn(jRemain) * *vertices0) + *vertices1[jRemain]  - fabs(rotTransMul[jRemain]);
+
+				if (overlapIgnored > what)
+				{
+					if (checkLastFeature && featureSave[baseId] % 3 == jRemain )
+						unkMathInf = what;
+
+					if (bestPlaneLength < what)
+					{
+						bestPlaneLength = what;
+						this->feature[baseId] = rotTransMul[jRemain] > 0.0f ? jRemain : jRemain + 3;
+						this->feature[testId] = -1;
+						this->separatingBodyId = baseId;
+						this->separatingAxisId = jRemain;
+						planeContact = true;
+					}
+				}
+				else
+				{
+					this->separatingBodyId = baseId;
+					this->separatingAxisId = jRemain;
+					return false;
+				}
+			}
+			sepIdCounter++;
+		}
+
+
+		if (checkLastFeature && (this->feature[0] != featureSave[0] || this->feature[1] != featureSave[1]) && !(bestPlaneLength * 1.01f < unkMathInf))
+		{
+			bestPlaneLength = unkMathInf;
+			this->feature[0] = featureSave[0];
+			this->feature[1] = featureSave[1];
+		}
+		const CoordinateFrame& primPV0 = this->getPrimitive(0)->getBody()->getPV().position;
+		const CoordinateFrame& primPV1 = this->getPrimitive(1)->getBody()->getPV().position;
+		Vector3* vertices0 = (Vector3*)this->block(0)->getVertices();
+		Vector3* vertices1 = (Vector3*)this->block(1)->getVertices();
+
+		Vector3 delta = primPV1.translation - primPV0.translation;
+
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				Vector3 PVcrossProd = primPV0.rotation.getColumn(i).cross(primPV1.rotation.getColumn(j));
+				if (PVcrossProd.unitize() <= 0.001f)
+					return planeContact;
+
+				float p0p1inCrossAxis = delta.dot(PVcrossProd);
+
+				Vector3 PVcrossProdMulPV0rot = primPV0.rotation * PVcrossProd;
+				Vector3 PVcrossProdMulPV1rot = primPV1.rotation * PVcrossProd;
+
+				float what = Math::taxiCabMagnitude(PVcrossProdMulPV0rot * *vertices0) + Math::taxiCabMagnitude(PVcrossProdMulPV1rot * *vertices1) - fabs(p0p1inCrossAxis);
+				if (overlapIgnored > what)
+				{
+					if (bestEdgeLength < what)
+					{
+						if ( what * 10.0 < bestPlaneLength )
+						{
+							if ( p0p1inCrossAxis > 0.0 )
+							{
+								this->feature[0] = this->block(0)->getClosestEdge(primPV0.rotation, (NormalId)i, PVcrossProd) + 6;
+								this->feature[1] = this->block(1)->getClosestEdge(primPV1.rotation, (NormalId)j, -PVcrossProd) + 6;
+							}
+							else
+							{
+								this->feature[0] = this->block(0)->getClosestEdge(primPV0.rotation, (NormalId)i, -PVcrossProd) + 6;
+								this->feature[1] = this->block(1)->getClosestEdge(primPV1.rotation, (NormalId)j, PVcrossProd) + 6;
+							}
+							planeContact = false;
+						}
+					}
+				}
+				else
+				{
+					 return false;
+				}
+			}
+		}
+		return true;
+	}
 }
