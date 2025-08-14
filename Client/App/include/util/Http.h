@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <atlbase.h>
 #include <atlutil.h>
-#include <wincrypt.h> 
 namespace RBX
 {
 	class Http 
