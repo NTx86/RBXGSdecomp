@@ -2,10 +2,10 @@
 
 namespace RBX
 {
-	Http::Http(const std::string* url) 
-		:url("")
-	{
-	}
+	Http::Http(const std::string& url)
+		: url(url) {}
+	Http::Http(const char* url) 
+		: url(url) {}
 
 	bool isRobloxSite(const char* url)
 	{

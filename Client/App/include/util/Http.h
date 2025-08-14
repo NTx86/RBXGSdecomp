@@ -6,13 +6,15 @@ namespace RBX
 {
 	class Http 
 	{
-	public: 
-		Http(const std::string* url);
-		bool isRobloxSite(const char* url);
-		bool isScript(const char* url);
-		
-
+	public:          
+		Http(const std::string& url);
+		Http(const char* url);
+	public:          
 		std::string url;
 		std::string additionalHeaders;
+	public:
+		bool isRobloxSite(const char* url);
+		bool isScript(const char* url);
+		bool trustCheck(char* url);
 	};
 }
