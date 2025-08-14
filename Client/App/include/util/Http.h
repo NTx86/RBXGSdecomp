@@ -13,8 +13,8 @@ namespace RBX
 		std::string url;
 		std::string additionalHeaders;
 	public:
-		bool isRobloxSite(const char* url);
-		bool isScript(const char* url);
-		bool trustCheck(char* url);
+		static bool isRobloxSite(const char* url);
+		static bool isScript(const char* url);
+		static bool trustCheck(char* url);
 	};
 }
