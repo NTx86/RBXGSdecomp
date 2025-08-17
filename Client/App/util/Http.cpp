@@ -10,16 +10,16 @@ namespace RBX
 	bool isRobloxSite(const char* url)
 	{
 		// i genuinely hate windows APIs and datatypes
-		ATL::CUrl targetUrl;
-		targetUrl.CrackUrl(url); 
+		ATL::CUrl crack;
+		crack.CrackUrl(url); 
 
-		if ( targetUrl.GetScheme()
-			&& (targetUrl.GetScheme() <= ATL_URL_SCHEME_GOPHER || targetUrl.GetScheme() > ATL_URL_SCHEME_HTTPS) )
+		int scheme = crack.GetScheme();
+		if (scheme && scheme != ATL_URL_SCHEME_HTTP && scheme != ATL_URL_SCHEME_HTTPS)
 		{
 			return false;
 		}
 
-		CString hostName = targetUrl.GetHostName();
+		CString hostName = crack.GetHostName();
 		hostName.MakeLower();
 
 		if (hostName.Right(10) == "roblox.com")
@@ -34,11 +34,12 @@ namespace RBX
 
 	bool isScript(const char* url)
 	{
-		ATL::CUrl targetUrl;
-		targetUrl.CrackUrl(url);
+		ATL::CUrl crack;
+		crack.CrackUrl(url);
 
-		if(targetUrl.GetScheme() == ATL_URL_SCHEME_FTP 
-			|| targetUrl.GetScheme() > ATL_URL_SCHEME_GOPHER && targetUrl.GetScheme() <= ATL_URL_SCHEME_HTTPS )
+		int scheme = crack.GetScheme();
+		if(scheme == ATL_URL_SCHEME_FTP 
+			|| scheme > ATL_URL_SCHEME_GOPHER && scheme <= ATL_URL_SCHEME_HTTPS )
 		{
 			return false;
 		}
@@ -47,7 +48,7 @@ namespace RBX
 
 		if(host.Find("javascript:") == 0)
 			return true;
-		if(host.Find("jscript:") == 0)
+		else if(host.Find("jscript:") == 0)
 			return true;
 
 		return false;
