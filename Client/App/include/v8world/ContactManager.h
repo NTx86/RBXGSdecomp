@@ -26,7 +26,7 @@ namespace RBX
 		Primitive* getSlowHit(const G3D::Array<Primitive*>&, const G3D::Ray&, const G3D::Array<Primitive const*>*, const HitTestFilter*, G3D::Vector3&, float, bool&, bool&) const;
 		Primitive* getFastHit(const G3D::Ray&, const G3D::Array<RBX::Primitive const*>*, const HitTestFilter*, G3D::Vector3&, bool&, bool&) const;
 	public:
-		ContactManager(World*);
+		ContactManager(World* world);
 		~ContactManager();
 	public:
 		const SpatialHash& getSpatialHash();

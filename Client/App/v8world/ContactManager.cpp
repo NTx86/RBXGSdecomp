@@ -4,6 +4,19 @@
 
 namespace RBX
 {
+	ContactManager::ContactManager(World* world)
+	{
+		SpatialHash* hash = new SpatialHash(world, this);
+		this->spatialHash = hash;
+
+		this->world = world;
+	}
+
+	ContactManager::~ContactManager()
+	{
+		delete this->spatialHash;
+	}
+
 	void ContactManager::getPrimitivesTouchingExtents(const Extents& extents, const Primitive* ignore, G3D::Array<Primitive*>& found)
 	{
 		this->spatialHash->getPrimitivesTouchingExtents(extents, ignore, found);
