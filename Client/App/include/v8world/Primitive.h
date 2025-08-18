@@ -139,8 +139,8 @@ namespace RBX
 		}
 		const G3D::CoordinateFrame& getCoordinateFrame() const;
 		G3D::CoordinateFrame getGridCorner() const;
-		void setCoordinateFrame(const CoordinateFrame& cFrame);
-		void setGridCorner(const CoordinateFrame& gridCorner);
+		void setCoordinateFrame(const G3D::CoordinateFrame& cFrame);
+		void setGridCorner(const G3D::CoordinateFrame& gridCorner);
 		void setPV(const PV&);
 		void setVelocity(const Velocity& vel);
 		void setMassInertia(float);
@@ -178,7 +178,7 @@ namespace RBX
 		{
 			return this->elasticity;
 		}
-		void setGridSize(const Vector3& gridSize);
+		void setGridSize(const G3D::Vector3& gridSize);
 		const G3D::Vector3& getGridSize() const
 		{
 			return geometry->getGridSize();
@@ -188,7 +188,7 @@ namespace RBX
 		Extents getExtentsLocal() const;
 		Extents getExtentsWorld() const;
 		const Extents& getFastFuzzyExtents() const;
-		bool hitTest(const Ray& worldRay, Vector3& worldHitPoint, bool& inside);
+		bool hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside);
 		Face getFaceInObject(NormalId objectFace);
 		Face getFaceInWorld(NormalId objectFace);
 		G3D::CoordinateFrame getFaceCoordInObject(NormalId objectFace);
