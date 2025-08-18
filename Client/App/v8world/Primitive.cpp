@@ -367,7 +367,7 @@ namespace RBX
 		return this->geometry->getRadius();
 	}
 
-	bool Primitive::hitTest(const Ray& worldRay, Vector3& worldHitPoint, bool& inside)
+	bool Primitive::hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside)
 	{
 		Vector3 localHitPoint(0, 0, 0); 
 
@@ -416,7 +416,7 @@ namespace RBX
 		return this->getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
 	}
 
-	void Primitive::setCoordinateFrame(const CoordinateFrame& cFrame)
+	void Primitive::setCoordinateFrame(const G3D::CoordinateFrame& cFrame)
 	{
 		bool ifcFrame = cFrame != body->getPV().position;
 		if (ifcFrame) 
@@ -475,7 +475,7 @@ namespace RBX
 		return numJoints;
 	}
 
-	void Primitive::setGridSize(const Vector3& gridSize)
+	void Primitive::setGridSize(const G3D::Vector3& gridSize)
 	{
 		Vector3 protectedSize = this->clipToSafeSize(gridSize);
 
@@ -517,7 +517,7 @@ namespace RBX
 		}
 	}
 
-	void Primitive::setGridCorner(const CoordinateFrame& gridCorner)
+	void Primitive::setGridCorner(const G3D::CoordinateFrame& gridCorner)
 	{
 		this->setCoordinateFrame(CoordinateFrame(gridCorner.rotation, 
 			gridCorner.pointToWorldSpace(geometry->getGridSize() * 0.5f)));
