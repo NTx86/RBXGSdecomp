@@ -43,5 +43,9 @@ namespace RBX
 		static int compare(const Guid*, const Guid*, const Guid*, const Guid*);
 		static int compare(const Guid*, const Guid*);
 		static void generateGUID(std::string& result);
+		const Data& getData() const
+		{
+			return this->data;
+		}
 	};
 }
