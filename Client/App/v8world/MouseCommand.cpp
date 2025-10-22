@@ -9,4 +9,11 @@ namespace RBX {
 	void MouseCommand::releaseCapture() {
 		this->capturedMouse = false;
 	}
+	
+	void MouseCommand::cancel() {
+		if (this->capturedMouse != false) {
+			releaseCapture();
+		}
+	}
+
 }

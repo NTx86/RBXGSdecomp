@@ -2,7 +2,7 @@
 
 #include "v8world/IRenderable.h"
 #include "v8world/INamed.h"
-
+//For some reason all functions when compiled add a bunch a of extra instructions. Idk if this is a me thing or not.
 namespace RBX {
 	class XmlState;
 	class Workspace;
@@ -31,7 +31,6 @@ namespace RBX {
 	public:
 		virtual ~MouseCommand();
 		virtual TextureId getTextureId() const;
-		//Is this even in header???? If placed outside of header its adds a butt-ton of extra instructions so idk 
 		virtual MouseCommand* isSticky() const {
 			return 0;
 		}
