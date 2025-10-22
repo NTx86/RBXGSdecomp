@@ -360,7 +360,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\INamed.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\IPipelined.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\IRenderable.h"
 					>
 				</File>
 				<File
@@ -381,6 +389,10 @@
 				</File>
 				<File
 					RelativePath=".\include\v8world\MotorJoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\MouseCommand.h"
 					>
 				</File>
 				<File
@@ -585,6 +597,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\INamed.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\IPipelined.cpp"
 				>
 			</File>
@@ -606,6 +622,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\MotorJoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\MouseCommand.cpp"
 				>
 			</File>
 			<File
