@@ -31,9 +31,7 @@ namespace RBX {
 	public:
 		virtual ~MouseCommand();
 		virtual TextureId getTextureId() const;
-		virtual MouseCommand* isSticky() const {
-			return 0;
-		}
+		virtual MouseCommand* isSticky() const;
 	private:
 		virtual const std::string getCursorName() const;
 

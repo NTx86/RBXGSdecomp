@@ -16,4 +16,7 @@ namespace RBX {
 		}
 	}
 
+	MouseCommand* MouseCommand::isSticky() const {
+			return NULL;
+	}
 }
