@@ -8,6 +8,7 @@ namespace RBX {
 	class Workspace;
 	class TextureId;
 	class UIEvent;
+
 	class MouseCommand : public RBX::INamed, public RBX::IRenderable {
 	private:
 		bool capturedMouse;
@@ -30,7 +31,7 @@ namespace RBX {
 	public:
 		virtual ~MouseCommand();
 		virtual TextureId getTextureId() const;
-		//Is this even in header???? If placed outside of header its adds a butt-ton of extra stack instructions so idk 
+		//Is this even in header???? If placed outside of header its adds a butt-ton of extra instructions so idk 
 		virtual MouseCommand* isSticky() const {
 			return 0;
 		}
