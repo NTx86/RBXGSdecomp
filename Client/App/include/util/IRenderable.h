@@ -1,10 +1,12 @@
 #pragma once
 
 //Todo: Fill out class
-namespace RBX {
+namespace RBX 
+{
 	class IRenderableBucket;
 
-	class IRenderable {
+	class IRenderable 
+	{
 	private:
 		int index2d;
 		int index3d;

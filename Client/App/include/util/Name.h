@@ -70,7 +70,8 @@ namespace RBX
 		}
 	};
 
-	class INamed {
+	class INamed 
+	{
 	public:
 		virtual const Name& getName() const;
 		INamed(const Name&);

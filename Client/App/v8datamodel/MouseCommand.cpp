@@ -1,8 +1,11 @@
 #include "v8datamodel/MouseCommand.h"
 #include "util/Debug.h"
-namespace RBX {
 
-	const std::string MouseCommand::getCursorName() const {
+namespace RBX 
+{
+
+	const std::string MouseCommand::getCursorName() const 
+	{
 		return "ArrowCursor";
 	}
 
@@ -10,13 +13,29 @@ namespace RBX {
 		this->capturedMouse = false;
 	}
 	
-	void MouseCommand::cancel() {
-		if (this->capturedMouse != false) {
+	void MouseCommand::cancel() 
+	{
+		if (this->capturedMouse != false) 
+		{
 			releaseCapture();
 		}
 	}
 
-	MouseCommand* MouseCommand::isSticky() const {
+	MouseCommand* MouseCommand::isSticky() const 
+	{
 			return NULL;
 	}
+
+	MouseCommand* MouseCommand::onMouseDown(const RBX::UIEvent &) 
+	{
+		return this;
+	}
+
+	MouseCommand* MouseCommand::onMouseUp(const RBX::UIEvent &) 
+	{
+		releaseCapture();
+		return NULL;
+	}
+
+	
 }

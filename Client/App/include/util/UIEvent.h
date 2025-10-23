@@ -3,11 +3,15 @@
 #include <G3DAll.h>
 #include <SDL.h>
 
-namespace RBX {
+namespace RBX 
+{
 	class UserInputBase;
-	class UIEvent {
+
+	class UIEvent 
+	{
 	public:
-		enum EventType {
+		enum EventType 
+		{
 			NO_EVENT,
 			MOUSE_RIGHT_BUTTON_DOWN,
 			MOUSE_RIGHT_BUTTON_UP,
@@ -21,21 +25,52 @@ namespace RBX {
 			KEY_DOWN,
 			KEY_UP,
 		};
+
 	public:
 		EventType eventType;
 		UserInputBase* userInput;
-		union {
-			struct {
+		union 
+		{
+			struct 
+			{
 				Vector2int16 mousePosition;
 				Vector2int16 mouseDelta;
 				Vector2int16 windowSize;
 			};
-			struct {
+			struct 
+			{
 				SDLKey key;
 				SDLMod mod;
 			};
 		};
-	public:
 
+	public:
+		UIEvent(UserInputBase* userInput, EventType eventType, SDLKey key, SDLMod mod) 
+			: userInput(userInput),
+			  eventType(eventType),
+			  key(key),
+			  mod(mod)	
+		{
+		}
+
+		UIEvent(UserInputBase* userInput, EventType eventType, Vector2int16 mousePosition, Vector2int16 mouseDelta)
+			: userInput(userInput),
+			  eventType(eventType),
+			  mousePosition(mousePosition),
+			  mouseDelta(mouseDelta)	
+		{
+		}
+
+		UIEvent()
+			: userInput(NULL),
+			  eventType(NO_EVENT)
+		{
+		}
+
+		bool isMouseEvent() const;
+		bool isKeyPressedEvent(SDLKey) const;
+		bool isKeyUpEvent(SDLKey) const;
+		bool isKeyPressedWithShiftEvent(SDLKey) const;
+		bool isKeyPressedWithShiftEvent() const;
 	};
 }
