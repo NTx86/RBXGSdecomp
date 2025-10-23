@@ -192,6 +192,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\IRenderable.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Math.h"
 					>
 				</File>
@@ -225,6 +229,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\SurfaceType.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\UIEvent.h"
 					>
 				</File>
 				<File
@@ -360,15 +368,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\v8world\INamed.h"
-					>
-				</File>
-				<File
 					RelativePath=".\include\v8world\IPipelined.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\v8world\IRenderable.h"
 					>
 				</File>
 				<File
@@ -389,10 +389,6 @@
 				</File>
 				<File
 					RelativePath=".\include\v8world\MotorJoint.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\v8world\MouseCommand.h"
 					>
 				</File>
 				<File
@@ -445,6 +441,14 @@
 				</File>
 				<File
 					RelativePath=".\include\v8world\World.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="v8datamodel"
+				>
+				<File
+					RelativePath=".\include\v8datamodel\MouseCommand.h"
 					>
 				</File>
 			</Filter>
@@ -597,10 +601,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\v8world\INamed.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\v8world\IPipelined.cpp"
 				>
 			</File>
@@ -622,10 +622,6 @@
 			</File>
 			<File
 				RelativePath=".\v8world\MotorJoint.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\v8world\MouseCommand.cpp"
 				>
 			</File>
 			<File
@@ -670,6 +666,14 @@
 			</File>
 			<File
 				RelativePath=".\v8world\World.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="v8datamodel"
+			>
+			<File
+				RelativePath=".\v8datamodel\MouseCommand.cpp"
 				>
 			</File>
 		</Filter>

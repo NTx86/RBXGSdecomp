@@ -69,4 +69,12 @@ namespace RBX
 			return doDeclare<sName>();
 		}
 	};
+
+	class INamed {
+	public:
+		virtual const Name& getName() const;
+		INamed(const Name&);
+		INamed();
+		//INamed& operator=(const INamed&);
+	};
 }

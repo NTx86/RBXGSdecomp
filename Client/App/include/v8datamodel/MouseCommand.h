@@ -1,8 +1,8 @@
 #pragma once
 
-#include "v8world/IRenderable.h"
-#include "v8world/INamed.h"
-//For some reason all functions when compiled add a bunch a of extra instructions. Idk if this is a me thing or not.
+#include "util/IRenderable.h"
+#include "util/Name.h"
+
 namespace RBX {
 	class XmlState;
 	class Workspace;
