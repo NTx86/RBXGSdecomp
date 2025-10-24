@@ -23,7 +23,7 @@ namespace RBX
 		bool isAsset() const;
 		bool isHttp() const;
 		~ContentId();
-		//ContentId& operator=(const ContentId&);
+		ContentId& operator=(const ContentId&);
 	public:
 		static ContentId fromUrl(const std::string&);
 		static ContentId fromFile(const std::string&);

@@ -208,6 +208,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\MeshId.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Name.h"
 					>
 				</File>
@@ -526,6 +530,10 @@
 			</File>
 			<File
 				RelativePath=".\util\Math.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\MeshId.cpp"
 				>
 			</File>
 			<File
