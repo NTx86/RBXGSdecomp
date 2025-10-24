@@ -10,7 +10,11 @@ namespace RBX {
 
 		TextureProxyBase(const TextureProxyBase&);
 		TextureProxyBase();
-		virtual ~TextureProxyBase();
+
+		virtual ~TextureProxyBase()
+		{
+		}
+
 		virtual Vector2 getSize();
 		TextureProxyBase& operator=(const TextureProxyBase&);
 	};

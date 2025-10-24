@@ -480,6 +480,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="renderlib"
+				>
+				<File
+					RelativePath=".\include\renderlib\TextureProxy.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -730,6 +738,14 @@
 			>
 			<File
 				RelativePath=".\rbxgraphics\TextureProxyBase.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="renderlib"
+			>
+			<File
+				RelativePath=".\renderlib\TextureProxy.cpp"
 				>
 			</File>
 		</Filter>
