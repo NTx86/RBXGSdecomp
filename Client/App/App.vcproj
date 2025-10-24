@@ -464,6 +464,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="appdraw"
+				>
+				<File
+					RelativePath=".\include\appdraw\Part.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -698,6 +706,14 @@
 			>
 			<File
 				RelativePath=".\v8datamodel\MouseCommand.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="appdraw"
+			>
+			<File
+				RelativePath=".\appdraw\Part.cpp"
 				>
 			</File>
 		</Filter>

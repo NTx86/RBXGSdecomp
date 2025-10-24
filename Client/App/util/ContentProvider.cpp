@@ -26,10 +26,6 @@ namespace RBX
 	{
 	}
 
-	ContentId::~ContentId()
-	{
-	}
-
 	bool ContentId::isAsset() const
 	{
 		return id.substr(0, 11) == "rbxasset://";
