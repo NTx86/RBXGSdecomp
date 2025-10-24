@@ -472,6 +472,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="rbxgraphics"
+				>
+				<File
+					RelativePath=".\include\rbxgraphics\TextureProxyBase.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -714,6 +722,14 @@
 			>
 			<File
 				RelativePath=".\appdraw\Part.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="rbxgraphics"
+			>
+			<File
+				RelativePath=".\rbxgraphics\TextureProxyBase.cpp"
 				>
 			</File>
 		</Filter>
