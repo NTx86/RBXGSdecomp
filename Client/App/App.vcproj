@@ -392,6 +392,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\JointBuilder.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\JointStage.h"
 					>
 				</File>
@@ -658,6 +662,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\Joint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\JointBuilder.cpp"
 				>
 			</File>
 			<File
