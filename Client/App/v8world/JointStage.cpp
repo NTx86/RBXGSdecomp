@@ -77,7 +77,8 @@ namespace RBX
 
 		for (; iter != iter2; iter++)
 		{
-			if (iter->second == j) {
+			if (iter->second == j) 
+			{
 				jointMap.erase(iter);
 				break;
 			}
