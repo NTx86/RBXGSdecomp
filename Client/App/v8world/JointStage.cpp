@@ -71,7 +71,7 @@ namespace RBX
 		if(!p)
 			return;
 
-		RBXASSERT(!pairInMap(j, p));
+		RBXASSERT(pairInMap(j, p));
 		Iterator iter = jointMap.lower_bound(p);
 		Iterator iter2 = jointMap.upper_bound(p);
 
@@ -84,7 +84,7 @@ namespace RBX
 			}
 		}
 
-		RBXASSERT(pairInMap(j, p));
+		RBXASSERT(!pairInMap(j, p));
 		RBXASSERT(iter2 != iter);
 	}
 
