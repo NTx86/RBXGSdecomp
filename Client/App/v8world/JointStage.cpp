@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "v8world/JointStage.h"
 #include "v8world/Edge.h"
 #include "v8world/ClumpStage.h"
@@ -64,11 +65,27 @@ namespace RBX
 		jointMap.insert(std::pair<Primitive*, Joint*>(p, j));
 	}
 
-	__declspec(noinline) void JointStage::removeFromMap(Joint* j, Primitive* p)
+	void JointStage::removeFromMap(Joint* j, Primitive* p)
 	{
-		// TODO
-		// remove noinline once completed
-		RBXASSERT(0);
+		typedef std::multimap<Primitive*, Joint*>::iterator Iterator; // TODO: sort this out
+
+		if(!p)
+			return;
+
+		RBXASSERT(!pairInMap(j, p));
+		Iterator iter = jointMap.lower_bound(p);
+		Iterator iter2 = jointMap.upper_bound(p);
+
+		for (; iter != iter2; iter++)
+		{
+			if (iter->second == j) {
+				jointMap.erase(iter);
+				break;
+			}
+		}
+
+		RBXASSERT(pairInMap(j, p));
+		RBXASSERT(iter2 != iter);
 	}
 
 	// NOTE: might be in headers
