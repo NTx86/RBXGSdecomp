@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "v8world/JointStage.h"
 #include "v8world/Edge.h"
 #include "v8world/ClumpStage.h"
