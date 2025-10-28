@@ -73,19 +73,19 @@ namespace RBX
 
 		RBXASSERT(pairInMap(j, p));
 		Iterator iter = jointMap.lower_bound(p);
-		Iterator iter2 = jointMap.upper_bound(p);
 
-		for (; iter != iter2; iter++)
+		while(iter != jointMap.upper_bound(p))
 		{
 			if (iter->second == j) 
 			{
 				jointMap.erase(iter);
-				break;
+				RBXASSERT(!pairInMap(j, p));
+				return;
 			}
+			iter++;
 		}
 
-		RBXASSERT(!pairInMap(j, p));
-		RBXASSERT(iter2 != iter);
+		RBXASSERT(0);
 	}
 
 	// NOTE: might be in headers
