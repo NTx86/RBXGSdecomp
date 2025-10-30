@@ -115,7 +115,7 @@ namespace RBX
 
 			float scaling = mass / (2 * area);
 
-			float temp = ((Z*Z*Z*Y)/3) + ((Z*Y*Y*Y)/3) + ((Y*Y*Y*X)/3) + ((Z*Z*Y*X)) + ((Z*X*Y*Y)) + ((X*Z*Z*Z)/3);
+			float temp = ((Z*Z*Z*Y)/3) + ((Z*Y*Y*Y)/3) + ((Y*Y*Y*X)/3) + (Z*Z*Y*X) + (Z*X*Y*Y) + ((X*Z*Z*Z)/3);
 
 			I[i] = temp * scaling;
 		}
