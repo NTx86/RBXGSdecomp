@@ -208,10 +208,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\util\MeshId.h"
-					>
-				</File>
-				<File
 					RelativePath=".\include\util\Name.h"
 					>
 				</File>
@@ -253,6 +249,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\Vector3int32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Vector6.h"
 					>
 				</File>
 				<File
@@ -460,14 +460,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="v8datamodel"
-				>
-				<File
-					RelativePath=".\include\v8datamodel\MouseCommand.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -534,10 +526,6 @@
 			</File>
 			<File
 				RelativePath=".\util\Math.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\util\MeshId.cpp"
 				>
 			</File>
 			<File
@@ -698,14 +686,6 @@
 			</File>
 			<File
 				RelativePath=".\v8world\World.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="v8datamodel"
-			>
-			<File
-				RelativePath=".\v8datamodel\MouseCommand.cpp"
 				>
 			</File>
 		</Filter>

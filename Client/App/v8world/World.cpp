@@ -22,9 +22,7 @@ namespace RBX
 		return numLinkCalls;
 	}
 
-	void World::addedBodyForce()
-	{
-	}
+	void World::addedBodyForce() { }
 
 	int World::getNumJoints() const {
 		return numJoints;
@@ -71,8 +69,7 @@ namespace RBX
 
 	void World::onPrimitiveContactParametersChanged(Primitive* p)
 	{
-		for (Contact* curContact = p->getFirstContact(); curContact != NULL;
-			curContact = p->getNextContact(curContact))
+		for (Contact* curContact = p->getFirstContact(); curContact != NULL; curContact = p->getNextContact(curContact))
 		{
 			curContact->onPrimitiveContactParametersChanged();
 		}
@@ -158,14 +155,10 @@ namespace RBX
 
 		Assembly::PrimIterator endIt = Assembly::PrimIterator::end(a);
 		Assembly::PrimIterator beginIt = Assembly::PrimIterator::begin(a);
-
-		while (true)
+		
+		for (; beginIt != endIt; ++beginIt)
 		{
-			if (endIt != beginIt)
-				break;
-
 			contactManager->onPrimitiveExtentsChanged(*beginIt);
-			++beginIt;
 		}
 	}
 

@@ -10,10 +10,9 @@ namespace RBX
 		std::string id;
 		const Name* mimeTypePtr;
 	public:
-		ContentId(const ContentId&);
 		ContentId();
-		ContentId(std::string);
-		ContentId(const char*);
+		ContentId(std::string id);
+		ContentId(const char* id);
 		ContentId(std::string, const Name&);
 		const Name& mimeType() const;
 		const char* c_str() const;
@@ -25,7 +24,7 @@ namespace RBX
 		~ContentId() 
 		{
 		};
-		ContentId& operator=(const ContentId&);
+		//ContentId& operator=(const ContentId&);
 	public:
 		static ContentId fromUrl(const std::string&);
 		static ContentId fromFile(const std::string&);

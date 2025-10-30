@@ -20,12 +20,6 @@ namespace RBX
 	{
 	}
 
-	ContentId::ContentId(const ContentId& contentId)
-		: id(contentId.id),
-		  mimeTypePtr(contentId.mimeTypePtr)
-	{
-	}
-
 	bool ContentId::isAsset() const
 	{
 		return id.substr(0, 11) == "rbxasset://";
