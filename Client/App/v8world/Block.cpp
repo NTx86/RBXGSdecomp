@@ -99,35 +99,28 @@ namespace RBX
 	}
 
 	// TODO: remove noinline after Block::getMoment is moved into the header file
-	// WHAT
 	__declspec(noinline) G3D::Matrix3 Block::getMomentHollow(float mass) const
 	{
-		const float third = 1.f/3.f;
 
-		float x = this->gridSize.x;
-		float y = this->gridSize.y;
-		float z = this->gridSize.z;
+		G3D::Vector3 grid = gridSize;
+		G3D::Vector3 I;
 
-		float v15 = ((x + y) * z + x * y) * 2.f;
-		float zSquared = z * z;
-		float zCubed = z * z * z;
-		float v13 = zCubed * y * third;
-		float v7 = z * y * y;
-		float ySquared = y * y;
-		float yCubed = y * y * y;
-		float area = yCubed * x * third;
-		float v9 = mass / (2.f * v15);
-		float xCubed = x * x * x;
-		float v18 = xCubed * z * third;
-		float v11 = z * z * x;
+		float area = 2 * (grid.x * grid.z + grid.y * grid.z + grid.x * grid.y);
 
-		//Vector3 I(yCubed,
-		//	((zSquared * y * x + v7 * y * third) + (zCubed * x * third) + (v7 * x) + area + v13) * v9,
-		//	((y * v11) + (x * x * z * y) + (v11 * z * third) + (xCubed * y * third) + v18 + v13) * v9);
-		Vector3 I((y*y*y)/3.f,
-			((zSquared * y * x + v7 * y * third) + (zCubed * x * third) + (v7 * x) + area + v13) * v9,
-			((y * v11) + (x * x * z * y) + (v11 * z * third) + (xCubed * y * third) + v18 + v13) * v9);
+		for(int i = 0; i < 3; i++)
+		{
+			float X = grid[(i    ) % 3];
+			float Y = grid[(i + 1) % 3];
+			float Z = grid[(i + 2) % 3];
+
+			float scaling = mass / (2 * area);
+
+			float temp = ((Z*Z*Z*Y)/3) + ((Z*Y*Y*Y)/3) + ((Y*Y*Y*X)/3) + ((Z*Z*Y*X)) + ((Z*X*Y*Y)) + ((X*Z*Z*Z)/3);
+
+			I[i] = temp * scaling;
+		}
 		return Math::fromDiagonal(I);
+
 	}
 
 	// NOTE: not the original function name
