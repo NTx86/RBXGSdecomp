@@ -64,10 +64,27 @@ namespace RBX
 		jointMap.insert(std::pair<Primitive*, Joint*>(p, j));
 	}
 
-	__declspec(noinline) void JointStage::removeFromMap(Joint* j, Primitive* p)
+	void JointStage::removeFromMap(Joint* j, Primitive* p)
 	{
-		// TODO
-		// remove noinline once completed
+		typedef std::multimap<Primitive*, Joint*>::iterator Iterator; // TODO: sort this out
+
+		if(!p)
+			return;
+
+		RBXASSERT(pairInMap(j, p));
+		Iterator iter = jointMap.lower_bound(p);
+
+		while(iter != jointMap.upper_bound(p))
+		{
+			if (iter->second == j) 
+			{
+				jointMap.erase(iter);
+				RBXASSERT(!pairInMap(j, p));
+				return;
+			}
+			iter++;
+		}
+
 		RBXASSERT(0);
 	}
 
