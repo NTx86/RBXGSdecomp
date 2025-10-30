@@ -14,7 +14,7 @@ namespace RBX
 	private:
 		int dictionaryIndex;
 	public:
-		std::string name;
+		const std::string name;
 
 	public:
 		int getDictionaryIndex() const { return dictionaryIndex; }
@@ -31,7 +31,10 @@ namespace RBX
 		bool operator ==(const Name& other) const;
 		bool operator !=(const char* name) const;
 		bool operator !=(const std::string& name) const;
-		bool operator !=(const Name& other) const;
+		bool operator !=(const Name& other) const
+		{
+			return this != &other;
+		}
 
 	private:
 		Name(const char* sName, int dictionaryIndex)
@@ -53,7 +56,7 @@ namespace RBX
 		static const Name& lookup(const char* sName);
 		static const Name& lookup(const std::string& sName);
 		static int compare(Name&, Name&);
-
+	private:
 		// NOTE: these have not been checked
 		// TODO: these also need to support const char* inputs
 		template<char*& sName>
