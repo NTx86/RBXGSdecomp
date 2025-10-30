@@ -62,8 +62,15 @@ namespace RBX
 		void getPrimitivesInGrid(const Vector3int32& grid, G3D::Array<Primitive*>& found);
 		bool getNextGrid(Vector3int32&, const G3D::Ray&, float);
 		void getPrimitivesTouchingExtents(const Extents& extents, const Primitive* ignore, G3D::Array<Primitive*>& answer);
-		int getNodesOut() const;
-		int getMaxBucket() const;
+		int getNodesOut() const
+		{
+			return nodesOut;
+		}
+
+		int getMaxBucket() const
+		{
+			return maxBucket;
+		}
 		void doStats() const;
 		//SpatialHash& operator=(const SpatialHash&);
 	  
