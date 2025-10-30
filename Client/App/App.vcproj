@@ -468,30 +468,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="appdraw"
-				>
-				<File
-					RelativePath=".\include\appdraw\Part.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="rbxgraphics"
-				>
-				<File
-					RelativePath=".\include\rbxgraphics\TextureProxyBase.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="renderlib"
-				>
-				<File
-					RelativePath=".\include\renderlib\TextureProxy.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -730,30 +706,6 @@
 			>
 			<File
 				RelativePath=".\v8datamodel\MouseCommand.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="appdraw"
-			>
-			<File
-				RelativePath=".\appdraw\Part.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="rbxgraphics"
-			>
-			<File
-				RelativePath=".\rbxgraphics\TextureProxyBase.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="renderlib"
-			>
-			<File
-				RelativePath=".\renderlib\TextureProxy.cpp"
 				>
 			</File>
 		</Filter>
