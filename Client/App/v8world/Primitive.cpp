@@ -8,7 +8,8 @@
 
 namespace RBX 
 {
-
+	#pragma warning (push)
+	#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
 	Primitive::Primitive(Geometry::GeometryType geometryType) : // WIP
 		guidSetExternally(false),
 		world(NULL),
@@ -31,6 +32,7 @@ namespace RBX
 			surfaceData[i] = NULL;
 		}
 	}
+	#pragma warning (pop)
 
 	Primitive::~Primitive() // WIP
 	{
