@@ -68,7 +68,7 @@ namespace RBX
 
 	void Primitive::setGuid(const Guid& value) 
 	{
-		RBXASSERT(world);
+		RBXASSERT(!world);
 		guid.copyDataFrom(value);
 		guidSetExternally = true;
 	}
@@ -85,10 +85,15 @@ namespace RBX
 	{
 		return body->getPV().position;
 	}
+
+	const G3D::CoordinateFrame& Primitive::getCoordinateFrameInlined() const
+	{
+		return body->getPV().position;
+	}
 	
 	G3D::CoordinateFrame Primitive::getGridCorner() const
 	{
-		const G3D::CoordinateFrame& pos = getCoordinateFrame();
+		const G3D::CoordinateFrame& pos = getCoordinateFrameInlined();
 		G3D::Vector3 hVec = -(geometry->getGridSize() * 0.5f);
 
 		return G3D::CoordinateFrame(pos.rotation, pos.pointToWorldSpace(hVec));
@@ -121,12 +126,12 @@ namespace RBX
 
 	bool Primitive::hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside) 
 	{
-		G3D::Ray localRay = getCoordinateFrame().toObjectSpace(worldRay);
+		G3D::Ray localRay = getCoordinateFrameInlined().toObjectSpace(worldRay);
 		G3D::Vector3 localHitPoint;
 
 		if(geometry->hitTest(localRay, localHitPoint, inside))
 		{
-			worldHitPoint = getCoordinateFrame().pointToWorldSpace(localHitPoint);
+			worldHitPoint = getCoordinateFrameInlined().pointToWorldSpace(localHitPoint);
 			return true;
 		}
 		else return false;
@@ -142,7 +147,7 @@ namespace RBX
 
 	Face Primitive::getFaceInWorld(NormalId objectFace)
 	{
-		return getFaceInObject(objectFace).toWorldSpace(getCoordinateFrame());
+		return getFaceInObject(objectFace).toWorldSpace(getCoordinateFrameInlined());
 	}
 
 	G3D::CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
@@ -259,7 +264,7 @@ namespace RBX
 
 	void Primitive::setCoordinateFrame(const G3D::CoordinateFrame& value)
 	{
-		if(value != getCoordinateFrame())
+		if(value != getCoordinateFrameInlined())
 		{
 			Assembly* assembly = getAssembly();
 			if(!assembly)
@@ -272,7 +277,7 @@ namespace RBX
 			else
 			{
 				RBXASSERT(world);
-				if(this == assembly->getMainPrimitive())
+				if(assembly->getMainPrimitive() == this)
 				{
 					body->setCoordinateFrame(value);
 					assembly->notifyMoved();
@@ -343,7 +348,7 @@ namespace RBX
 			if(world)
 			{
 				bool newDrag = !dragging && value;
-				if(newDrag != oldDrag)
+				if(oldDrag != newDrag)
 					world->onPrimitiveCanCollideChanged(this);
 			}
 		}
@@ -399,41 +404,17 @@ namespace RBX
 		}
 	}
 
-	bool Primitive::aaBoxCollide(const Primitive& p0, const Primitive& p1) // WIP
+	bool Primitive::aaBoxCollide(const Primitive& p0, const Primitive& p1)
 	{
-		const G3D::Vector3& t0 = p0.getCoordinateFrame().translation;
-		const G3D::Vector3& t1 = p1.getCoordinateFrame().translation;
-		G3D::Vector3 delta = t0 - t1;
+		G3D::Vector3 delta = p0.getCoordinateFrame().translation - p1.getCoordinateFrame().translation;
 		float r0 = p0.getRadius();
 		float r1 = p1.getRadius();
-
-		float* a;
-
-		float nx = abs(delta.x);
-		float ny = abs(delta.y);
-		float nz = abs(delta.z);
-
-		if (nx > ny) // taken and modified from G3D::Vector3::primaryAxis. May be a Math library function.
-		{			 // Very messy indeed!
-			if (nx > nz)
-				a = &delta.x;
-			else
-				a = &delta.z;
-		} 
-		else 
-		{
-			if (ny > nz)
-				a = &delta.y;
-			else
-				a = &delta.z;
-		}
-
-		if (r0 + r1 < *a)
+		
+		if (r0 + r1 < Math::longestVector3Component(delta))
 			return false;
 
-		const Extents& f0 = p0.getFastFuzzyExtents();
 		const Extents& f1 = p1.getFastFuzzyExtents();
+		const Extents& f0 = p0.getFastFuzzyExtents();
 		return f0.overlapsOrTouches(f1);
 	}
-	
 }
