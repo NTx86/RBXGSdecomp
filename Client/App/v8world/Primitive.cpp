@@ -87,18 +87,7 @@ namespace RBX {
 		const G3D::CoordinateFrame& pos = body->getPV().position;
 		G3D::Vector3 hVec = -(geometry->getGridSize() * 0.5f);
 
-		G3D::Vector3 kProd;
-
-		for (int r = 0; r < 3; ++r) 
-		{ // taken and modified from G3D Matrix3.h because matrix multiplication THEN addition does not give 100% match
-			kProd[r] =
-				pos.rotation[r][0] * hVec[0] +
-				pos.rotation[r][1] * hVec[1] +
-				pos.rotation[r][2] * hVec[2] +
-				pos.translation[r];
-		}
-
-		return G3D::CoordinateFrame(pos.rotation, kProd);
+		return G3D::CoordinateFrame(pos.rotation, pos.pointToWorldSpace(hVec));
 	}
 
 	void Primitive::setGridCorner(const G3D::CoordinateFrame& gridCorner)
@@ -106,16 +95,7 @@ namespace RBX {
 		G3D::Vector3 kProd;
 		G3D::Vector3 hVec = geometry->getGridSize() * 0.5;
 
-		for (int r = 0; r < 3; ++r) 
-		{ // taken and modified from G3D Matrix3.h because matrix multiplication THEN addition does not give as good a match
-			kProd[r] =
-				gridCorner.rotation[r][0] * hVec[0] +
-				gridCorner.rotation[r][1] * hVec[1] +
-				gridCorner.rotation[r][2] * hVec[2] +
-				gridCorner.translation[r];
-		}
-
-		setCoordinateFrame(G3D::CoordinateFrame(gridCorner.rotation, kProd));
+		setCoordinateFrame(G3D::CoordinateFrame(gridCorner.rotation, gridCorner.pointToWorldSpace(hVec)));
 
 	}
 
