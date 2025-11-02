@@ -1,10 +1,13 @@
 #include "v8world/Primitive.h"
 #include "v8world/Geometry.h"
+#include "v8world/Assembly.h"
 #include "v8world/Ball.h"
 #include "v8world/Block.h"
+#include "v8world/World.h"
 #include <cmath>
 
-namespace RBX {
+namespace RBX 
+{
 
 	Primitive::Primitive(Geometry::GeometryType geometryType) : // WIP
 		guidSetExternally(false),
@@ -24,7 +27,7 @@ namespace RBX {
 	{ // TODO: declare NullController class in controller.h
 		for(int i = 0; i < 6; i++) 
 		{
-			surfaceType[i] = SurfaceType::NO_SURFACE;
+			surfaceType[i] = NO_SURFACE;
 			surfaceData[i] = NULL;
 		}
 	}
@@ -32,7 +35,7 @@ namespace RBX {
 	Primitive::~Primitive() // WIP
 	{
 		Geometry::GeometryType type = geometry->getGeometryType();
-		if(type != Geometry::GeometryType::GEOMETRY_NONE) {
+		if(type != Geometry::GEOMETRY_NONE) {
 			if(geometry) 
 				delete geometry;
 			if(body)
@@ -49,7 +52,8 @@ namespace RBX {
 	{
 		G3D::Vector3 r = newSize.min(Vector3(512.0f, 512.0f, 512.0f));
 
-		if(r.x * r.y * r.z > 1e+6f) {
+		if(r.x * r.y * r.z > 1e+6f) 
+		{
 			r.y = floorf(1e+6f / (r.x * r.z));
 		}
 
@@ -59,7 +63,7 @@ namespace RBX {
 	float Primitive::computeJointK() const 
 	{
 		Geometry::GeometryType type = geometry->getGeometryType();
-		return Constants::getJointK(geometry->getGridSize(), type == Geometry::GeometryType::GEOMETRY_BALL);
+		return Constants::getJointK(geometry->getGridSize(), type == Geometry::GEOMETRY_BALL);
 	}
 
 	void Primitive::setGuid(const Guid& value) 
@@ -84,7 +88,7 @@ namespace RBX {
 	
 	G3D::CoordinateFrame Primitive::getGridCorner() const
 	{
-		const G3D::CoordinateFrame& pos = body->getPV().position;
+		const G3D::CoordinateFrame& pos = getCoordinateFrame();
 		G3D::Vector3 hVec = -(geometry->getGridSize() * 0.5f);
 
 		return G3D::CoordinateFrame(pos.rotation, pos.pointToWorldSpace(hVec));
@@ -92,11 +96,8 @@ namespace RBX {
 
 	void Primitive::setGridCorner(const G3D::CoordinateFrame& gridCorner)
 	{
-		G3D::Vector3 kProd;
 		G3D::Vector3 hVec = geometry->getGridSize() * 0.5;
-
 		setCoordinateFrame(G3D::CoordinateFrame(gridCorner.rotation, gridCorner.pointToWorldSpace(hVec)));
-
 	}
 
 	void Primitive::setVelocity(const Velocity& vel)
@@ -120,12 +121,12 @@ namespace RBX {
 
 	bool Primitive::hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside) 
 	{
-		G3D::Ray localRay = body->getPV().position.toObjectSpace(worldRay);
+		G3D::Ray localRay = getCoordinateFrame().toObjectSpace(worldRay);
 		G3D::Vector3 localHitPoint;
 
 		if(geometry->hitTest(localRay, localHitPoint, inside))
 		{
-			worldHitPoint = body->getPV().position.pointToWorldSpace(localHitPoint);
+			worldHitPoint = getCoordinateFrame().pointToWorldSpace(localHitPoint);
 			return true;
 		}
 		else return false;
@@ -141,7 +142,7 @@ namespace RBX {
 
 	Face Primitive::getFaceInWorld(NormalId objectFace)
 	{
-		return getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
+		return getFaceInObject(objectFace).toWorldSpace(getCoordinateFrame());
 	}
 
 	G3D::CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
@@ -183,6 +184,16 @@ namespace RBX {
 		return joints.first ? joints.first : contacts.first;
 	}
 
+	Joint* Primitive::getFirstJoint() const
+	{
+		return rbx_static_cast<Joint*>(joints.first);
+	}
+
+	Contact* Primitive::getFirstContact()
+	{
+		return rbx_static_cast<Contact*>(contacts.first);
+	}
+
 	RigidJoint* Primitive::getFirstRigid()
 	{
 		return getFirstRigidAt(getFirstEdge());
@@ -192,17 +203,237 @@ namespace RBX {
 	{
 		switch(geometryType)
 		{
-			case Geometry::GeometryType::GEOMETRY_BLOCK: return new Block;
-			case Geometry::GeometryType::GEOMETRY_BALL: return new Ball;
+			case Geometry::GEOMETRY_BLOCK: return new Block;
+			case Geometry::GEOMETRY_BALL: return new Ball;
 			default: return Geometry::nullGeometry();
 		}
 	}
 
-	void newTouch(Primitive* touch, Primitive* touchOther); // TODO: Compiler complains about World class being undefined
+	void newTouch(Primitive* touch, Primitive* touchOther)
+	{
+		Clump* clumpTouch = touch->getClump();
+		Clump* clumpOTouch = touchOther->getClump();
+
+		RBXASSERT(clumpTouch);
+		RBXASSERT(clumpOTouch);
+
+		if(touch->getOwner()->reportTouches() && 
+			((!clumpTouch->getAnchored() && clumpTouch->getSleepStatus() == Sim::AWAKE) ||
+			(!clumpOTouch->getAnchored() && clumpOTouch->getSleepStatus() == Sim::AWAKE)))
+		{
+			touch->getWorld()->onPrimitiveTouched(touch, touchOther);
+		}
+	};
 
 	void Primitive::onNewTouch(Primitive* p0, Primitive* p1)
 	{
 		newTouch(p0, p1);
 		newTouch(p1, p0);
 	}
+
+	Assembly* Primitive::getAssembly() const 
+	{
+		return clump ? clump->getAssembly() : NULL;
+	}
+
+	void Primitive::setPrimitiveType(Geometry::GeometryType geometryType)
+	{
+		RBXASSERT(geometry->getGeometryType() != Geometry::GEOMETRY_NONE);
+		RBXASSERT(geometryType != Geometry::GEOMETRY_NONE);
+
+		if(geometry->getGeometryType() != geometryType)
+		{
+			G3D::Vector3 oldSize = geometry->getGridSize();
+			if(geometry)
+				delete geometry;
+
+			geometry = newGeometry(geometryType);
+
+			if(world)
+				world->onPrimitiveGeometryTypeChanged(this);
+
+			setGridSize(oldSize);
+			JointK.setDirty();
+		}
+	}
+
+	void Primitive::setCoordinateFrame(const G3D::CoordinateFrame& value)
+	{
+		if(value != getCoordinateFrame())
+		{
+			Assembly* assembly = getAssembly();
+			if(!assembly)
+			{
+				body->setCoordinateFrame(value);
+				myOwner->notifyMoved();
+				if(world)
+					world->onPrimitiveExtentsChanged(this);
+			}
+			else
+			{
+				RBXASSERT(world);
+				if(this == assembly->getMainPrimitive())
+				{
+					body->setCoordinateFrame(value);
+					assembly->notifyMoved();
+					world->onAssemblyExtentsChanged(assembly);
+					if(!anchored)
+						world->ticklePrimitive(this);
+				}
+			}
+		}
+	}
+
+	void Primitive::setDragging(bool _dragging)
+	{
+		if(dragging != _dragging)
+		{
+			bool oldDrag = !dragging && canCollide;
+			dragging = _dragging;
+
+			setAnchor(anchored);
+			if(world)
+			{
+				bool newDrag = !dragging && canCollide;
+				if(newDrag != oldDrag)
+					world->onPrimitiveCanCollideChanged(this);
+			}
+		}
+	}
+
+	void Primitive::setAnchor(bool _anchored)
+	{
+		anchored = _anchored;
+
+		bool exists = getAnchor();
+
+		if(_anchored || dragging)
+			_anchored = true;
+
+		if(_anchored == exists)
+			return;
+
+		if(_anchored)
+		{
+			RBXASSERT(!anchorObject);
+			anchorObject = new Anchor(this);
+			if(world)
+				world->onPrimitiveAddedAnchor(this);
+		}
+		else
+		{
+			RBXASSERT(anchorObject);
+			if(world)
+				world->onPrimitiveRemovingAnchor(this);
+			
+			if(anchorObject)
+				delete anchorObject;
+
+			anchorObject = NULL;
+		}
+	}
+
+	void Primitive::setCanCollide(bool value)
+	{
+		bool oldDrag = !dragging && canCollide;
+
+		if(canCollide != value)
+		{
+			canCollide = value;
+			if(world)
+			{
+				bool newDrag = !dragging && value;
+				if(newDrag != oldDrag)
+					world->onPrimitiveCanCollideChanged(this);
+			}
+		}
+	}
+
+	void Primitive::setCanSleep(bool _canSleep)
+	{
+		if(_canSleep != canSleep)
+		{
+			canSleep = _canSleep;
+			if(world)
+				world->onPrimitiveCanSleepChanged(this);
+		}
+	}
+
+	void Primitive::setFriction(float _friction)
+	{
+		if(_friction != friction)
+		{
+			friction = _friction;
+			if(world)
+				world->onPrimitiveContactParametersChanged(this);
+		}
+	}
+
+	void Primitive::setElasticity(float _elasticity)
+	{
+		if(_elasticity != elasticity)
+		{
+			elasticity = _elasticity;
+			if(world)
+				world->onPrimitiveContactParametersChanged(this);
+		}
+	}
+
+	void Primitive::setGridSize(const G3D::Vector3& gridSize) // near-100% match when Body::setMoment is set as __declspec(noinline)
+	{
+		G3D::Vector3 protectedSize = clipToSafeSize(gridSize);
+
+		if(protectedSize != geometry->getGridSize())
+		{
+			fuzzyExtentsStateId = -2;
+			geometry->setGridSize(protectedSize);
+
+			float newSize = geometry->getGridVolume();
+			body->setMass(newSize);
+			body->setMoment(geometry->getMoment(newSize));
+
+			JointK.setDirty();
+			if(world)
+				world->onPrimitiveExtentsChanged(this);
+			JointK.setDirty();
+		}
+	}
+
+	bool Primitive::aaBoxCollide(const Primitive& p0, const Primitive& p1) // WIP
+	{
+		const G3D::Vector3& t0 = p0.getCoordinateFrame().translation;
+		const G3D::Vector3& t1 = p1.getCoordinateFrame().translation;
+		G3D::Vector3 delta = t0 - t1;
+		float r0 = p0.getRadius();
+		float r1 = p1.getRadius();
+
+		float* a;
+
+		float nx = abs(delta.x);
+		float ny = abs(delta.y);
+		float nz = abs(delta.z);
+
+		if (nx > ny) // taken and modified from G3D::Vector3::primaryAxis. May be a Math library function.
+		{			 // Very messy indeed!
+			if (nx > nz)
+				a = &delta.x;
+			else
+				a = &delta.z;
+		} 
+		else 
+		{
+			if (ny > nz)
+				a = &delta.y;
+			else
+				a = &delta.z;
+		}
+
+		if (r0 + r1 < *a)
+			return false;
+
+		const Extents& f0 = p0.getFastFuzzyExtents();
+		const Extents& f1 = p1.getFastFuzzyExtents();
+		return f0.overlapsOrTouches(f1);
+	}
+	
 }

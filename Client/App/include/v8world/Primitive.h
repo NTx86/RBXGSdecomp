@@ -1,7 +1,13 @@
 #pragma once
-#include "v8world/IPipelined.h"
+#include "v8world/Anchor.h"
+#include "v8world/Clump.h"
+#include "v8world/Contact.h"
+#include "v8world/Edge.h"
 #include "v8world/Geometry.h"
+#include "v8world/IMoving.h"
+#include "v8world/IPipelined.h"
 #include "v8world/SurfaceData.h"
+#include "v8world/RigidJoint.h"
 #include "util/Guid.h"
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -86,7 +92,8 @@ namespace RBX
 		static bool ignoreBool;
   
 	public:
-		int& worldIndexFunc() { // TODO: is this correct?
+		int& worldIndexFunc() 
+		{
 			return worldIndex;
 		}
 	private:
@@ -105,7 +112,10 @@ namespace RBX
 		}
 
 		void setGuid(const Guid&);
-		World* getWorld() const;
+		World* getWorld() const 
+		{
+			return world;
+		}
 		void setWorld(World*);
 		Clump* getClump() const
 		{
@@ -226,7 +236,9 @@ namespace RBX
 		{
 			return JointK;
 		}
+	private:
 		RigidJoint* getFirstRigidAt(Edge*);
+	public:
 		int getNumJoints2() const
 		{
 			return joints.num;
