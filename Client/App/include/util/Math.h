@@ -68,7 +68,14 @@ namespace RBX
 			{
 				return std::max(fabs(v.x), std::max(fabs(v.y), fabs(v.z)));
 			}
-			static float planarSize(const G3D::Vector3&);
+			static float planarSize(const G3D::Vector3& size)
+			{
+				if(size.y < size.z && size.x < size.y)
+				{
+					return size.z * size.x;
+				}
+				else return (size.x < size.z ? size.z : size.x) * size.y;
+			};
 			static float taxiCabMagnitude(const G3D::Vector3& v) {return fabs(v.x) + fabs(v.y) + fabs(v.z);}
 			static const G3D::Plane& yPlane();
 			static G3D::Vector3 closestPointOnRay(const G3D::Ray&, const G3D::Ray&);

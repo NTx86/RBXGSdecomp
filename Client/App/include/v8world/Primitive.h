@@ -32,8 +32,12 @@ namespace RBX
 		int num;
   
 	public:
-		EdgeList();
-		~EdgeList();
+		EdgeList() : num(0), first(NULL) {}
+		~EdgeList()
+		{
+			RBXASSERT(!first);
+			RBXASSERT(!num);
+		}
 	public:
 		bool hasEdge();
   
@@ -82,7 +86,9 @@ namespace RBX
 		static bool ignoreBool;
   
 	public:
-		int& worldIndexFunc();
+		int& worldIndexFunc() { // TODO: is this correct?
+			return worldIndex;
+		}
 	private:
 		void onChangedInKernel();
 		G3D::Vector3 clipToSafeSize(const G3D::Vector3&);
@@ -94,7 +100,10 @@ namespace RBX
 		Primitive(Geometry::GeometryType);
 		virtual ~Primitive();
 	public:
-		const Guid& getGuid() const;
+		const Guid& getGuid() const {
+			return guid;
+		}
+
 		void setGuid(const Guid&);
 		World* getWorld() const;
 		void setWorld(World*);
@@ -183,7 +192,10 @@ namespace RBX
 		{
 			return geometry->getGridSize();
 		}
-		virtual float getRadius() const;
+		virtual float getRadius() const 
+		{
+			return geometry->getRadius();
+		};
 		float getPlanarSize() const;
 		Extents getExtentsLocal() const;
 		Extents getExtentsWorld() const;

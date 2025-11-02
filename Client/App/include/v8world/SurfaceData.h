@@ -11,13 +11,13 @@ namespace RBX
 		float paramB;
 
 	public:
-		SurfaceData()
+		__forceinline SurfaceData() // forceinlined for Primitive::setSurfaceData
 			: paramA(-0.5f),
 			  paramB(0.5f),
 			  inputType(Controller::NO_INPUT)
 		{
 		}
-		bool operator==(const SurfaceData& other) const
+		__forceinline bool operator==(const SurfaceData& other) const // forceinlined for Primitive::setSurfaceData
 		{
 			return
 				inputType == other.inputType &&
