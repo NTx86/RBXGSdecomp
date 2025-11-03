@@ -105,7 +105,7 @@ namespace RBX
 		G3D::Vector3 grid = gridSize;
 		G3D::Vector3 I;
 
-		float area = 2 * (grid.x * grid.z + grid.y * grid.z + grid.x * grid.y);
+		float area = ((grid.x * grid.z + grid.y * grid.z) + grid.x * grid.y) * 2;
 
 		for(int i = 0; i < 3; i++)
 		{
