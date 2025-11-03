@@ -40,7 +40,7 @@ namespace RBX
 
 	public:
 		//Controller(const Controller&);
-		Controller();
+		Controller() {}
 		virtual ~Controller() {}
 		virtual float getValue(InputType inputType) const { return 0.0f; }
 		virtual ControllerType getControllerType() const { return NO_CONTROLLER; }
@@ -51,5 +51,35 @@ namespace RBX
 
 		static bool isControllableInput(InputType inputType); // this is inlined :(
 		static G3D::Color3 controllerTypeToColor(ControllerType controllerType);
+	};
+
+	class NullController : public Controller
+	{
+	public:
+		virtual ControllerType getControllerType() const
+		{
+			return NO_CONTROLLER;
+		}
+		virtual bool hasIntelligence() const
+		{
+			return false;
+		}
+		virtual bool isUserController() const
+		{
+			return false;
+		}
+
+		//NullController(const NullController&);
+		NullController() : Controller() {}
+
+		virtual ~NullController();
+
+		//NullController& operator=(const NullController&);
+
+		static NullController* getStaticNullController()
+		{
+			static NullController staticNullController;
+			return &staticNullController;
+		}
 	};
 }

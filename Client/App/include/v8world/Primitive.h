@@ -107,10 +107,10 @@ namespace RBX
 		Primitive(Geometry::GeometryType);
 		virtual ~Primitive();
 	public:
-		const Guid& getGuid() const {
+		const Guid& getGuid() const 
+		{
 			return guid;
 		}
-
 		void setGuid(const Guid&);
 		World* getWorld() const 
 		{
@@ -206,7 +206,7 @@ namespace RBX
 		virtual float getRadius() const 
 		{
 			return geometry->getRadius();
-		};
+		}
 		float getPlanarSize() const;
 		Extents getExtentsLocal() const;
 		Extents getExtentsWorld() const;
