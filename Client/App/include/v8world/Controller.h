@@ -78,8 +78,8 @@ namespace RBX
 
 		static NullController* getStaticNullController()
 		{
-			static NullController staticNullController;
-			return &staticNullController;
+			static NullController n;
+			return &n;
 		}
 	};
 }
