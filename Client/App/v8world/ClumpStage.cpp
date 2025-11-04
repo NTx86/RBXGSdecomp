@@ -11,24 +11,6 @@
 
 namespace RBX
 {
-	float calculatePlanar(const Vector3& gridSize)
-	{
-		if (gridSize.x < gridSize.y)
-		{
-			if (gridSize.x < gridSize.z)
-				return gridSize.y * gridSize.z;
-			else
-				return gridSize.y * gridSize.x;
-		}
-		else
-		{
-			if (gridSize.y < gridSize.z)
-				return gridSize.x * gridSize.z;
-			else
-				return gridSize.x * gridSize.y;
-		}
-	}
-
 	PrimitiveSort::PrimitiveSort()
 		: anchored(false),
 		  surfaceAreaJoints(0)
@@ -37,7 +19,7 @@ namespace RBX
 
 	PrimitiveSort::PrimitiveSort(const Primitive* p)
 	{
-		float planar = calculatePlanar(p->getGeometry()->getGridSize());
+		float planar = Math::planarSize(p->getGeometry()->getGridSize());
 		RBXASSERT(planar < 2147483600.0f);
 		RBXASSERT(planar > 0.0f);
 		this->surfaceAreaJoints = G3D::iRound(floor(planar)) * p->getNumJoints2();
@@ -98,7 +80,7 @@ namespace RBX
 
 	void ClumpStage::anchorsInsert(Anchor* a)
 	{
-		int planar = G3D::iRound(floor(calculatePlanar(a->getPrimitive()->getGridSize())));
+		int planar = G3D::iRound(floor(Math::planarSize(a->getPrimitive()->getGridSize())));
 
 		bool inserted;
 		inserted = anchorSizeMap.insert(std::pair<Anchor*, int>(a, planar)).second;

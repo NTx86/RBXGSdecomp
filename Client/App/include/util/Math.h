@@ -70,11 +70,20 @@ namespace RBX
 			}
 			static float planarSize(const G3D::Vector3& size)
 			{
-				if(size.y < size.z && size.x < size.y)
+				if (size.x < size.y)
 				{
-					return size.z * size.x;
+					if (size.x < size.z)
+						return size.y * size.z;
+					else
+						return size.y * size.x;
 				}
-				else return (size.x < size.z ? size.z : size.x) * size.y;
+				else
+				{
+					if (size.y < size.z)
+						return size.x * size.z;
+					else
+						return size.x * size.y;
+				}
 			};
 			static float taxiCabMagnitude(const G3D::Vector3& v) {return fabs(v.x) + fabs(v.y) + fabs(v.z);}
 			static const G3D::Plane& yPlane();
