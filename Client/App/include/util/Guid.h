@@ -36,9 +36,10 @@ namespace RBX
 		void assign(Data);
 		void extract(Data&) const;
 
-		void copyDataFrom(const Guid& guid) { // TODO: is this correct?
+		void copyDataFrom(const Guid& guid) // TODO: is this correct?
+		{
 			this->assign(guid.data);
-		};
+		}
 
 		std::string readableString(int scopeLength) const;
 

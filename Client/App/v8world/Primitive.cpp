@@ -10,7 +10,7 @@ namespace RBX
 {
 	#pragma warning (push)
 	#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
-	Primitive::Primitive(Geometry::GeometryType geometryType) : // WIP
+	Primitive::Primitive(Geometry::GeometryType geometryType) :
 		guidSetExternally(false),
 		world(NULL),
 		clump(NULL),
@@ -22,10 +22,16 @@ namespace RBX
 		geometry(newGeometry(geometryType)),
 		body(new Body),
 		elasticity(0.75f),
+		friction(0.0f),
+		myOwner(NULL),
+		anchorObject(NULL),
+		dragging(false),
+		anchored(false),
 		canCollide(true),
 		canSleep(true),
-		JointK(this, &Primitive::computeJointK)
-	{ // TODO: declare NullController class in controller.h
+		JointK(this, &Primitive::computeJointK),
+		controller(NullController::getStaticNullController())
+	{
 		for(int i = 0; i < 6; i++) 
 		{
 			surfaceType[i] = NO_SURFACE;
@@ -119,7 +125,6 @@ namespace RBX
 
 	Extents Primitive::getExtentsWorld() const 
 	{
-
 		G3D::Vector3 hVec = geometry->getGridSize() * 0.5f;
 		Extents local(-hVec, hVec);
 
