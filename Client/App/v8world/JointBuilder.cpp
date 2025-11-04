@@ -31,31 +31,23 @@ namespace RBX
 			NormalId id2 = Math::getClosestObjectNormalId(-c0Rotation, c1.rotation);
 			Joint* joint = RotateJoint::canBuildJoint(p0, p1, (NormalId)i, id2);
 
-			if (joint) 
-			{
+			if (joint)
 				return joint;
-			}
 
 			joint = WeldJoint::canBuildJoint(p0, p1, (NormalId)i, id2);
 
 			if (joint)
-			{
 				return joint;
-			}
 
 			joint = SnapJoint::canBuildJoint(p0, p1, (NormalId)i, id2);
 
 			if (joint)
-			{
 				return joint;
-			}
 
 			joint = GlueJoint::canBuildJoint(p0, p1, (NormalId)i, id2);
 
 			if (joint)
-			{
 				return joint;
-			}
 		}
 		return NULL;
 	}

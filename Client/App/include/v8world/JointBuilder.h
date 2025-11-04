@@ -8,6 +8,6 @@ namespace RBX
 	class JointBuilder
 	{
 	public:
-		static Joint* canJoin(Primitive*, Primitive*);
+		static Joint* canJoin(Primitive* p0, Primitive* p1);
 	};
 }
