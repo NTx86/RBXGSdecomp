@@ -564,4 +564,67 @@ namespace RBX
 	{
 		return CoordinateFrame(Math::snapToAxes(snap.rotation), Math::toGrid(snap.translation, grid));
 	}
+
+	G3D::Matrix3 Math::alignAxesClosest(const G3D::Matrix3& align, const G3D::Matrix3& target)
+	{
+		float dots[3][3];
+		float maxDot = 0.0f;
+		int maxJ = -1, maxI = -1;
+
+		for(int i = 0; i < 3; i++)
+		{
+			G3D::Vector3 aAxis = align.getColumn(i);
+			for(int j = 0; j < 3; j++)
+			{
+				G3D::Vector3 tAxis = target.getColumn(j);
+				float atDot = tAxis.dot(aAxis);
+				dots[i][j] = atDot;
+
+				if(fabs(atDot) > fabs(maxDot))
+				{
+					maxI = i;
+					maxJ = j;
+					maxDot = atDot;
+				}
+			}
+		}
+
+		float mult = (maxDot >= 0.0f) ? 1.0f : -1.0f;
+		G3D::Vector3 bestV = align.getColumn(maxI) * mult;
+
+		float maxDot1 = 0.0f;
+		int maxI1 = -1, maxJ1 = -1;
+
+		for(int i = 0; i < 3; i++)
+		{
+			if(i != maxI)
+				for(int j = 0; j < 3; j++)
+				{
+					if(j != maxJ && fabs(dots[i][j]) > fabs(maxDot1))
+					{
+						maxDot1 = dots[i][j];
+						maxI1 = i;
+						maxJ1 = j;
+					}
+				}
+		}
+		
+		float mult1 = (maxDot1 >= 0.0f) ? 1.0f : -1.0f;
+		G3D::Vector3 secondV = align.getColumn(maxI1) * mult1;
+
+		int maxI2 = (3 - maxI1) - maxI;
+		int maxJ2 = (3 - maxJ1) - maxJ;
+
+		float maxDot2 = dots[maxI2][maxJ2];
+		float mult2 = (maxDot2 >= 0.0f) ? 1.0f : -1.0f;
+
+		G3D::Vector3 thirdV = align.getColumn(maxI2) * mult2;
+
+		G3D::Matrix3 result;
+		result.setColumn(maxJ, bestV);
+		result.setColumn(maxJ1, secondV);
+		result.setColumn(maxJ2, thirdV);
+
+		return result;
+	}
 }
