@@ -418,9 +418,9 @@ namespace RBX
 	{
 		float bestPlaneLength = Math::inf();
 		float bestEdgeLength = Math::inf();
-		float unkMathInf = Math::inf();
-		int featureSave[2] = {this->feature[0], this->feature[1]};
-		bool checkLastFeature = (featureSave[0] >= 0 && featureSave[0] < 6) || featureSave[1] <= 5;
+		float lastPlaneLength = Math::inf();
+		int lastFeature[2] = {this->feature[0], this->feature[1]};
+		bool checkLastFeature = (lastFeature[0] >= 0 && lastFeature[0] < 6) || lastFeature[1] <= 5;
 
 		int sepIdCounter = this->separatingBodyId + 1;
 
@@ -430,8 +430,8 @@ namespace RBX
 			int testId = sepIdCounter % 2;
 			const CoordinateFrame& primPV0 = this->getPrimitive(baseId)->getBody()->getPV().position;
 			const CoordinateFrame& primPV1 = this->getPrimitive(testId)->getBody()->getPV().position;
-			Vector3* vertices0 = (Vector3*)this->block(0)->getVertices();
-			Vector3* vertices1 = (Vector3*)this->block(1)->getVertices();
+			Vector3* eTest = (Vector3*)this->block(0)->getVertices();
+			Vector3* eBase = (Vector3*)this->block(1)->getVertices();
 
 			Vector3 delta = primPV1.translation - primPV0.translation;
 
@@ -439,29 +439,29 @@ namespace RBX
 
 			for (int j = this->separatingAxisId; j < this->separatingAxisId + 3; j++)
 			{
-				int jRemain = j % 3;
+				int axisId = j % 3;
 
-				float what = Math::taxiCabMagnitude(primPV1.rotation * primPV0.rotation.getColumn(jRemain) * *vertices0) + *vertices1[jRemain]  - fabs(rotTransMul[jRemain]);
+				float what = Math::taxiCabMagnitude(primPV1.rotation * primPV0.rotation.getColumn(axisId) * *eTest) + *eBase[axisId]  - fabs(rotTransMul[axisId]);
 
 				if (overlapIgnored > what)
 				{
-					if (checkLastFeature && featureSave[baseId] % 3 == jRemain )
-						unkMathInf = what;
+					if (checkLastFeature && lastFeature[baseId] % 3 == axisId )
+						lastPlaneLength = what;
 
 					if (bestPlaneLength < what)
 					{
 						bestPlaneLength = what;
-						this->feature[baseId] = rotTransMul[jRemain] > 0.0f ? jRemain : jRemain + 3;
+						this->feature[baseId] = rotTransMul[axisId] > 0.0f ? axisId : axisId + 3;
 						this->feature[testId] = -1;
 						this->separatingBodyId = baseId;
-						this->separatingAxisId = jRemain;
+						this->separatingAxisId = axisId;
 						planeContact = true;
 					}
 				}
 				else
 				{
 					this->separatingBodyId = baseId;
-					this->separatingAxisId = jRemain;
+					this->separatingAxisId = axisId;
 					return false;
 				}
 			}
@@ -469,33 +469,46 @@ namespace RBX
 		}
 
 
-		if (checkLastFeature && (this->feature[0] != featureSave[0] || this->feature[1] != featureSave[1]) && !(bestPlaneLength * 1.01f < unkMathInf))
+		/*if (checkLastFeature && (this->feature[0] != lastFeature[0] || this->feature[1] != lastFeature[1]) && !(bestPlaneLength * 1.01f < lastPlaneLength))
 		{
-			bestPlaneLength = unkMathInf;
-			this->feature[0] = featureSave[0];
-			this->feature[1] = featureSave[1];
+			bestPlaneLength = lastPlaneLength;
+			this->feature[0] = lastFeature[0];
+			this->feature[1] = lastFeature[1];
+		}*/
+
+		if (checkLastFeature) 
+		{
+			if (this->feature[0] != lastFeature[0] || this->feature[1] != lastFeature[1]) 
+			{
+				if (!(bestPlaneLength * 1.01f < lastPlaneLength))
+				{
+					bestPlaneLength = lastPlaneLength;
+					this->feature[0] = lastFeature[0];
+					this->feature[1] = lastFeature[1];
+				}
+			}
 		}
 		const CoordinateFrame& primPV0 = this->getPrimitive(0)->getBody()->getPV().position;
 		const CoordinateFrame& primPV1 = this->getPrimitive(1)->getBody()->getPV().position;
-		Vector3* vertices0 = (Vector3*)this->block(0)->getVertices();
-		Vector3* vertices1 = (Vector3*)this->block(1)->getVertices();
+		Vector3* eTest = (Vector3*)this->block(0)->getVertices();
+		Vector3* eBase = (Vector3*)this->block(1)->getVertices();
 
-		Vector3 delta = primPV1.translation - primPV0.translation;
+		Vector3 p0p1 = primPV1.translation - primPV0.translation;
 
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				Vector3 PVcrossProd = primPV0.rotation.getColumn(i).cross(primPV1.rotation.getColumn(j));
-				if (PVcrossProd.unitize() <= 0.001f)
+				Vector3 crossAxis = primPV0.rotation.getColumn(i).cross(primPV1.rotation.getColumn(j));
+				if (crossAxis.unitize() <= 0.001f)
 					return planeContact;
 
-				float p0p1inCrossAxis = delta.dot(PVcrossProd);
+				float p0p1inCrossAxis = crossAxis.dot(p0p1);
 
-				Vector3 PVcrossProdMulPV0rot = primPV0.rotation * PVcrossProd;
-				Vector3 PVcrossProdMulPV1rot = primPV1.rotation * PVcrossProd;
+				Vector3 crossAxisMulPV0rot = primPV0.rotation * crossAxis;
+				Vector3 crossAxisMulPV1rot = primPV1.rotation * crossAxis;
 
-				float what = Math::taxiCabMagnitude(PVcrossProdMulPV0rot * *vertices0) + Math::taxiCabMagnitude(PVcrossProdMulPV1rot * *vertices1) - fabs(p0p1inCrossAxis);
+				float what = Math::taxiCabMagnitude(crossAxisMulPV0rot * *eTest) + Math::taxiCabMagnitude(crossAxisMulPV1rot * *eBase) - fabs(p0p1inCrossAxis);
 				if (overlapIgnored > what)
 				{
 					if (bestEdgeLength < what)
@@ -504,13 +517,13 @@ namespace RBX
 						{
 							if ( p0p1inCrossAxis > 0.0 )
 							{
-								this->feature[0] = this->block(0)->getClosestEdge(primPV0.rotation, (NormalId)i, PVcrossProd) + 6;
-								this->feature[1] = this->block(1)->getClosestEdge(primPV1.rotation, (NormalId)j, -PVcrossProd) + 6;
+								this->feature[0] = this->block(0)->getClosestEdge(primPV0.rotation, (NormalId)i, crossAxis) + 6;
+								this->feature[1] = this->block(1)->getClosestEdge(primPV1.rotation, (NormalId)j, -crossAxis) + 6;
 							}
 							else
 							{
-								this->feature[0] = this->block(0)->getClosestEdge(primPV0.rotation, (NormalId)i, -PVcrossProd) + 6;
-								this->feature[1] = this->block(1)->getClosestEdge(primPV1.rotation, (NormalId)j, PVcrossProd) + 6;
+								this->feature[0] = this->block(0)->getClosestEdge(primPV0.rotation, (NormalId)i, -crossAxis) + 6;
+								this->feature[1] = this->block(1)->getClosestEdge(primPV1.rotation, (NormalId)j, crossAxis) + 6;
 							}
 							planeContact = false;
 						}
