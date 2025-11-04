@@ -426,7 +426,7 @@ namespace RBX
 
 		for (int i = this->separatingBodyId; i < this->separatingBodyId + 2; i++)
 		{
-			int baseId = this->separatingBodyId % 2;
+			int baseId = i % 2;
 			int testId = sepIdCounter % 2;
 			const CoordinateFrame& primPV0 = this->getPrimitive(baseId)->getBody()->getPV().position;
 			const CoordinateFrame& primPV1 = this->getPrimitive(testId)->getBody()->getPV().position;
