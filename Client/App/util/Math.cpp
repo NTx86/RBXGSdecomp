@@ -568,8 +568,8 @@ namespace RBX
 	G3D::Matrix3 Math::alignAxesClosest(const G3D::Matrix3& align, const G3D::Matrix3& target)
 	{
 		float dots[3][3];
+		int maxI = -1, maxJ = -1;
 		float maxDot = 0.0f;
-		int maxJ = -1, maxI = -1;
 
 		for(int i = 0; i < 3; i++)
 		{
@@ -577,7 +577,7 @@ namespace RBX
 			for(int j = 0; j < 3; j++)
 			{
 				G3D::Vector3 tAxis = target.getColumn(j);
-				float atDot = tAxis.dot(aAxis);
+				float atDot = aAxis.dot(tAxis);
 				dots[i][j] = atDot;
 
 				if(fabs(atDot) > fabs(maxDot))
