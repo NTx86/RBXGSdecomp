@@ -188,8 +188,8 @@ namespace RBX
 		RBXASSERT(unitRay.direction.isUnit());
 
 		Primitive* bestPrimitive = NULL;
-		float stopOffset = maxDistance;
 		float bestOffset = maxDistance;
+		float stopOffset = maxDistance;
 
 		stopped = false;
 		inside = false;
@@ -213,26 +213,25 @@ namespace RBX
 				{
 					G3D::Vector3 thisHitPoint;
 					bool insideTemp;
-					float yes = unitRay.direction.dot(thisHitPoint - unitRay.origin);
 					if(currentPrimitive->hitTest(unitRay, thisHitPoint, insideTemp))
 					{
-						float yes = unitRay.direction.dot(thisHitPoint - unitRay.origin);
-						if(yes > 0.0f)
+						float thisOffset = unitRay.direction.dot(thisHitPoint - unitRay.origin);
+						if(thisOffset > 0.0f)
 						{
 							switch(randomVar)
 							{
 							case 0:
-								if(yes < stopOffset)
+								if(thisOffset < stopOffset)
 								{
-									stopOffset = yes;
+									stopOffset = thisOffset;
 									stopped = true;
 								}
 								break;
 							case 2:
-								if(yes < bestOffset)
+								if(thisOffset < bestOffset)
 								{
 									inside = insideTemp;
-									bestOffset = yes;
+									bestOffset = thisOffset;
 									hitPoint = thisHitPoint;
 									bestPrimitive = currentPrimitive;
 								}
@@ -245,7 +244,7 @@ namespace RBX
 			}
 		}
 
-		if((stopped && bestPrimitive) && stopOffset < bestOffset)
+		if((stopped && bestPrimitive) && bestOffset < stopOffset)
 			stopped = false;
 
 		return bestPrimitive;
