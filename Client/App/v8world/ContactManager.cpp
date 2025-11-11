@@ -140,7 +140,7 @@ namespace RBX
 
 		do
 		{
-			primitives.resize(0,false);
+			primitives.fastClear();
 			spatialHash->getPrimitivesInGrid(grid, primitives);
 			Primitive* slowHit = getSlowHit(primitives, unitRay, ignorePrim, filter, hitPointWorld, magnitude, inside, stopped);
 
@@ -176,7 +176,8 @@ namespace RBX
 			G3D::Vector3 temp = hitPointWorld - worldRay.origin;
 			tempDist = temp.magnitude();
 		}
-		else tempDist = 0.0f;
+		else 
+			tempDist = 0.0f;
 
 		distanceToHit = tempDist;
 
@@ -199,9 +200,9 @@ namespace RBX
 			Primitive* currentPrimitive = primitives[i];
 
 			bool isNotFound = ignorePrim ? ignorePrim->find(currentPrimitive) == ignorePrim->end() : true;
-			int randomVar = filter ? filter->filterResult(currentPrimitive) : 2;
+			HitTestFilter::Result hitResult = filter ? filter->filterResult(currentPrimitive) : HitTestFilter::INCLUDE_PRIM;
 
-			if(isNotFound && randomVar != 1)
+			if(isNotFound && hitResult != HitTestFilter::IGNORE_PRIM)
 			{
 				G3D::Vector3 trans = currentPrimitive->getCoordinateFrame().translation;
 				float radius = currentPrimitive->getRadius();
@@ -218,16 +219,16 @@ namespace RBX
 						float thisOffset = unitRay.direction.dot(thisHitPoint - unitRay.origin);
 						if(thisOffset > 0.0f)
 						{
-							switch(randomVar)
+							switch(hitResult)
 							{
-							case 0:
+							case HitTestFilter::STOP_TEST:
 								if(thisOffset < stopOffset)
 								{
 									stopOffset = thisOffset;
 									stopped = true;
 								}
 								break;
-							case 2:
+							case HitTestFilter::INCLUDE_PRIM:
 								if(thisOffset < bestOffset)
 								{
 									inside = insideTemp;
@@ -236,7 +237,8 @@ namespace RBX
 									bestPrimitive = currentPrimitive;
 								}
 								break;
-							default: RBXASSERT(0);
+							default: 
+								RBXASSERT(0);
 							}
 						}
 					}
