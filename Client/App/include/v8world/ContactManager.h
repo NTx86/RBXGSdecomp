@@ -29,7 +29,11 @@ namespace RBX
 		ContactManager(World* world);
 		~ContactManager();
 	public:
-		const SpatialHash& getSpatialHash();
+		const SpatialHash& getSpatialHash()
+		{
+			return *spatialHash;
+		}
+
 		Primitive* getHit(const G3D::Ray& worldRay, const std::vector<Primitive const*>* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPoint, bool& inside) const;
 		Primitive* getHit(const G3D::Ray& worldRay, const G3D::Array<Primitive const*>* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPoint, bool& inside) const;
 		void getPrimitivesTouchingExtents(const Extents& extents, const Primitive* ignore, G3D::Array<Primitive*>& found);
