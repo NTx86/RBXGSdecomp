@@ -10,8 +10,7 @@ namespace RBX
 		Primitive* primitive;
 
 	public:
-		Anchor(Primitive*);
-		~Anchor();
+		Anchor(Primitive* primitive) : primitive(primitive) {}
 		Primitive* getPrimitive()
 		{
 			return primitive;

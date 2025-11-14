@@ -168,6 +168,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\ContentProvider.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Debug.h"
 					>
 				</File>
@@ -197,6 +201,14 @@
 				</File>
 				<File
 					RelativePath=".\include\util\IndexArray.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\IRenderable.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\ISelectable3d.h"
 					>
 				</File>
 				<File
@@ -236,6 +248,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\UIEvent.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Units.h"
 					>
 				</File>
@@ -245,6 +261,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\Vector3int32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Vector6.h"
 					>
 				</File>
 				<File
@@ -364,6 +384,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8world\GlueJoint.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8world\IMoving.h"
 					>
 				</File>
@@ -377,6 +401,10 @@
 				</File>
 				<File
 					RelativePath=".\include\v8world\Joint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8world\JointBuilder.h"
 					>
 				</File>
 				<File
@@ -553,6 +581,10 @@
 			Name="util"
 			>
 			<File
+				RelativePath=".\util\ContentProvider.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\Debug.cpp"
 				>
 			</File>
@@ -598,6 +630,10 @@
 			</File>
 			<File
 				RelativePath=".\util\RunningAverage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\UIEvent.cpp"
 				>
 			</File>
 			<File
@@ -653,6 +689,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\GlueJoint.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\IMoving.cpp"
 				>
 			</File>
@@ -666,6 +706,10 @@
 			</File>
 			<File
 				RelativePath=".\v8world\Joint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8world\JointBuilder.cpp"
 				>
 			</File>
 			<File

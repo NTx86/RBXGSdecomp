@@ -21,7 +21,7 @@ namespace RBX
 		virtual void onSetSize();
 	public:
 		Block(const Block& other);
-		Block();
+		Block() : Geometry(), cornerRadius(0.0f), vertices(NULL) {}
 		virtual ~Block() {}
 		virtual bool hitTest(const G3D::Ray&, G3D::Vector3&, bool&);
 		virtual GeometryType getGeometryType() const

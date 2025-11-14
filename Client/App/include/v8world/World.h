@@ -92,7 +92,10 @@ namespace RBX
 		const G3D::Array<Primitive*>& getTouch() const;
 		const G3D::Array<Primitive*>& getTouchOther() const;
 		void computeFallen(G3D::Array<Primitive*>&) const;
-		const G3D::Array<Primitive*>& getPrimitives() const;
+		const G3D::Array<Primitive*>& getPrimitives() const 
+		{
+			return this->primitives.underlyingArray();
+		}
 		float step(float);
 		void update();
 		void reset();
@@ -119,20 +122,20 @@ namespace RBX
 		Profiling::CodeProfiler& getProfileWorldStep();
 		const Profiling::CodeProfiler& getProfileBroadphase() const;
 		const Profiling::CodeProfiler& getProfileUiStep() const;
-		void onPrimitiveAddedAnchor(Primitive*);
-		void onPrimitiveRemovingAnchor(Primitive*);
-		void onPrimitiveExtentsChanged(Primitive*);
-		void onAssemblyExtentsChanged(Assembly*);
-		void onPrimitiveContactParametersChanged(Primitive*);
-		void onPrimitiveCanCollideChanged(Primitive*);
-		void onPrimitiveCanSleepChanged(Primitive*);
-		void onPrimitiveGeometryTypeChanged(Primitive*);
-		void onPrimitiveTouched(Primitive*, Primitive*);
-		void onMotorAngleChanged(MotorJoint*);
-		void onJointPrimitiveNulling(Joint*, Primitive*);
-		void onJointPrimitiveSet(Joint*, Primitive*);
-		void insertContact(Contact*);
-		void destroyContact(Contact*);
+		void onPrimitiveAddedAnchor(Primitive* p);
+		void onPrimitiveRemovingAnchor(Primitive* p);
+		void onPrimitiveExtentsChanged(Primitive* p);
+		void onAssemblyExtentsChanged(Assembly* a);
+		void onPrimitiveContactParametersChanged(Primitive* p);
+		void onPrimitiveCanCollideChanged(Primitive* p);
+		void onPrimitiveCanSleepChanged(Primitive* p);
+		void onPrimitiveGeometryTypeChanged(Primitive* p);
+		void onPrimitiveTouched(Primitive* touchP, Primitive* touchOtherP);
+		void onMotorAngleChanged(MotorJoint* m);
+		void onJointPrimitiveNulling(Joint* j, Primitive* p);
+		void onJointPrimitiveSet(Joint* j, Primitive* p);
+		void insertContact(Contact* c);
+		void destroyContact(Contact* c);
 		//World& operator=(const World&);
 	};
 }

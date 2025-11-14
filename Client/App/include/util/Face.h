@@ -45,7 +45,10 @@ namespace RBX
 			return (c3 - c0).direction();
 		}
 		G3D::Vector3 getNormal() const;
-		G3D::Vector2 size() const;
+		G3D::Vector2 size() const
+		{
+			return G3D::Vector2((c1 - c0).magnitude(), (c3 - c0).magnitude());
+		}
 		G3D::Vector3 center() const
 		{
 			return (c2 + c0) * 0.5f;

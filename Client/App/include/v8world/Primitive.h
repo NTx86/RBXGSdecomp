@@ -1,7 +1,13 @@
 #pragma once
-#include "v8world/IPipelined.h"
+#include "v8world/Anchor.h"
+#include "v8world/Clump.h"
+#include "v8world/Contact.h"
+#include "v8world/Edge.h"
 #include "v8world/Geometry.h"
+#include "v8world/IMoving.h"
+#include "v8world/IPipelined.h"
 #include "v8world/SurfaceData.h"
+#include "v8world/RigidJoint.h"
 #include "util/Guid.h"
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -32,8 +38,12 @@ namespace RBX
 		int num;
   
 	public:
-		EdgeList();
-		~EdgeList();
+		EdgeList() : num(0), first(NULL) {}
+		~EdgeList()
+		{
+			RBXASSERT(!first);
+			RBXASSERT(!num);
+		}
 	public:
 		bool hasEdge();
   
@@ -44,6 +54,8 @@ namespace RBX
 
 	class Primitive : public IPipelined
 	{
+		friend class SpatialHash;
+
 	private:
 		Guid guid;
 		bool guidSetExternally;
@@ -80,7 +92,10 @@ namespace RBX
 		static bool ignoreBool;
   
 	public:
-		int& worldIndexFunc();
+		int& worldIndexFunc() 
+		{
+			return worldIndex;
+		}
 	private:
 		void onChangedInKernel();
 		G3D::Vector3 clipToSafeSize(const G3D::Vector3&);
@@ -92,9 +107,15 @@ namespace RBX
 		Primitive(Geometry::GeometryType);
 		virtual ~Primitive();
 	public:
-		const Guid& getGuid() const;
+		const Guid& getGuid() const 
+		{
+			return guid;
+		}
 		void setGuid(const Guid&);
-		World* getWorld() const;
+		World* getWorld() const 
+		{
+			return world;
+		}
 		void setWorld(World*);
 		Clump* getClump() const
 		{
@@ -135,7 +156,8 @@ namespace RBX
 		{
 			return myOwner;
 		}
-		const G3D::CoordinateFrame& getCoordinateFrame() const;
+		__declspec(noinline) const G3D::CoordinateFrame& getCoordinateFrame() const;
+		const G3D::CoordinateFrame& getCoordinateFrameInlined() const; // TODO: Workaround! Figure this out later.
 		G3D::CoordinateFrame getGridCorner() const;
 		void setCoordinateFrame(const G3D::CoordinateFrame&);
 		void setGridCorner(const G3D::CoordinateFrame&);
@@ -148,7 +170,10 @@ namespace RBX
 			return dragging;
 		}
 		void setAnchor(bool);
-		bool getAnchor() const;
+		bool getAnchor() const
+		{
+			return anchorObject != NULL;
+		}
 		Anchor* getAnchorObject()
 		{
 			return anchorObject;
@@ -164,15 +189,24 @@ namespace RBX
 			return canSleep;
 		}
 		void setFriction(float);
-		float getFriction() const;
+		float getFriction() const
+		{
+			return this->friction;
+		}
 		void setElasticity(float);
-		float getElasticity() const;
+		float getElasticity() const
+		{
+			return this->elasticity;
+		}
 		void setGridSize(const G3D::Vector3&);
 		const G3D::Vector3& getGridSize() const
 		{
 			return geometry->getGridSize();
 		}
-		virtual float getRadius() const;
+		virtual float getRadius() const 
+		{
+			return geometry->getRadius();
+		}
 		float getPlanarSize() const;
 		Extents getExtentsLocal() const;
 		Extents getExtentsWorld() const;
@@ -203,8 +237,13 @@ namespace RBX
 		{
 			return JointK;
 		}
+	private:
 		RigidJoint* getFirstRigidAt(Edge*);
-		int getNumJoints2() const;
+	public:
+		int getNumJoints2() const
+		{
+			return joints.num;
+		}
 		int countNumJoints() const;
 		int getNumContacts() const;
 		int getNumEdges() const;
