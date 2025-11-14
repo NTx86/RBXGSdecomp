@@ -21,28 +21,28 @@ namespace RBX
 		static bool ignoreBool;
 
 	private:
-		Contact* createContact(Primitive*, Primitive*);
+		Contact* createContact(Primitive* p0, Primitive* p1);
 		void stepBroadPhase();
-		Primitive* getSlowHit(const G3D::Array<Primitive*>&, const G3D::Ray&, const G3D::Array<Primitive const*>*, const HitTestFilter*, G3D::Vector3&, float, bool&, bool&) const;
-		Primitive* getFastHit(const G3D::Ray&, const G3D::Array<RBX::Primitive const*>*, const HitTestFilter*, G3D::Vector3&, bool&, bool&) const;
+		Primitive* getSlowHit(const G3D::Array<Primitive*>& primitives, const G3D::Ray& unitRay, const G3D::Array<Primitive const*>* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPoint, float maxDistance, bool& inside, bool& stopped) const;
+		Primitive* getFastHit(const G3D::Ray& worldRay, const G3D::Array<Primitive const*>* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPointWorld, bool& inside, bool& stopped) const;
 	public:
 		ContactManager(World* world);
 		~ContactManager();
 	public:
 		const SpatialHash& getSpatialHash();
-		Primitive* getHit(const G3D::Ray&, const std::vector<Primitive const*>*, const HitTestFilter*, G3D::Vector3&, bool&) const;
-		Primitive* getHit(const G3D::Ray&, const G3D::Array<Primitive const*>*, const HitTestFilter*, G3D::Vector3&, bool&) const;
+		Primitive* getHit(const G3D::Ray& worldRay, const std::vector<Primitive const*>* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPoint, bool& inside) const;
+		Primitive* getHit(const G3D::Ray& worldRay, const G3D::Array<Primitive const*>* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPoint, bool& inside) const;
 		void getPrimitivesTouchingExtents(const Extents& extents, const Primitive* ignore, G3D::Array<Primitive*>& found);
-		bool intersectingOthers(Primitive*, const std::set<Primitive*>&, float);
-		bool intersectingOthers(const G3D::Array<Primitive *>&, float);
-		bool intersectingOthers(Primitive*, float);
-		void onNewPair(Primitive*, Primitive*);
+		bool intersectingOthers(Primitive* check, const std::set<Primitive*>& checkSet, float overlapIgnored);
+		bool intersectingOthers(const G3D::Array<Primitive*>& check, float overlapIgnored);
+		bool intersectingOthers(Primitive* check, float overlapIgnored);
+		void onNewPair(Primitive* p0, Primitive* p1);
 		void onReleasePair(Primitive* p0, Primitive* p1);
 		void onPrimitiveAdded(Primitive* p);
 		void onPrimitiveRemoved(Primitive* p);
 		void onPrimitiveExtentsChanged(Primitive* p);
-		void onPrimitiveGeometryTypeChanged(Primitive*);
+		void onPrimitiveGeometryTypeChanged(Primitive* p);
 		void stepWorld();
-		RBX::Primitive* getHitLegacy(const G3D::Ray&, const Primitive*, const HitTestFilter*, G3D::Vector3&, float&, const float&) const;
+		RBX::Primitive* getHitLegacy(const G3D::Ray& originDirection, const Primitive* ignorePrim, const HitTestFilter* filter, G3D::Vector3& hitPointWorld, float& distanceToHit, const float& maxSearchDepth) const;
 	};
 }
