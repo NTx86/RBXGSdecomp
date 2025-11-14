@@ -15,7 +15,11 @@ namespace RBX
 		CopyOnWrite(const T&);
 		CopyOnWrite();
 	public:
-		//T** operator class T *boost::shared_ptr<T>() const; // TODO: is this definition right? (no it isnt, fix the error!!!)
+		// TODO: is this definition right?
+		operator boost::shared_ptr<const T>() const
+		{
+			return object;
+		}
 		const T& operator*() const
 		{
 			return *object.get();
