@@ -36,7 +36,10 @@ namespace RBX
 	  
 	public:
 		//ServiceRemoving(const ServiceRemoving&);
-		ServiceRemoving(Instance*);
+		ServiceRemoving(Instance* instance)
+			: service(shared_from(instance))
+		{
+		}
 	private:
 		ServiceRemoving& operator=(const ServiceRemoving&);
 	public:

@@ -284,5 +284,22 @@ namespace RBX
 		{
 			return dynamic_cast<To*>(instance);
 		}
+
+		// TODO: remove the __forceinline
+		template<typename Class>
+		static __forceinline Class* findFirstAncestorOfClass(Instance* instance)
+		{
+			Instance* p = instance;
+			while (p != NULL)
+			{
+				Class* castedInstance = fastDynamicCast<Class>(p);
+				if (castedInstance)
+					return castedInstance;
+
+				p = p->parent;
+			}
+
+			return NULL;
+		}
 	};
 }

@@ -28,7 +28,10 @@ namespace RBX
 		bool operator >(const RBX::Name& other) const;
 		bool operator ==(const char* name) const;
 		bool operator ==(const std::string& name) const;
-		bool operator ==(const Name& other) const;
+		bool operator ==(const Name& other) const
+		{
+			return this == &other;
+		}
 		bool operator !=(const char* name) const;
 		bool operator !=(const std::string& name) const;
 		bool operator !=(const Name& other) const
