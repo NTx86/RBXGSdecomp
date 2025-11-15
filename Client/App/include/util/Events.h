@@ -34,8 +34,12 @@ namespace RBX
 		mutable RaiseRange* raiseRange;
 
 	protected:
-		Notifier(const Notifier&);
-		Notifier() : listeners(), raiseRange(0) {}
+		//Notifier(const Notifier&);
+		Notifier()
+			: listeners(),
+			  raiseRange(NULL)
+		{
+		}
 		Notifier& operator=(const Notifier&);
 
 	public:
