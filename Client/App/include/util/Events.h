@@ -31,11 +31,15 @@ namespace RBX
 	{
 	private:
 		std::vector<Listener<T,U>*> listeners;
-		RaiseRange* raiseRange;
+		mutable RaiseRange* raiseRange;
 
 	protected:
-		Notifier(const Notifier&);
-		Notifier();
+		//Notifier(const Notifier&);
+		Notifier()
+			: listeners(),
+			  raiseRange(NULL)
+		{
+		}
 		Notifier& operator=(const Notifier&);
 
 	public:

@@ -59,7 +59,10 @@ namespace RBX
 		void onAssemblyRemoving(Assembly* assembly);
 		void onWakeUpRequest(Assembly* assembly);
 		int numTouchingContacts();
-		const std::set<Assembly*>& getAwakeAssemblies() const;
+		const std::set<Assembly*>& getAwakeAssemblies() const
+		{
+			return awake;
+		}
 		void onLosingContact(const Array<Contact*>& separating);
 		//SleepStage& operator=(const SleepStage&);
   
