@@ -14,6 +14,8 @@
 
 namespace RBX
 {
+	#pragma warning (push)
+	#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
 	World::World() : 
 		contactManager(new ContactManager(this)),
 		jointStage(new JointStage(NULL, this)),
@@ -34,6 +36,7 @@ namespace RBX
 			getSleepStage()->profilingSleep->parent = profilingWorldStep.get();
 			jointStage->getKernel()->profilingKernel->parent = profilingWorldStep.get(); 
 		}
+	#pragma warning (pop)
 
 	World::~World()
 	{
@@ -42,11 +45,8 @@ namespace RBX
 		RBXASSERT(primitives.size() == 0);
 		RBXASSERT(breakableJoints.size() == 0);
 		
-		if(jointStage)
-			delete jointStage;
-
-		if(contactManager)
-			delete contactManager;
+		delete jointStage;
+		delete contactManager;
 	}
 
 	int World::getNumContacts() const
