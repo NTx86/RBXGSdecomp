@@ -35,10 +35,6 @@ namespace RBX
 		  archivable(true),
 		  guid()
 	{
-		//boost::signal<void(bool)> temp;
-		//matchTemp.connect(NULL, temp);
-		Reflection::SignalDescImpl<1, void(bool)>::GenericSlotAdapter temp(NULL);
-		temp(false);
 	}
 
 	Instance::Instance()
