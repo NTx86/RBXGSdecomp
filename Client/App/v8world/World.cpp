@@ -128,7 +128,6 @@ namespace RBX
 
 	void World::onJointPrimitiveNulling(Joint* j, Primitive* p)
 	{
-		Notifier<World, AutoJoin>::raise(AutoJoin(j));
 		jointStage->onJointPrimitiveNulling(j,p);
 	}
 
