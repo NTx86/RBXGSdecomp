@@ -25,16 +25,14 @@ namespace RBX
 	// is this the right file for AutoJoin and AutoDestroy?
 	struct AutoJoin
 	{
-	public:
 		Joint* joint;
-		AutoJoin(Joint*);
+		AutoJoin(Joint* j) : joint(j) {}
 	};
 
 	struct AutoDestroy
 	{
-	public:
 		Joint* joint;
-		AutoDestroy(Joint*);
+		AutoDestroy(Joint* j) : joint(j) {}
 	};
 
 	class World : public Notifier<World, AutoJoin>, public Notifier<World, AutoDestroy>
@@ -48,7 +46,7 @@ namespace RBX
 		bool inStepCode;
 		bool inJointNotification;
 		int worldStepId;
-		RBX::IndexArray<Primitive, &Primitive::worldIndexFunc> primitives;
+		IndexArray<Primitive, &Primitive::worldIndexFunc> primitives;
 		std::set<Joint*> breakableJoints;
 		int numJoints;
 		int numContacts;
@@ -61,23 +59,29 @@ namespace RBX
 		static bool disableEnvironmentalThrottle;
   
 	public:
-		void createJoints(Primitive*);
+		void createJoints(Primitive* p);
 	private:
 		void createJoints(Primitive*, std::set<Primitive*>*);
 	public:
-		void destroyJoints(Primitive*);
+		void destroyJoints(Primitive* p);
 	private:
 		void destroyJoints(Primitive*, std::set<Primitive*>*);
 		void destroyJoint(Joint*);
-		void removeFromBreakable(Joint*);
+		void removeFromBreakable(Joint* j);
 		void doBreakJoints();
 	public:
 		//World(const World&);
 		World();
 		virtual ~World();
 	public:
-		void assertNotInStep();
-		void assertInStep();
+		void assertNotInStep()
+		{
+			RBXASSERT(!inStepCode);
+		}
+		void assertInStep()
+		{
+			RBXASSERT(inStepCode);
+		}
 		void addedBodyForce();
 		void setCanThrottle(bool);
 		ContactManager& getContactManager();
@@ -91,7 +95,7 @@ namespace RBX
 		Kernel& getKernel();
 		const G3D::Array<Primitive*>& getTouch() const;
 		const G3D::Array<Primitive*>& getTouchOther() const;
-		void computeFallen(G3D::Array<Primitive*>&) const;
+		void computeFallen(G3D::Array<Primitive*>& fallen) const;
 		const G3D::Array<Primitive*>& getPrimitives() const 
 		{
 			return this->primitives.underlyingArray();
@@ -100,9 +104,9 @@ namespace RBX
 		void update();
 		void reset();
 		int getWorldStepId();
-		void insertPrimitive(Primitive*);
-		void removePrimitive(Primitive*);
-		void ticklePrimitive(Primitive*);
+		void insertPrimitive(Primitive* p);
+		void removePrimitive(Primitive* p);
+		void ticklePrimitive(Primitive* p);
 		void joinAll();
 		void createJointsToWorld(const G3D::Array<Primitive*>&);
 		void destroyJointsToWorld(const G3D::Array<Primitive*>&);

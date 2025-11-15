@@ -116,7 +116,10 @@ namespace RBX
 		{
 			return world;
 		}
-		void setWorld(World*);
+		void setWorld(World* world)
+		{
+			this->world = world;
+		}
 		Clump* getClump() const
 		{
 			return clump;
@@ -245,7 +248,10 @@ namespace RBX
 			return joints.num;
 		}
 		int countNumJoints() const;
-		int getNumContacts() const;
+		int getNumContacts() const
+		{
+			return contacts.num;
+		}
 		int getNumEdges() const;
 		bool hasEdge();
 		Edge* getFirstEdge() const;
