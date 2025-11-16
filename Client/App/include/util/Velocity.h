@@ -15,7 +15,7 @@ namespace RBX {
 			Velocity operator-() const;
 			G3D::Vector3 linearVelocityAtOffset(const G3D::Vector3& vec3) const
 			{
-				return this->linear + this->rotational.cross(vec3);
+				return linear + rotational.cross(vec3);
 			}
 			Velocity velocityAtOffset(const G3D::Vector3&) const;
 			Velocity rotateBy(const G3D::Matrix3&) const;
