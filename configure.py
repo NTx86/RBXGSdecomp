@@ -4,8 +4,8 @@ from pathlib import Path
 root = Path(__file__).parent    
 
 def configure():
-    targetPath = root.joinpath("RBXGS")
-    basePath = root.joinpath("Client/App/Release")
+    targetPath = root / "RBXGS"
+    basePath = root / "Client/App/Release"
 
     # Error names could be clearer
     if not targetPath.is_dir():
@@ -26,21 +26,22 @@ def configure():
         ],
         "units": [],
     }
-
-    units = config["units"]
     
-    for targetObj in targetPath.iterdir():
-        name = targetObj.name
-        targetName = targetObj.name.split(".")[0]
+    with open("objdiff.json", "w", encoding='utf-8') as file:
+        for i, targetObj in enumerate(targetPath.iterdir()):
+            objFilename = targetObj.name
 
-        units.append({
-            "name": targetName,
-            "target_path": str(targetPath.joinpath(name)),
-            "base_path": str(basePath.joinpath(name)),
-        })
+            config["units"].append({
+                "name": objFilename.split(".")[0],
+                "target_path": str(targetPath / objFilename)
+            })
 
-    with open(root.joinpath("objdiff.json"), "w") as file:
-        file.write(json.dumps(config, indent=4))
+            if basePath.joinpath(objFilename).is_file():
+                config["units"][i].update({
+                    "base_path": str(basePath / objFilename)
+                })
+
+        json.dump(config, file, indent=4)            
 
 if __name__ == "__main__":
     configure()
