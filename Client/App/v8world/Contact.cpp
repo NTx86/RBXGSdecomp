@@ -643,7 +643,7 @@ namespace RBX
 				}
 			}
 
-			if(wasZero != 0 && foundCounter == 4)
+			if(wasZero && foundCounter == 4)
 				return foundCounter;
 			else
 			{
