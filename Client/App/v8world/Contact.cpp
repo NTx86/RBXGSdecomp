@@ -537,4 +537,166 @@ namespace RBX
 		}
 		return true;
 	}
+
+	int BlockBlockContact::intersectRectQuad(G3D::Vector2& planeRect, G3D::Vector2 (&otherQuad)[4])
+	{
+		bool quadCrossRect[4][4];
+
+		bool quadIn[4] = {true, true, true, true};
+
+		int foundCounter = 0;
+
+		for(int i = 3; i >= 0; i--)
+		{
+			if(otherQuad[i].y <= planeRect.y)
+			{
+				quadCrossRect[0][i] = true;
+			}
+			else
+			{
+				quadCrossRect[0][i] = false;
+				quadIn[i] = false;
+			}
+
+			if(otherQuad[i].x >= -planeRect.x)
+			{
+				quadCrossRect[1][i] = true;
+			}
+			else
+			{
+				quadCrossRect[1][i] = false;
+				quadIn[i] = false;
+			}
+
+			if(otherQuad[i].y >= -planeRect.y)
+			{
+				quadCrossRect[2][i] = true;
+			}
+			else
+			{
+				quadCrossRect[2][i] = false;
+				quadIn[i] = false;
+			}
+
+			if(otherQuad[i].x <= planeRect.x)
+			{
+				quadCrossRect[3][i] = true;
+			}
+			else
+			{
+				quadCrossRect[3][i] = false;
+				quadIn[i] = false;
+			}
+		}
+
+		for(int i = 3; i >= 0; i--)
+		{
+			if(quadIn[i])
+			{
+				loadGeoPairPointPlane(bOther, bPlane, i, otherPlaneID, planeID);
+				foundCounter++;
+			}
+		}
+
+		if(foundCounter == 4)
+			return foundCounter;
+		else
+		{
+			bool rectCrossQuad[4][4];
+			G3D::Vector2 rect[4];
+			rect[0] = G3D::Vector2(planeRect.x, planeRect.y);
+			rect[1] = G3D::Vector2(-planeRect.x, planeRect.y);
+			rect[2] = G3D::Vector2(-planeRect.x, -planeRect.y);
+			rect[3] = G3D::Vector2(planeRect.x, -planeRect.y);
+
+			bool rectIn[4] = {true, true, true, true};
+
+			for(int i = 3; i >= 0; i--)
+			{
+				G3D::Vector2& current = otherQuad[i];
+				G3D::Vector2& currentO = otherQuad[(i + 3) % 4];
+				for(int j = 0; j < 4; j++)
+				{
+					G3D::Vector2 math1 = rect[j] - current;
+					G3D::Vector2 math2 = currentO - current;
+
+					if((math2.x * math1.y) - (math2.y * math1.x) >= 0.0f)
+					{
+						rectCrossQuad[i][j] = true;
+					}
+					else
+					{
+						rectCrossQuad[i][j] = false;
+						rectIn[j] = false;
+					}
+				}
+			}
+
+			int wasZero = foundCounter == 0;
+
+			for(int i = 0; i < 4; i++)
+			{
+				if(rectIn[i])
+				{
+					loadGeoPairPointPlane(bPlane, bOther, i, planeID, otherPlaneID);
+					foundCounter++;
+				}
+			}
+
+			if(wasZero != 0 && foundCounter == 4)
+				return foundCounter;
+			else
+			{
+				for(int i = 0; i < 4; i++)
+				{
+					for(int j = 3; j >= 0; j--)
+					{
+						if(quadCrossRect[i][j] != quadCrossRect[i][(j + 3) % 4] && rectCrossQuad[j][i] != rectCrossQuad[j][(i + 1) % 4])
+						{
+
+							loadGeoPairEdgeEdgePlane(bOther, bPlane, block(bOther)->faceVertexToEdge(otherPlaneID, (j+3)%4), block(bPlane)->faceVertexToEdge(planeID, i));
+							foundCounter++;
+						}
+					}
+				}
+				RBXASSERT(foundCounter != 1 && foundCounter <= 8);
+				return foundCounter;
+			}
+		}
+	}
+
+	bool BlockBlockContact::computeIsColliding(float overlapIgnored)
+	{
+		bool scratch;
+		return computeIsColliding(scratch, overlapIgnored);
+	}
+
+	bool BlockBlockContact::stepContact()
+	{
+		bool planeContact;
+		if(computeIsColliding(planeContact, 0.0f))
+		{
+			if(inStage(IStage::KERNEL_STAGE))
+			{
+				matched.resize(0);
+				matched.resize(connectors.size());
+				if(planeContact)
+				{
+					computePlaneContact();
+					deleteUnmatchedConnectors();
+					return true;
+				}
+				loadGeoPairEdgeEdge(0, 1, feature[0] - 6, feature[1] - 6);
+				deleteUnmatchedConnectors();
+			}
+			return true;
+		}
+		else
+		{
+			deleteAllConnectors();
+			feature[0] = -1;
+			feature[1] = -1;
+			return false;
+		}
+	}
 }
