@@ -699,4 +699,42 @@ namespace RBX
 			return false;
 		}
 	}
+
+	int BlockBlockContact::computePlaneContact()
+	{
+		if(feature[0] >= 0)
+		{
+			planeID = (NormalId)feature[0];
+			bPlane = 0;
+			bOther = 1;
+		}
+		else
+		{
+			planeID = (NormalId)feature[1];
+			bPlane = 1;
+			bOther = 0;
+		}
+
+		const G3D::CoordinateFrame& otherFrame = getPrimitive(bOther)->getBody()->getPV().position;
+		const G3D::CoordinateFrame& planeFrame = getPrimitive(bPlane)->getBody()->getPV().position;
+
+		G3D::CoordinateFrame otherToPlane = planeFrame.inverse() * otherFrame;
+
+		Block* otherBlock = block(bOther);
+		Block* planeBlock = block(bPlane);
+
+		G3D::Vector3 otherVertexPlaneCoords = Math::getWorldNormal(planeID, planeFrame);
+		otherPlaneID = Math::getClosestObjectNormalId(-otherVertexPlaneCoords, otherFrame.rotation);
+
+		G3D::Vector2 planeRect = planeBlock->getProjectedVertex(*(planeBlock->getFaceVertex(planeID, 0)),planeID);
+
+		G3D::Vector2 otherQuad[4] = {};
+
+		for(int i = 0; i < 4; i++)
+		{
+			G3D::Vector3 world = otherToPlane.pointToWorldSpace(*(otherBlock->getFaceVertex(otherPlaneID, i)));
+			otherQuad[i] = otherBlock->getProjectedVertex(world, planeID);
+		}
+		return intersectRectQuad(planeRect, otherQuad);
+	}
 }
