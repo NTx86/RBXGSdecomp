@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include <G3D/Color3.h>
 #include <G3D/Vector3.h>
 #include "v8datamodel/BrickColor.h"
