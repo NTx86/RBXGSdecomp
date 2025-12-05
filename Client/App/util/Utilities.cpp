@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include "util/Utilities.h"
 #include "util/ContentProvider.h"
 #include <stdio.h>
