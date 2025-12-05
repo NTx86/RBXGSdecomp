@@ -866,6 +866,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8tree\Property.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8tree\Service.cpp"
 				>
 			</File>
