@@ -154,8 +154,7 @@ bool XmlNameValuePair::getValue(unsigned& value) const
 	return false;
 }
 
-// TODO: remove noinline
-__declspec(noinline) bool XmlNameValuePair::getValue(bool& value) const
+bool XmlNameValuePair::getValue(bool& value) const
 {
 	if (valueType == BOOL)
 	{
