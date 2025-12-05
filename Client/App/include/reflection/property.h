@@ -1,41 +1,12 @@
 #pragma once
 #include "reflection/member.h"
 #include "v8xml/XmlElement.h"
-#include "v8xml/SerializerV2.h"
 #include "util/Handle.h"
 
 namespace RBX
 {
 	class Instance;
-
-	// NOTE: may not be intended for this file (could suit object.h or reflection.h better)
-	class IIDREF
-	{
-	private:
-		virtual void assignIDREF(Reflection::DescribedBase*, const InstanceHandle&) const;
-	public:
-		//IIDREF(const IIDREF&);
-		IIDREF()
-		{
-		}
-	public:
-		//IIDREF& operator=(const IIDREF&);
-	};
-
-	// NOTE: may not be intended for this file
-	class IReferenceBinder
-	{
-	public:
-		//virtual void announceID(const XmlNameValuePair*, Instance*); // TODO: uncomment once XmlNameValuePair is added
-		//virtual void announceIDREF(const XmlNameValuePair*, Reflection::DescribedBase*, const IIDREF*); // TODO: uncomment once IIDREF and XmlNameValuePair are added
-	protected:
-		void assign(const IIDREF*, Reflection::DescribedBase*, const InstanceHandle&);
-	public:
-		//IReferenceBinder(const IReferenceBinder&);
-		IReferenceBinder();
-	public:
-		//IReferenceBinder& operator=(const IReferenceBinder&);
-	};
+	class IReferenceBinder;
 
 	namespace Reflection
 	{

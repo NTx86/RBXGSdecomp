@@ -16,7 +16,7 @@ namespace RBX
 		InstanceHandle();
 	public:
 		InstanceHandle& operator=(boost::shared_ptr<Instance>); // possibly just linkTo
-		InstanceHandle& operator=(const InstanceHandle&);
+		//InstanceHandle& operator=(const InstanceHandle&);
 		bool empty() const;
 		boost::shared_ptr<Instance> getTarget() const;
 		void linkTo(boost::shared_ptr<Instance> target);

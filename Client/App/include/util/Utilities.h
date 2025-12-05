@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -38,6 +39,93 @@ namespace RBX
 		~CopyOnWrite();
 	public:
 		//CopyOnWrite& operator=(const CopyOnWrite&);
+	};
+
+	template<typename T>
+	class StringConverter
+	{
+	public:
+		static std::string convertToString(const T& value);
+		static bool convertToValue(const std::string& text, T& value);
+	};
+
+	// NOTE: original file for this class is unknown
+	template<typename Class>
+	class Parent
+	{
+	private:
+		Class* first;
+		Class* last;
+	  
+	public:
+		Parent()
+			: first(NULL),
+			  last(NULL)
+		{
+		}
+
+	public:
+		void pushBackChild(Class* child)
+		{
+			if (!last)
+				first = child;
+			else
+				last->setNextSibling(child);
+
+			last = child;
+		}
+		void pushFrontChild(Class*);
+		void addChild(Class*);
+		void removeChild(Class*);
+		const Class* firstChild() const
+		{
+			return first;
+		}
+		Class* firstChild()
+		{
+			return first;
+		}
+		const Class* nextChild(const Class* child) const
+		{
+			return child->nextSibling();
+		}
+		Class* nextChild(Class* child)
+		{
+			return child->nextSibling();
+		}
+	};
+
+	// NOTE: original file for this class is unknown
+	template<typename Class>
+	class Sibling
+	{
+		template<typename Class>
+		friend class Parent;
+
+	private:
+		Class* next;
+	  
+	protected:
+		Sibling(Class*);
+		Sibling()
+			: next(NULL)
+		{
+		}
+
+	public:
+		Class* nextSibling()
+		{
+			return next;
+		}
+		const Class* nextSibling() const
+		{
+			return next;
+		}
+	private:
+		void setNextSibling(Class* sibling)
+		{
+			next = sibling;
+		}
 	};
 
 	// Function traits

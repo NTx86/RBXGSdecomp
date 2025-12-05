@@ -3,6 +3,22 @@
 
 namespace RBX
 {
+	class IReferenceBinder;
+
+	// NOTE: may not be intended for this file
+	class IIDREF
+	{
+	private:
+		virtual void assignIDREF(Reflection::DescribedBase*, const InstanceHandle&) const;
+	public:
+		//IIDREF(const IIDREF&);
+		IIDREF()
+		{
+		}
+	public:
+		//IIDREF& operator=(const IIDREF&);
+	};
+
 	namespace Reflection
 	{
 		template<typename Class, const char** ClassName, typename DerivedClass>

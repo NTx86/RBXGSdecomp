@@ -2,36 +2,37 @@
 
 namespace RBX
 {
-	ContentId::ContentId()
-		: id(), 
-		  mimeTypePtr(&Name::getNullName())
+	// TODO: check match
+	bool operator<(const ContentId& a, const ContentId& b)
 	{
+		return a.toString() < b.toString();
 	}
 
-	ContentId::ContentId(const char* id)
-		: id(id),
-		mimeTypePtr(&Name::getNullName())
+	ContentProvider& ContentProvider::singleton()
 	{
+		static ContentProvider sing;
+		return sing;
 	}
 
-	ContentId::ContentId(std::string id)
-		: id(id),
-		mimeTypePtr(&Name::getNullName())
+	bool ContentProvider::isHttpUrl(const std::string& s)
 	{
+		if (s.find("http://", 0, 7) == 0)
+			return true;
+
+		if (s.find("https://", 0, 8) == 0)
+			return true;
+
+		return false;
 	}
 
-	bool ContentId::isAsset() const
+	std::string ContentProvider::assetFolder() const
 	{
-		return id.substr(0, 11) == "rbxasset://";
+		return assetFolderPath;
 	}
 
-	bool ContentId::isFile() const
+	bool ContentProvider::isRequestQueueEmpty()
 	{
-		return id.substr(0, 7) == "file://";
-	}
-
-	bool ContentId::isHttp() const
-	{
-		return id.substr(0, 4) == "http";
+		boost::mutex::scoped_lock lock(requestSync);
+		return requestQueue.empty();
 	}
 }

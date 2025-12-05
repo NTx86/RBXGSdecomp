@@ -83,7 +83,8 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			UseOfATL="2"
+			CharacterSet="0"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -164,6 +165,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\base64.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\boost.hpp"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\ComputeProp.h"
 					>
 				</File>
@@ -200,6 +209,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Http.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\IndexArray.h"
 					>
 				</File>
@@ -209,6 +222,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\ISelectable3d.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Log.h"
 					>
 				</File>
 				<File
@@ -237,6 +254,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\RunningAverage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\standardout.h"
 					>
 				</File>
 				<File
@@ -528,11 +549,27 @@
 				Name="v8xml"
 				>
 				<File
+					RelativePath=".\include\v8xml\Serializer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8xml\SerializerV2.h"
 					>
 				</File>
 				<File
 					RelativePath=".\include\v8xml\XmlElement.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8xml\XmlSerializer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="v8datamodel"
+				>
+				<File
+					RelativePath=".\include\v8datamodel\BrickColor.h"
 					>
 				</File>
 			</Filter>
@@ -581,6 +618,10 @@
 			Name="util"
 			>
 			<File
+				RelativePath=".\util\boost.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\ContentProvider.cpp"
 				>
 			</File>
@@ -602,6 +643,14 @@
 			</File>
 			<File
 				RelativePath=".\util\Handle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Http.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Log.cpp"
 				>
 			</File>
 			<File
@@ -633,11 +682,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\standardout.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\UIEvent.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\util\Units.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Utilities.cpp"
 				>
 			</File>
 		</Filter>
@@ -817,7 +874,27 @@
 			Name="v8datamodel"
 			>
 			<File
+				RelativePath=".\v8datamodel\BrickColor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8datamodel\PartInstance.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="v8xml"
+			>
+			<File
+				RelativePath=".\v8xml\SerializerV2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8xml\XmlElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8xml\XmlSerializer.cpp"
 				>
 			</File>
 		</Filter>
