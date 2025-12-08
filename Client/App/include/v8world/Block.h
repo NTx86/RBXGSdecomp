@@ -42,7 +42,10 @@ namespace RBX
 			return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[normId][edge]];
 		}
 		int getClosestEdge(const G3D::Matrix3& rotation, NormalId normalID, G3D::Vector3& crossAxis);
-		int faceVertexToEdge(NormalId normId, int edge);
+		int faceVertexToEdge(NormalId normId, int edge)
+		{
+			return BLOCK_FACE_VERTEX_TO_EDGE[normId][edge];
+		}
 		int faceVertexToClockwiseEdge(NormalId, int);
 		const G3D::Vector3* getEdgeVertex(int edgeId) const;
 		NormalId getEdgeNormal(int edge)

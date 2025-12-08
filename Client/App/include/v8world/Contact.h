@@ -101,11 +101,19 @@ namespace RBX
 		Block* block(int i);
 		bool getBestPlaneEdge(bool& planeContact, float overlapIgnored);
 		int computePlaneContact();
-		int intersectRectQuad(G3D::Vector2& planeRect, G3D::Vector2* otherQuad[4]); //might not be correct?
+		int intersectRectQuad(G3D::Vector2& planeRect, G3D::Vector2 (&otherQuad)[4]); //might not be correct?
 		void loadGeoPairPointPlane(int pointBody, int planeBody, int pointID, NormalId pointFaceID, NormalId planeFaceID);
 		void loadGeoPairEdgeEdgePlane(int edgeBody, int planeBody, int edge0, int edge1);
 		virtual bool computeIsColliding(float overlapIgnored);
-		bool computeIsColliding(bool&, float);
+
+		bool computeIsColliding(bool& planeContact, float overlapIgnored) // TODO: Apparently this overload is inlined, but not the other one. Should this be in the header?
+		{
+			if(Primitive::aaBoxCollide(*getPrimitive(0), *getPrimitive(1)))
+				return getBestPlaneEdge(planeContact, overlapIgnored);
+			else
+				return false;
+		}
+
 		virtual void deleteAllConnectors();
 		virtual bool stepContact();
 	public:
