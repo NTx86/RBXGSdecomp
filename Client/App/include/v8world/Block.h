@@ -37,12 +37,24 @@ namespace RBX
 		GeoPairType getBallBlockInfo(int onBorder, const G3D::Vector3int16 clip, const G3D::Vector3*& offset, NormalId& normalID);
 		const float* getVertices() const { return (float*)this->vertices; }
 		const G3D::Vector3& getExtent() const;
-		const G3D::Vector3* getFaceVertex(NormalId, int) const;
+		const G3D::Vector3* getFaceVertex(NormalId normId, int edge) const
+		{
+			return &this->vertices[Block::BLOCK_FACE_TO_VERTEX[normId][edge]];
+		}
 		int getClosestEdge(const G3D::Matrix3& rotation, NormalId normalID, G3D::Vector3& crossAxis);
-		int faceVertexToEdge(NormalId, int);
+		int faceVertexToEdge(NormalId normId, int edge)
+		{
+			return BLOCK_FACE_VERTEX_TO_EDGE[normId][edge];
+		}
 		int faceVertexToClockwiseEdge(NormalId, int);
 		const G3D::Vector3* getEdgeVertex(int edgeId) const;
-		NormalId getEdgeNormal(int);
+		NormalId getEdgeNormal(int edge)
+		{
+			int answer = edge / 4 + 3 * (edge % 2);
+			if (edge > 12)
+				answer = (answer + 3) % 6;
+			return (NormalId)answer;
+		}
 		G3D::Vector2 getProjectedVertex(const G3D::Vector3& vertex, NormalId normalID);
 		Block& operator=(const Block& other);
 
