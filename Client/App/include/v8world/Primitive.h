@@ -116,7 +116,10 @@ namespace RBX
 		{
 			return world;
 		}
-		void setWorld(World*);
+		void setWorld(World* world)
+		{
+			this->world = world;
+		}
 		Clump* getClump() const
 		{
 			return clump;
