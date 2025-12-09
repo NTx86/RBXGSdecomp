@@ -211,6 +211,11 @@ namespace RBX
 		return getFirstRigidAt(getFirstEdge());
 	}
 
+	RigidJoint* Primitive::getNextRigid(RigidJoint* prev)
+	{
+		return getFirstRigidAt(getNextEdge(prev));
+	}
+
 	Geometry* Primitive::newGeometry(Geometry::GeometryType geometryType)
 	{
 		switch(geometryType)
@@ -423,5 +428,99 @@ namespace RBX
 		const Extents& f1 = p1.getFastFuzzyExtents();
 		const Extents& f0 = p0.getFastFuzzyExtents();
 		return f0.overlapsOrTouches(f1);
+	}
+
+	Extents Primitive::computeFuzzyExtents() const
+	{
+		Extents ext = Extents::fromCenterCorner(getCoordinateFrameInlined().translation, geometry->getCenterToCorner(getCoordinateFrameInlined().rotation));
+		ext.expand(0.01f);
+
+		return ext;
+	}
+
+	void Primitive::setController(Controller* _controller)
+	{
+		if(!_controller)
+			_controller = NullController::getStaticNullController();
+
+		if(controller != _controller)
+			controller = _controller;
+	}
+
+	const Extents& Primitive::getFastFuzzyExtents() const
+	{
+		if(fuzzyExtentsStateId != body->getStateIndex())
+		{
+			fuzzyExtents = computeFuzzyExtents();
+			fuzzyExtentsStateId = body->getStateIndex();
+		}
+
+		return fuzzyExtents;
+	}
+
+	Joint* Primitive::getNextJoint(Joint* prev) const
+	{
+		return rbx_static_cast<Joint*>(prev->getNext(this));
+	}
+
+	Contact* Primitive::getNextContact(Contact* prev)
+	{
+		return rbx_static_cast<Contact*>(prev->getNext(this));
+	}
+
+	Edge* Primitive::getNextEdge(Edge* e) const
+	{
+		Edge* next = e->getNext(this);
+
+		if(next)
+			return next;
+		else
+			return Joint::isJoint(e) ? contacts.first : NULL;
+	}
+
+	Joint* Primitive::getJoint(Primitive* p0, Primitive* p1)
+	{
+		Primitive* least = p0->getNumJoints2() < p1->getNumJoints2() ? p0 : p1;
+
+		for(Joint* current = least->getFirstJoint(); current != NULL; current = least->getNextJoint(current))
+		{
+			if(p0 == current->getPrimitive(0) && p1 == current->getPrimitive(1) || p0 == current->getPrimitive(1) && p1 == current->getPrimitive(0))
+			   return current;
+		}
+		return NULL;
+	}
+
+	Contact* Primitive::getContact(Primitive* p0, Primitive* p1)
+	{
+		Primitive* least = p0->getNumContacts() < p1->getNumContacts() ? p0 : p1;
+
+		for(Contact* current = least->getFirstContact(); current != NULL; current = least->getNextContact(current))
+		{
+			if(p0 == current->getPrimitive(0) && p1 == current->getPrimitive(1) || p0 == current->getPrimitive(1) && p1 == current->getPrimitive(0))
+			   return current;
+		}
+		return NULL;
+	}
+
+	RigidJoint* Primitive::getFirstRigidAt(Edge* start)
+	{
+		for(Edge* current = start; current != NULL; current = getNextEdge(current))
+		{
+			if(RigidJoint::isRigidJoint(current))
+				return rbx_static_cast<RigidJoint*>(current);
+		}
+		return NULL;
+	}
+
+	int Primitive::countNumJoints() const
+	{
+		int counter = 0;
+		for(Joint* current = getFirstJoint(); current != NULL; current = getNextJoint(current))
+		{
+			Joint::JointType type = current->getJointType();
+			if(type != Joint::FREE_JOINT && type != Joint::ANCHOR_JOINT)
+				counter++;
+		}
+		return counter;
 	}
 }
