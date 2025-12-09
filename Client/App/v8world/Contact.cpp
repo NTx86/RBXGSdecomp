@@ -665,6 +665,14 @@ namespace RBX
 		}
 	}
 
+	bool BlockBlockContact::computeIsColliding(bool& planeContact, float overlapIgnored)
+	{
+		if(Primitive::aaBoxCollide(*getPrimitive(0), *getPrimitive(1)))
+			return getBestPlaneEdge(planeContact, overlapIgnored);
+		else
+			return false;
+	}
+
 	bool BlockBlockContact::computeIsColliding(float overlapIgnored)
 	{
 		bool scratch;
