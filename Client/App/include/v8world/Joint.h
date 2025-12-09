@@ -115,7 +115,10 @@ namespace RBX
 				return NO_JOINT;
 			}
 		}
-		static bool isJoint(Edge*);
+		static bool isJoint(Edge* e)
+		{
+			return e->getEdgeType() == Edge::JOINT;
+		}
 		static bool isAssemblyJoint(Edge* e);
 		static bool isGroundJoint(Joint*);
 		static bool isAutoJoinJoint(Joint*);

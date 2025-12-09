@@ -252,4 +252,34 @@ namespace RBX
 		return bestPrimitive;
 	}
 
+	Contact* ContactManager::createContact(Primitive* p0, Primitive* p1)
+	{
+		Geometry::GeometryType type0 = p0->getGeometry()->getGeometryType();
+		Geometry::GeometryType type1 = p1->getGeometry()->getGeometryType();
+
+		if(type0 > type1)
+			std::swap(p0, p1);
+
+		type0 = p0->getGeometry()->getGeometryType();
+		type1 = p1->getGeometry()->getGeometryType();
+
+		switch(type0)
+		{
+		case Geometry::GEOMETRY_BALL:
+
+			switch(type1)
+			{
+			case Geometry::GEOMETRY_BALL:
+				return new BallBallContact(p0, p1);
+			case Geometry::GEOMETRY_BLOCK:
+				return new BallBlockContact(p0, p1);
+			}
+
+		case Geometry::GEOMETRY_BLOCK:
+			return new BlockBlockContact(p0, p1);
+		default:
+			RBXASSERT(0);
+			return NULL;
+		}
+	}
 }
