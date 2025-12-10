@@ -3,7 +3,7 @@ A decompilation of [RBXGS (Roblox Grid Service) version 0.3.634.0](https://archi
 
 Recommended to use Microsoft Visual Studio 2005 with [SP1 Update](https://web.archive.org/web/20200801000000id_/download.microsoft.com/download/6/3/c/63c69e5d-74c9-48ea-b905-30ac3831f288/VS80sp1-KB926601-X86-ENU.exe) for matching. (Visual C/C++(14.00.50727)[C++])
 
-You can create the [objdiff](https://github.com/encounter/objdiff) project by first exporting target objects with the [Object file exporter extension for Ghidra](https://github.com/boricj/ghidra-delinker-extension) into a `RBXGS` directory in the root of this repository, then running `configure.py` to create the project based on what you have exported.
+You can create the [objdiff](https://github.com/encounter/objdiff) project by exporting target objects with the [Object file exporter extension for Ghidra](https://github.com/boricj/ghidra-delinker-extension) and then running `configure.py` with the target directory you put your objects in. Whenever you export new objects you should run the script again for the project to update.
 
 # Dependencies
 * [boost 1.34.1](https://www.boost.org/users/history/version_1_34_1.html)

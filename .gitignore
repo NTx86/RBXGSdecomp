@@ -400,5 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 # objdiff stuff
-RBXGS/
 objdiff.json
