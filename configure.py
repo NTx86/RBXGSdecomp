@@ -21,12 +21,11 @@ def configure(desiredTargetPath):
         "build_base": False,
         "units": [],
     }
+
+    objects = list(f for f in targetPath.iterdir() if f.is_file())
     
     with open("objdiff.json", "w", encoding='utf-8') as file:
-        for i, targetObj in enumerate(targetPath.iterdir()):
-            if not targetObj.is_file():
-                continue
-
+        for i, targetObj in enumerate(objects):
             objName = targetObj.name
 
             config["units"].append({
@@ -39,7 +38,7 @@ def configure(desiredTargetPath):
                     "base_path": str(basePath / objName)
                 })
 
-        json.dump(config, file, indent=4)            
+        json.dump(config, file, indent=4)
 
 if __name__ == "__main__":
     args = parser.parse_args()
