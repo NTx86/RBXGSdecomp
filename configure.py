@@ -25,7 +25,7 @@ def configure(desiredTargetPath):
     with open("objdiff.json", "w", encoding='utf-8') as file:
         for i, targetObj in enumerate(targetPath.iterdir()):
             if not targetObj.is_file():
-                return
+                continue
 
             objName = targetObj.name
 
