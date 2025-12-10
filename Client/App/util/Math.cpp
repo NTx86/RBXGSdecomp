@@ -320,6 +320,11 @@ namespace RBX
 		return byteAngleFloat * segSizeRadians() - pi();
 	}
 
+	G3D::Vector3 Math::toGrid(const G3D::Vector3& v, float grid)
+	{
+		return Math::toGrid(v, G3D::Vector3(grid, grid, grid));
+	}
+
 	G3D::Vector3 Math::toGrid(const G3D::Vector3& v, const G3D::Vector3& grid)
 	{
 		Vector3 units = v / grid;
@@ -538,21 +543,47 @@ namespace RBX
 		return result;
 	}
 
+	bool Math::fuzzyEq(float f0, float f1, float epsilon)
+	{
+		float num1 = fabs(f0) + 1;
+		float num2 = fabs(f0 - f1);
+
+		return (f0 == f1 || num2 <= num1 * epsilon);
+	}
+
 	bool Math::fuzzyEq(const G3D::Vector3& v0, const G3D::Vector3& v1, float epsilon)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			float axis1 = v0[i];
-			float axis2 = v1[i];
-
-			float num1 = fabs(axis1) + 1;
-			float num2 = fabs(axis1 - axis2);
-
-			if (!(axis1 == axis2 || num2 <= num1 * epsilon))
+			if (!Math::fuzzyEq(v0[i], v1[i], epsilon))
 				return false;
 		}
 
 		return true;
+	}
+
+	bool Math::fuzzyEq(const G3D::Matrix3& m0, const G3D::Matrix3& m1, float epsilon)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (!Math::fuzzyEq(m0[i][j], m1[i][j], epsilon))
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool Math::fuzzyEq(const G3D::CoordinateFrame& c0, const G3D::CoordinateFrame& c1, float epsT, float epsR)
+	{
+		bool tRes = Math::fuzzyEq(c0.translation, c1.translation, epsT);
+		if (!tRes)
+			return false;
+
+		bool rRes = Math::fuzzyEq(c0.rotation, c1.rotation, epsR);
+		return rRes ? true : false;
 	}
 
 	G3D::CoordinateFrame Math::snapToGrid(const G3D::CoordinateFrame& snap, const G3D::Vector3& grid)

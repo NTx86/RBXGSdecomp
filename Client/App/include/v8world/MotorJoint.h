@@ -15,8 +15,14 @@ namespace RBX
 		float desiredAngle;
   
 	private:
-		virtual Joint::JointType getJointType() const;
-		virtual bool isBroken() const;
+		virtual Joint::JointType getJointType() const
+		{
+			return MOTOR_JOINT;
+		}
+		virtual bool isBroken() const
+		{
+			return false;
+		}
 		virtual bool isAligned();
 		void setJointAngle(float value);
 	public:
