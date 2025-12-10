@@ -83,7 +83,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -189,6 +189,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\HitTestFilter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Http.h"
 					>
 				</File>
 				<File
@@ -522,6 +526,10 @@
 			</File>
 			<File
 				RelativePath=".\util\Guid.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Http.cpp"
 				>
 			</File>
 			<File
