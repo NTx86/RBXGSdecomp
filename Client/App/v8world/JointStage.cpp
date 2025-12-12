@@ -82,11 +82,11 @@ namespace RBX
 
 		RBXASSERT(pairInMap(j, p));
 
-		for(Iterator iter = jointMap.lower_bound(p); iter != jointMap.upper_bound(p); iter++)
+		for(Iterator it = jointMap.lower_bound(p); it != jointMap.upper_bound(p); it++)
 		{
-			if (iter->second == j) 
+			if (it->second == j) 
 			{
-				jointMap.erase(iter);
+				jointMap.erase(it);
 				RBXASSERT(!pairInMap(j, p));
 				return;
 			}
