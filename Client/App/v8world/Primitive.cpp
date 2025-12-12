@@ -4,6 +4,7 @@
 #include "v8world/Ball.h"
 #include "v8world/Block.h"
 #include "v8world/World.h"
+#include <intrin.h>
 #include <cmath>
 
 namespace RBX 
@@ -410,8 +411,12 @@ namespace RBX
 			body->setMoment(geometry->getMoment(newSize));
 
 			JointK.setDirty();
+
+			_ReadWriteBarrier();
+
 			if(world)
 				world->onPrimitiveExtentsChanged(this);
+
 			JointK.setDirty();
 		}
 	}
@@ -522,5 +527,54 @@ namespace RBX
 				counter++;
 		}
 		return counter;
+	}
+
+	void Primitive::insertEdge(Edge* e)
+	{
+		Primitive* p0 = e->getPrimitive(0);
+		Primitive* p1 = e->getPrimitive(1);
+
+		if(Joint::isJoint(e))
+		{
+			EdgeList::insertEdge(p0, e, e->getPrimitive(0)->joints);
+
+			if(p1)
+				EdgeList::insertEdge(p1, e, e->getPrimitive(1)->joints);
+			else
+				RBXASSERT(rbx_static_cast<Joint*>(e)->getJointType() == Joint::ANCHOR_JOINT || rbx_static_cast<Joint*>(e)->getJointType() == Joint::FREE_JOINT);
+		}
+		else
+		{
+			EdgeList::insertEdge(p0, e, e->getPrimitive(0)->contacts);
+			EdgeList::insertEdge(p1, e, e->getPrimitive(1)->contacts);
+		}
+	}
+
+	void Primitive::removeEdge(Edge* e)
+	{
+		Primitive* p0 = e->getPrimitive(0);
+		Primitive* p1 = e->getPrimitive(1);
+
+		if(Joint::isJoint(e))
+		{
+			EdgeList::removeEdge(p0, e, e->getPrimitive(0)->joints);
+
+			if(p1)
+				EdgeList::removeEdge(p1, e, e->getPrimitive(1)->joints);
+			else
+				RBXASSERT(rbx_static_cast<Joint*>(e)->getJointType() == Joint::ANCHOR_JOINT || rbx_static_cast<Joint*>(e)->getJointType() == Joint::FREE_JOINT);
+		}
+		else
+		{
+			EdgeList::removeEdge(p0, e, e->getPrimitive(0)->contacts);
+			EdgeList::removeEdge(p1, e, e->getPrimitive(1)->contacts);
+		}
+	}
+
+	void EdgeList::insertEdge(Primitive* p, Edge* e, EdgeList& list)
+	{
+		e->setNext(p, list.first);
+		list.first = e;
+		list.num++;
 	}
 }
