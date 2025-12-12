@@ -17,6 +17,7 @@ namespace RBX
 	private:
 		int numContactsInStage;
 		IndexArray<Contact, &Contact::steppingIndexFunc> stepping;
+	public:
 		boost::scoped_ptr<Profiling::CodeProfiler> profilingCollision;
 	  
 	private:

@@ -50,12 +50,30 @@ namespace RBX
 		}
 
 		void reset();
-		void setBallBall(RBX::Body*, RBX::Body*, float, float);
-		void setBallBlock(RBX::Body*, RBX::Body*, float, const G3D::Vector3*, RBX::NormalId, RBX::GeoPairType);
-		void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int, RBX::NormalId);
-		void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
-		void setEdgeEdge(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId);
-		bool match(RBX::Body*, RBX::Body*, RBX::GeoPairType, int, int);
+		void setBallBall(RBX::Body* b0, RBX::Body* b1, float radius0, float radius1)
+		{
+			this->geoPair.setBallBall(b0, b1, radius0, radius1);
+		}
+		void setBallBlock(RBX::Body* b0, RBX::Body* b1, float radius0, const G3D::Vector3* offset1 , RBX::NormalId normId, RBX::GeoPairType pairType)
+		{
+			this->geoPair.setBallBlock(b0, b1, radius0, offset1, normId, pairType);
+		}
+		void setPointPlane(RBX::Body* b0, RBX::Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, int point0ID, RBX::NormalId norm1)
+		{
+			this->geoPair.setPointPlane(b0, b1, offset0, offset1, point0ID, norm1);
+		}
+		void setEdgeEdgePlane(RBX::Body* b0, RBX::Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1 , RBX::NormalId norm0, RBX::NormalId norm1, RBX::NormalId planeID, float edgeLength)
+		{
+			this->geoPair.setEdgeEdgePlane(b0, b1, offset0, offset1, norm0, norm1, planeID, edgeLength);
+		}
+		void setEdgeEdge(RBX::Body* b0, RBX::Body* b1, const G3D::Vector3* offset0, const G3D::Vector3* offset1, RBX::NormalId norm0, RBX::NormalId norm1)
+		{
+			this->geoPair.setEdgeEdge(b0, b1, offset0, offset1, norm0, norm1);
+		}
+		bool match(RBX::Body* _b0, RBX::Body* _b1, RBX::GeoPairType _pairType, int param0, int param1)
+		{
+			return this->geoPair.match(_b0, _b1, _pairType, param0, param1);
+		}
 		virtual void computeForce(const float, bool);
 		virtual bool canThrottle() const;
 		virtual ~ContactConnector() {};

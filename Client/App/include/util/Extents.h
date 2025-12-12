@@ -19,7 +19,6 @@ namespace RBX
 	public:
 		bool operator==(const Extents&) const;
 		bool operator!=(const Extents&) const;
-		Extents& operator=(const Extents&);
 		const Vector3& min() const {return this->low;}
 		const Vector3& max() const {return this->high;}
 		Vector3 getCorner(int i) const;
@@ -41,7 +40,11 @@ namespace RBX
 		void unionWith(const Extents& other);
 		void shift(const Vector3&);
 		void scale(float);
-		void expand(float);
+		void expand(float f)
+		{
+			this->low -= G3D::Vector3(f, f, f);
+			this->high += G3D::Vector3(f, f, f);
+		}
 		Vector3& operator[](int);
 		const Vector3& operator[](int) const;
 		operator Vector3 *();
@@ -56,7 +59,10 @@ namespace RBX
 	private:
 		static float epsilon();
 	public:
-		static Extents fromCenterCorner(const Vector3&, const Vector3&);
+		static Extents fromCenterCorner(const Vector3& center, const Vector3& corner)
+		{
+			return Extents(center - corner, center + corner);
+		}
 		static Extents fromCenterRadius(const Vector3&, float);
 		static Extents vv(const Vector3& v0, const Vector3& v1);
 		static bool overlapsOrTouches(const Extents&, const Extents&);
