@@ -44,16 +44,14 @@ namespace RBX
 	{
 		Geometry::GeometryType type = geometry->getGeometryType();
 		if(type != Geometry::GEOMETRY_NONE) {
-			if(geometry) 
-				delete geometry;
-			if(body)
-				delete body;
+			delete geometry;
+			delete body;
 		}
 		for(int i = 0; i < 6; i++)
 			delete surfaceData[i];
 
-		RBXASSERT(!inPipeline());
-		RBXASSERT(!clump && !world);
+		RBXASSERT(!world);
+		RBXASSERT(!clump);
 	}
 
 	G3D::Vector3 Primitive::clipToSafeSize(const G3D::Vector3& newSize)
