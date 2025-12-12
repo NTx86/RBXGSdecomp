@@ -173,4 +173,26 @@ namespace RBX
 		static bool isUrl(const std::string&);
 		static bool isHttpUrl(const std::string&);
 	};
+
+	class MD5Hasher
+	{
+	public:
+		virtual void addData(const char* data, size_t nBytes) = 0;
+		virtual void addData(const std::string& data) = 0;
+		virtual void addData(std::istream& data) = 0;
+		
+		virtual std::string toString() = 0;
+		virtual const char* c_str() = 0;
+
+	public:
+		//MD5Hasher(const MD5Hasher&);
+		MD5Hasher()
+		{
+		}
+	public:
+		//MD5Hasher& operator=(const MD5Hasher&);
+
+	public:
+		static MD5Hasher* create();
+	};
 }
