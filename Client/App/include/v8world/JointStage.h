@@ -20,29 +20,29 @@ namespace RBX
 	  
 	private:
 		ClumpStage* getClumpStage();
-		void moveEdgeToDownstream(Edge*);
-		void removeEdgeFromDownstream(Edge*);
-		void moveJointToDownstream(Joint*);
-		void removeJointFromDownstream(Joint*);
-		bool jointInList(Joint*);
-		void removeFromList(Joint*);
-		void insertToList(Joint*);
-		bool pairInMap(Joint*, Primitive*);
-		void insertToMap(Joint*, Primitive*);
-		void removeFromMap(Joint*, Primitive*);
-		bool edgeHasPrimitivesDownstream(Edge*);
+		void moveEdgeToDownstream(Edge* e);
+		void removeEdgeFromDownstream(Edge* e);
+		void moveJointToDownstream(Joint* j);
+		void removeJointFromDownstream(Joint* j);
+		bool jointInList(Joint* j);
+		void removeFromList(Joint* j);
+		void insertToList(Joint* j);
+		bool pairInMap(Joint* j, Primitive* p);
+		void insertToMap(Joint* j, Primitive* p);
+		void removeFromMap(Joint* j, Primitive* p);
+		bool edgeHasPrimitivesDownstream(Edge* e);
 	public:
 		//JointStage(const JointStage&);
-		JointStage(IStage*, World*);
+		JointStage(IStage* upstream, World* world);
 		virtual ~JointStage();
 	public:
 		virtual IStage::StageType getStageType();
-		virtual void onEdgeAdded(Edge*);
-		virtual void onEdgeRemoving(Edge*);
-		void onPrimitiveAdded(Primitive*);
-		void onPrimitiveRemoving(Primitive*);
-		void onJointPrimitiveNulling(Joint*, Primitive*);
-		void onJointPrimitiveSet(Joint*, Primitive*);
+		virtual void onEdgeAdded(Edge* e);
+		virtual void onEdgeRemoving(Edge* e);
+		void onPrimitiveAdded(Primitive* p);
+		void onPrimitiveRemoving(Primitive* p);
+		void onJointPrimitiveNulling(Joint* j, Primitive* nulling);
+		void onJointPrimitiveSet(Joint* j, Primitive* p);
 		//JointStage& operator=(const JointStage&);
 	};
 }

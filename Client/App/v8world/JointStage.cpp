@@ -55,20 +55,13 @@ namespace RBX
 	{
 		typedef std::multimap<Primitive*, Joint*>::const_iterator Iterator;
 
-		do
+		for(Iterator it = jointMap.lower_bound(p); it != jointMap.upper_bound(p); it++)
 		{
-			std::pair<Iterator, Iterator> range = jointMap.equal_range(p);
-			Iterator& it = range.first;
-
-			for (; it != range.second; it++)
-			{
-				if (it->second == j)
-					return true;
-			}
-
-			return false;
+			if (it->second == j)
+				return true;
 		}
-		while (false);
+
+		return false;
 	}
 
 	void JointStage::insertToMap(Joint* j, Primitive* p)
@@ -84,35 +77,22 @@ namespace RBX
 	{
 		typedef std::multimap<Primitive*, Joint*>::iterator Iterator;
 
-		if (!p)
+		if(!p)
+			return;
+
+		RBXASSERT(pairInMap(j, p));
+
+		for(Iterator it = jointMap.lower_bound(p); it != jointMap.upper_bound(p); it++)
 		{
-			RBXASSERT(pairInMap(j, p));
-
-			do
+			if (it->second == j) 
 			{
-				std::pair<Iterator, Iterator> range = jointMap.equal_range(p);
-				Iterator it = range.first;
-
-				// I feel like this is a function elsewhere
-				for (; it != range.second; it++)
-				{
-					if (it->second == j)
-						break;
-				}
-
-				if (it != range.second)
-				{
-					jointMap.erase(it);
-				}
-				else
-				{
-					RBXASSERT(0);
-				}
-
+				jointMap.erase(it);
 				RBXASSERT(!pairInMap(j, p));
+				return;
 			}
-			while (0); // do while forces standard library functions to inline... dont ask why but i need it right now
 		}
+
+		RBXASSERT(0);
 	}
 
 	// NOTE: might be in headers
@@ -153,10 +133,9 @@ namespace RBX
 
 	void JointStage::onJointPrimitiveNulling(Joint* j, Primitive* nulling)
 	{
-		RBXASSERT(!nulling);
-		RBXASSERT(!j->links(nulling));
+		RBXASSERT(nulling);
+		RBXASSERT(j->links(nulling));
 		RBXASSERT(j->downstreamOfStage(this) == edgeHasPrimitivesDownstream(j));
-		RBXASSERT(!j->inPipeline());
 		RBXASSERT(j->downstreamOfStage(this) != jointInList(j));
 
 		if (j->downstreamOfStage(this))
@@ -168,7 +147,7 @@ namespace RBX
 		}
 		else
 		{
-			RBXASSERT(!j->inStage(this));
+			RBXASSERT(j->inStage(this));
 			removeFromMap(j, nulling);
 		}
 
@@ -237,9 +216,29 @@ namespace RBX
 
 	void JointStage::onPrimitiveAdded(Primitive* p)
 	{
+		typedef std::multimap<Primitive*, Joint*>::const_iterator Iterator;
+
 		p->putInPipeline(this);
 		getClumpStage()->onPrimitiveAdded(p);
-		// TODO
+
+		std::vector<Joint*> jointsToPush;
+
+		for(Iterator it = jointMap.lower_bound(p); it != jointMap.upper_bound(p); it++)
+		{
+			if(edgeHasPrimitivesDownstream(it->second))
+				jointsToPush.push_back(it->second);
+		}
+
+		for(size_t i = 0; i < jointsToPush.size(); i++)
+		{
+			Joint* current = jointsToPush[i];
+
+			removeFromList(current);
+			removeFromMap(current, p);
+			removeFromMap(current, current->otherPrimitive(p));
+
+			moveJointToDownstream(current);
+		}
 	}
 
 	void JointStage::onPrimitiveRemoving(Primitive* p)

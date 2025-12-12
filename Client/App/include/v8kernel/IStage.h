@@ -23,7 +23,7 @@ class RBX::IStage { // Size=0xc
 namespace RBX {
 	class Kernel;
 
-	class IStage {
+	class __declspec(novtable) IStage {
 		private:
 			IStage *upstream;
 			IStage *downstream;
