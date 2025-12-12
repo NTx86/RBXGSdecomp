@@ -233,9 +233,7 @@ namespace RBX
 		{
 			Joint* current = jointsToPush[i];
 
-			size_t success = incompleteJoints.erase(current);
-			RBXASSERT(success == 1);
-
+			removeFromList(current);
 			removeFromMap(current, p);
 			removeFromMap(current, current->otherPrimitive(p));
 
