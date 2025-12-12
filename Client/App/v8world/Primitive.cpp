@@ -94,15 +94,10 @@ namespace RBX
 	{
 		return body->getPV().position;
 	}
-
-	const G3D::CoordinateFrame& Primitive::getCoordinateFrameInlined() const
-	{
-		return body->getPV().position;
-	}
 	
 	G3D::CoordinateFrame Primitive::getGridCorner() const
 	{
-		const G3D::CoordinateFrame& pos = getCoordinateFrameInlined();
+		const G3D::CoordinateFrame& pos = body->getPV().position;
 		G3D::Vector3 hVec = -(geometry->getGridSize() * 0.5f);
 
 		return G3D::CoordinateFrame(pos.rotation, pos.pointToWorldSpace(hVec));
@@ -124,22 +119,25 @@ namespace RBX
 		return Math::planarSize(geometry->getGridSize());
 	}
 
-	Extents Primitive::getExtentsWorld() const 
+	Extents Primitive::getExtentsLocal() const
 	{
 		G3D::Vector3 hVec = geometry->getGridSize() * 0.5f;
-		Extents local(-hVec, hVec);
+		return Extents(-hVec, hVec);
+	}
 
-		return local.toWorldSpace(getCoordinateFrame());
+	Extents Primitive::getExtentsWorld() const 
+	{
+		return getExtentsLocal().toWorldSpace(getCoordinateFrame());
 	}
 
 	bool Primitive::hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside) 
 	{
-		G3D::Ray localRay = getCoordinateFrameInlined().toObjectSpace(worldRay);
+		G3D::Ray localRay = body->getPV().position.toObjectSpace(worldRay);
 		G3D::Vector3 localHitPoint;
 
 		if(geometry->hitTest(localRay, localHitPoint, inside))
 		{
-			worldHitPoint = getCoordinateFrameInlined().pointToWorldSpace(localHitPoint);
+			worldHitPoint = body->getPV().position.pointToWorldSpace(localHitPoint);
 			return true;
 		}
 		else return false;
@@ -147,15 +145,12 @@ namespace RBX
 
 	Face Primitive::getFaceInObject(NormalId objectFace)
 	{
-		G3D::Vector3 hVec = geometry->getGridSize() * 0.5;
-		Extents extents(-hVec, hVec);
-
-		return Face::fromExtentsSide(extents, objectFace);
+		return Face::fromExtentsSide(getExtentsLocal(), objectFace);
 	}
 
 	Face Primitive::getFaceInWorld(NormalId objectFace)
 	{
-		return getFaceInObject(objectFace).toWorldSpace(getCoordinateFrameInlined());
+		return getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
 	}
 
 	G3D::CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
@@ -277,7 +272,7 @@ namespace RBX
 
 	void Primitive::setCoordinateFrame(const G3D::CoordinateFrame& value)
 	{
-		if(value != getCoordinateFrameInlined())
+		if(value != body->getPV().position)
 		{
 			Assembly* assembly = getAssembly();
 			if(!assembly)
@@ -437,7 +432,7 @@ namespace RBX
 
 	Extents Primitive::computeFuzzyExtents() const
 	{
-		Extents ext = Extents::fromCenterCorner(getCoordinateFrameInlined().translation, geometry->getCenterToCorner(getCoordinateFrameInlined().rotation));
+		Extents ext = Extents::fromCenterCorner(body->getPV().position.translation, geometry->getCenterToCorner(body->getPV().position.rotation));
 		ext.expand(0.01f);
 
 		return ext;
