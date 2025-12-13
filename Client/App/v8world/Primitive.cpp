@@ -392,7 +392,7 @@ namespace RBX
 		}
 	}
 
-	void Primitive::setGridSize(const G3D::Vector3& gridSize) // near-100% match when Body::setMoment is set as __declspec(noinline)
+	void Primitive::setGridSize(const G3D::Vector3& gridSize) // 100% match when Body::setMoment is set as __declspec(noinline)
 	{
 		G3D::Vector3 protectedSize = clipToSafeSize(gridSize);
 
@@ -407,7 +407,7 @@ namespace RBX
 
 			JointK.setDirty();
 
-			_ReadWriteBarrier();
+			_ReadWriteBarrier(); // TODO: is there a better way of doing this?
 
 			if(world)
 				world->onPrimitiveExtentsChanged(this);
