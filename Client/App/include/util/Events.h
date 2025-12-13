@@ -27,7 +27,7 @@ namespace RBX
 	};
 
 	template<typename T, typename U>
-	class Notifier
+	class __declspec(novtable) Notifier
 	{
 	private:
 		std::vector<Listener<T,U>*> listeners;

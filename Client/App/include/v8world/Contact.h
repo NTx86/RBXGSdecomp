@@ -24,7 +24,10 @@ namespace RBX
 	private:
 		virtual void putInKernel(Kernel* _kernel);
 		virtual void removeFromKernel();
-		virtual Edge::EdgeType getEdgeType() const;
+		virtual Edge::EdgeType getEdgeType() const
+		{
+			return CONTACT;
+		}
 	protected:
 		Body* getBody(int) const;
 		ContactConnector* createConnector();

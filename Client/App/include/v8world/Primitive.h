@@ -160,7 +160,6 @@ namespace RBX
 			return myOwner;
 		}
 		__declspec(noinline) const G3D::CoordinateFrame& getCoordinateFrame() const;
-		const G3D::CoordinateFrame& getCoordinateFrameInlined() const; // TODO: Workaround! Figure this out later.
 		G3D::CoordinateFrame getGridCorner() const;
 		void setCoordinateFrame(const G3D::CoordinateFrame& value);
 		void setGridCorner(const G3D::CoordinateFrame& gridCorner);

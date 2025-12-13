@@ -7,7 +7,7 @@ namespace RBX
 {
 	class World;
 
-	class IPipelined
+	class __declspec(novtable) IPipelined
 	{
 	private:
 		RBX::IStage* currentStage;

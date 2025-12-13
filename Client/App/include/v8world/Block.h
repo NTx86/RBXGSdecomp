@@ -29,7 +29,7 @@ namespace RBX
 			return GEOMETRY_BLOCK;
 		}
 		virtual float getRadius() const;
-		virtual G3D::Vector3 getCenterToCorner(const G3D::Matrix3&) const;
+		virtual G3D::Vector3 getCenterToCorner(const G3D::Matrix3& rotation) const;
 		virtual G3D::Matrix3 getMoment(float mass) const;
 		virtual float getGridVolume() const;
 		void projectToFace(G3D::Vector3& ray, G3D::Vector3int16& clip, int& onBorder);
