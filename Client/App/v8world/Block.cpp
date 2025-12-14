@@ -38,12 +38,15 @@ namespace RBX
 
 			for (int i = 0; i < 2; i++)
 			{
-				fabsCorner.y *= -1.0f;
+				fabsCorner.x *= -1.0f;
 				for (int j = 0; j < 2; j++)
 				{
-					fabsCorner.z *= -1.0f;
-					fabsCorner.x *= -1.0f;
-					vertices[i*2+j] = fabsCorner;
+					fabsCorner.y *= -1.0f;
+					for (int k = 0; k < 2; k++)
+					{
+						fabsCorner.z *= -1.0f;
+						vertices[i*4+j*2+k] = fabsCorner;
+					}
 				}
 			}
 		}
