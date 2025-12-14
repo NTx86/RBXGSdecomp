@@ -1,7 +1,9 @@
 # RBXGS Decompilation
 A decompilation of [RBXGS (Roblox Grid Service) version 0.3.634.0](https://archive.org/download/rbxgssetup/S3FileHandler_RBXGSSetup_0.3.634.0.msi), currently focusing on specific critical components (v8kernel, v8world, etc.) for now, and will later expand out to other classes.
 
-Recommended to use Microsoft Visual Studio 2005 with [SP1 Update](https://web.archive.org/web/20200801000000id_/download.microsoft.com/download/6/3/c/63c69e5d-74c9-48ea-b905-30ac3831f288/VS80sp1-KB926601-X86-ENU.exe) for matching. (Visual C/C++(14.00.50727)[C++])
+You need to use Microsoft Visual Studio 2005 with [SP1 Update](https://web.archive.org/web/20200801000000id_/download.microsoft.com/download/6/3/c/63c69e5d-74c9-48ea-b905-30ac3831f288/VS80sp1-KB926601-X86-ENU.exe) for matching. (Visual C/C++(14.00.50727)[C++])
+
+You have to select ReleaseAssert configuration when compiling the code otherwise it won't produce matching code. To test linking you can select ReleaseAssertDLL configuration (Note: this configuration did not exist in the original Roblox source code and is only present for link testing purposes only)
 
 You can create the [objdiff](https://github.com/encounter/objdiff) project by exporting target objects with the [Object file exporter extension for Ghidra](https://github.com/boricj/ghidra-delinker-extension) and then running `configure.py` with the target directory you put your objects in. Whenever you export new objects you should run the script again for the project to update.
 
