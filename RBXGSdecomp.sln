@@ -7,12 +7,18 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
+		ReleaseAssert|Win32 = ReleaseAssert|Win32
+		ReleaseAssertDLL|Win32 = ReleaseAssertDLL|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.Debug|Win32.Build.0 = Debug|Win32
 		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.Release|Win32.ActiveCfg = Release|Win32
 		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.Release|Win32.Build.0 = Release|Win32
+		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.ReleaseAssert|Win32.ActiveCfg = ReleaseAssert|Win32
+		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.ReleaseAssert|Win32.Build.0 = ReleaseAssert|Win32
+		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.ReleaseAssertDLL|Win32.ActiveCfg = ReleaseAssertDLL|Win32
+		{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}.ReleaseAssertDLL|Win32.Build.0 = ReleaseAssertDLL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
