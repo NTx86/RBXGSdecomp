@@ -74,6 +74,12 @@ namespace RBX
 	{
 		return *jointStage->getKernel();
 	}
+
+	const Kernel& World::getKernel() const
+	{
+		return *jointStage->getKernel();
+	}
+
 	int World::getNumBodies() const
 	{
 		return jointStage->getKernel()->numBodies();
@@ -365,6 +371,86 @@ namespace RBX
 						fallen.push_back(currentPrim);
 				}
 			}
+		}
+	}
+
+	float World::step(float desiredInterval)
+	{
+		assertNotInStep();
+
+		Profiling::Mark mark(*profilingWorldStep, true);
+		
+		RBXASSERT(desiredInterval > 0.01);
+		RBXASSERT(desiredInterval < 0.1);
+
+		update();
+
+		double startTick = G3D::System::getTick();
+		bool throttling = false;
+		int startTime = G3D::max(1, Math::iRound(floorf(desiredInterval * Constants::worldStepsPerSec())));
+
+		for (int i = 0; i < startTime; i++)
+		{
+			int numOfSteps = worldStepId / Constants::worldStepsPerUiStep();
+
+			if (worldStepId % Constants::worldStepsPerUiStep() == 0)
+			{
+				Profiling::Mark markUI(*profilingUiStep, false);
+				doBreakJoints();
+				touch.fastClear();
+				touchOther.fastClear();
+
+				inStepCode = true;
+				getClumpStage()->stepUi(numOfSteps);
+				getSimJobStage().notifyMovingPrimitives();
+				inStepCode = false;
+			}
+
+			{
+				inStepCode = true;
+				Profiling::Mark markBroadphase(*profilingBroadphase, false);
+				contactManager->stepWorld();
+				inStepCode = false;
+			}
+
+			inStepCode = true;
+			jointStage->stepWorld(worldStepId, numOfSteps, throttling);
+			inStepCode = false;
+
+			if (!World::disableEnvironmentalThrottle && canThrottle)
+				throttling = G3D::System::getTick() > (i + 1) * Constants::worldDt() + startTick;
+			else
+				throttling = false;
+
+			worldStepId++;
+		}
+
+		return Constants::worldDt() * startTime;
+	}
+
+	void World::insertJoint(Joint* j)
+	{
+		assertNotInStep();
+		RBXASSERT(!inJointNotification);
+
+		if (j->getPrimitive(0) && j->getPrimitive(1))
+		{
+			Joint* d = Primitive::getJoint(j->getPrimitive(0), j->getPrimitive(1));
+			if (d)
+			{
+				inJointNotification = true;
+				Notifier<World, AutoDestroy>::raise(AutoDestroy(d));
+				inJointNotification = false;
+			}
+		}
+
+		jointStage->onEdgeAdded(j);
+		numJoints++;
+
+		if (j->isBreakable())
+		{
+			size_t success = breakableJoints.insert(j).second; 
+			RBXASSERT(success);
 		}
 	}
 }
