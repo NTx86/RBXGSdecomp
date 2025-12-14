@@ -26,29 +26,35 @@ namespace RBX
 	  
 	public:
 		//PrimitiveSort(const PrimitiveSort&);
-		PrimitiveSort(const Primitive*);
+		PrimitiveSort(const Primitive* p);
 		PrimitiveSort();
 	public:
 		bool operator==(const PrimitiveSort& other) const
 		{
-			return anchored == other.anchored && surfaceAreaJoints == other.surfaceAreaJoints;
+			return isEqual(*this, other);
 		}
 		bool operator!=(const PrimitiveSort& other) const
 		{
-			return anchored != other.anchored && surfaceAreaJoints != other.surfaceAreaJoints;
+			return !isEqual(*this, other);
 		}
 		bool operator<(const PrimitiveSort& other) const
 		{
-			return anchored != other.anchored && surfaceAreaJoints < other.surfaceAreaJoints;
+			return isLess(*this, other);
 		}
 		bool operator>(const PrimitiveSort& other) const
 		{
-			return anchored != other.anchored && surfaceAreaJoints > other.surfaceAreaJoints;
+			return !isLess(*this, other);
 		}
 	  
 	private:
-		static bool isEqual(const PrimitiveSort&, const PrimitiveSort&);
-		static bool isLess(const PrimitiveSort&, const PrimitiveSort&);
+		static bool isEqual(const PrimitiveSort& s0, const PrimitiveSort& s1)
+		{
+			return s0.anchored == s1.anchored && s0.surfaceAreaJoints == s1.surfaceAreaJoints;
+		}
+		static bool isLess(const PrimitiveSort& s0, const PrimitiveSort& s1)
+		{
+			return s0.anchored != s1.anchored ? s1.anchored : (s0.surfaceAreaJoints < s1.surfaceAreaJoints);
+		}
 	};
 
 	class PrimitiveEntry
@@ -59,7 +65,7 @@ namespace RBX
 
 	public:
 		//PrimitiveEntry(const PrimitiveEntry&);
-		PrimitiveEntry(Primitive*, PrimitiveSort);
+		PrimitiveEntry(Primitive* primitive, PrimitiveSort power);
 	};
 
 	class AnchorEntry
@@ -80,25 +86,25 @@ namespace RBX
 
 	public:
 		//RigidEntry(const RigidEntry&);
-		RigidEntry(RigidJoint*, PrimitiveSort);
+		RigidEntry(RigidJoint* rigidJoint, PrimitiveSort power);
 	};
 
 	class PrimitiveSortCriterion
 	{
 	public:
-		bool operator()(const PrimitiveEntry&, const PrimitiveEntry&) const;
+		bool operator()(const PrimitiveEntry& p0, const PrimitiveEntry& p1) const;
 	};
 
 	class AnchorSortCriterion
 	{
 	public:
-		bool operator()(const AnchorEntry&, const AnchorEntry&) const;
+		bool operator()(const AnchorEntry& a0, const AnchorEntry& a1) const;
 	};
 
 	class RigidSortCriterion
 	{
 	public:
-		bool operator()(const RigidEntry&, const RigidEntry&) const;
+		bool operator()(const RigidEntry& r0, const RigidEntry& r1) const;
 	};
 
 	class ClumpStage : public IWorldStage
@@ -247,10 +253,10 @@ namespace RBX
 		//ClumpStage& operator=(const ClumpStage&);
   
 	private:
-		static PrimitiveSort getRigidPower(RigidJoint*);
+		static PrimitiveSort getRigidPower(RigidJoint* r);
 	public:
-		static PrimitiveSort getMotorPower(const MotorJoint*);
+		static PrimitiveSort getMotorPower(const MotorJoint* m);
 	private:
-		static int numClumps(RigidJoint*);
+		static int numClumps(RigidJoint* r);
 	};
 }

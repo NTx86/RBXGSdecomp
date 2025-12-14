@@ -27,15 +27,19 @@ namespace RBX
 	};
 
 	template<typename T, typename U>
-	class Notifier
+	class __declspec(novtable) Notifier
 	{
 	private:
 		std::vector<Listener<T,U>*> listeners;
-		RaiseRange* raiseRange;
+		mutable RaiseRange* raiseRange;
 
 	protected:
-		Notifier(const Notifier&);
-		Notifier();
+		//Notifier(const Notifier&);
+		Notifier()
+			: listeners(),
+			  raiseRange(NULL)
+		{
+		}
 		Notifier& operator=(const Notifier&);
 
 	public:

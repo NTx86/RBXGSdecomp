@@ -25,16 +25,14 @@ namespace RBX
 	// is this the right file for AutoJoin and AutoDestroy?
 	struct AutoJoin
 	{
-	public:
 		Joint* joint;
-		AutoJoin(Joint*);
+		AutoJoin(Joint* j) : joint(j) {}
 	};
 
 	struct AutoDestroy
 	{
-	public:
 		Joint* joint;
-		AutoDestroy(Joint*);
+		AutoDestroy(Joint* j) : joint(j) {}
 	};
 
 	class World : public Notifier<World, AutoJoin>, public Notifier<World, AutoDestroy>
@@ -48,7 +46,7 @@ namespace RBX
 		bool inStepCode;
 		bool inJointNotification;
 		int worldStepId;
-		RBX::IndexArray<Primitive, &Primitive::worldIndexFunc> primitives;
+		IndexArray<Primitive, &Primitive::worldIndexFunc> primitives;
 		std::set<Joint*> breakableJoints;
 		int numJoints;
 		int numContacts;
@@ -61,23 +59,29 @@ namespace RBX
 		static bool disableEnvironmentalThrottle;
   
 	public:
-		void createJoints(Primitive*);
+		void createJoints(Primitive* p);
 	private:
 		void createJoints(Primitive*, std::set<Primitive*>*);
 	public:
-		void destroyJoints(Primitive*);
+		void destroyJoints(Primitive* p);
 	private:
 		void destroyJoints(Primitive*, std::set<Primitive*>*);
 		void destroyJoint(Joint*);
-		void removeFromBreakable(Joint*);
+		void removeFromBreakable(Joint* j);
 		void doBreakJoints();
 	public:
 		//World(const World&);
 		World();
 		virtual ~World();
 	public:
-		void assertNotInStep();
-		void assertInStep();
+		void assertNotInStep()
+		{
+			RBXASSERT(!inStepCode);
+		}
+		void assertInStep()
+		{
+			RBXASSERT(inStepCode);
+		}
 		void addedBodyForce();
 		void setCanThrottle(bool);
 		ContactManager& getContactManager();
@@ -91,15 +95,18 @@ namespace RBX
 		Kernel& getKernel();
 		const G3D::Array<Primitive*>& getTouch() const;
 		const G3D::Array<Primitive*>& getTouchOther() const;
-		void computeFallen(G3D::Array<Primitive*>&) const;
-		const G3D::Array<Primitive*>& getPrimitives() const;
+		void computeFallen(G3D::Array<Primitive*>& fallen) const;
+		const G3D::Array<Primitive*>& getPrimitives() const 
+		{
+			return this->primitives.underlyingArray();
+		}
 		float step(float);
 		void update();
 		void reset();
 		int getWorldStepId();
-		void insertPrimitive(Primitive*);
-		void removePrimitive(Primitive*);
-		void ticklePrimitive(Primitive*);
+		void insertPrimitive(Primitive* p);
+		void removePrimitive(Primitive* p);
+		void ticklePrimitive(Primitive* p);
 		void joinAll();
 		void createJointsToWorld(const G3D::Array<Primitive*>&);
 		void destroyJointsToWorld(const G3D::Array<Primitive*>&);
@@ -119,20 +126,20 @@ namespace RBX
 		Profiling::CodeProfiler& getProfileWorldStep();
 		const Profiling::CodeProfiler& getProfileBroadphase() const;
 		const Profiling::CodeProfiler& getProfileUiStep() const;
-		void onPrimitiveAddedAnchor(Primitive*);
-		void onPrimitiveRemovingAnchor(Primitive*);
-		void onPrimitiveExtentsChanged(Primitive*);
-		void onAssemblyExtentsChanged(Assembly*);
-		void onPrimitiveContactParametersChanged(Primitive*);
-		void onPrimitiveCanCollideChanged(Primitive*);
-		void onPrimitiveCanSleepChanged(Primitive*);
-		void onPrimitiveGeometryTypeChanged(Primitive*);
-		void onPrimitiveTouched(Primitive*, Primitive*);
-		void onMotorAngleChanged(MotorJoint*);
-		void onJointPrimitiveNulling(Joint*, Primitive*);
-		void onJointPrimitiveSet(Joint*, Primitive*);
-		void insertContact(Contact*);
-		void destroyContact(Contact*);
+		void onPrimitiveAddedAnchor(Primitive* p);
+		void onPrimitiveRemovingAnchor(Primitive* p);
+		void onPrimitiveExtentsChanged(Primitive* p);
+		void onAssemblyExtentsChanged(Assembly* a);
+		void onPrimitiveContactParametersChanged(Primitive* p);
+		void onPrimitiveCanCollideChanged(Primitive* p);
+		void onPrimitiveCanSleepChanged(Primitive* p);
+		void onPrimitiveGeometryTypeChanged(Primitive* p);
+		void onPrimitiveTouched(Primitive* touchP, Primitive* touchOtherP);
+		void onMotorAngleChanged(MotorJoint* m);
+		void onJointPrimitiveNulling(Joint* j, Primitive* p);
+		void onJointPrimitiveSet(Joint* j, Primitive* p);
+		void insertContact(Contact* c);
+		void destroyContact(Contact* c);
 		//World& operator=(const World&);
 	};
 }

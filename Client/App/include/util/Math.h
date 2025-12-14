@@ -40,8 +40,8 @@ namespace RBX
 			static bool isNanInfDenormMatrix3(const G3D::Matrix3&);
 			static bool fixDenorm(G3D::Vector3& v);
 			static bool fixDenorm(float&);
-			static bool fuzzyEq(const G3D::CoordinateFrame&, const G3D::CoordinateFrame&, float, float);
-			static bool fuzzyEq(const G3D::Matrix3&, const G3D::Matrix3&, float);
+			static bool fuzzyEq(const G3D::CoordinateFrame& c0, const G3D::CoordinateFrame& c1, float epsT, float epsR);
+			static bool fuzzyEq(const G3D::Matrix3& m0, const G3D::Matrix3& m1, float epsilon);
 			static bool fuzzyEq(const G3D::Vector3& v0, const G3D::Vector3& v1, float epsilon);
 			static bool fuzzyEq(float, float, float);
 			static bool fuzzyAxisAligned(const G3D::Matrix3& m0, const G3D::Matrix3& m1, float radTolerance);
@@ -61,14 +61,30 @@ namespace RBX
 			static float maxAxisLength(const G3D::Vector3& v);
 			static G3D::Vector3 sortVector3(const G3D::Vector3& v);
 			static RBX::Velocity calcTrajectory(const G3D::Vector3&, const G3D::Vector3&, float);
-			static G3D::Vector3 toGrid(const G3D::Vector3&, float);
+			static G3D::Vector3 toGrid(const G3D::Vector3& v, float grid);
 			static G3D::Vector3 toGrid(const G3D::Vector3& v, const G3D::Vector3& grid);
 			static bool lessThan(const G3D::Vector3& min, const G3D::Vector3& max);
 			static __forceinline float longestVector3Component(const G3D::Vector3& v)
 			{
 				return std::max(fabs(v.x), std::max(fabs(v.y), fabs(v.z)));
 			}
-			static float planarSize(const G3D::Vector3&);
+			static float planarSize(const G3D::Vector3& size)
+			{
+				if (size.x < size.y)
+				{
+					if (size.x < size.z)
+						return size.y * size.z;
+					else
+						return size.y * size.x;
+				}
+				else
+				{
+					if (size.y < size.z)
+						return size.x * size.z;
+					else
+						return size.x * size.y;
+				}
+			};
 			static float taxiCabMagnitude(const G3D::Vector3& v) {return fabs(v.x) + fabs(v.y) + fabs(v.z);}
 			static const G3D::Plane& yPlane();
 			static G3D::Vector3 closestPointOnRay(const G3D::Ray&, const G3D::Ray&);

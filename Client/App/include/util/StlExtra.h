@@ -4,6 +4,19 @@
 
 namespace RBX
 {
+	template<typename T> void fastRemoveIndex(std::vector<T>& vec, unsigned int index)
+	{
+		RBXASSERT(index < vec.size());
+		RBXASSERT(!vec.empty());
+		RBXASSERT(vec.size() < 32);
+		size_t newSize = vec.size()-1;
+		if (index < newSize)
+		{
+			vec[index] = vec.back();
+		}
+		vec.resize(newSize);
+	}
+
 	template<typename T> unsigned int fastRemoveShort(std::vector<T>& vec, T const& item)
 	{
 		std::vector<T>::iterator iter = std::find(vec.begin(), vec.end(), item);
