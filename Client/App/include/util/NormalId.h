@@ -25,9 +25,6 @@ namespace RBX
 	const G3D::Vector3& normalIdToVector3(NormalId normalId);
 	const G3D::Matrix3& normalIdToMatrix3(NormalId normalId);
 
-	const NormalId inlinedFunction1(NormalId id); // these functions were inlined but are still used in normalIdToMatrix3Internal. names are unknown.
-	const NormalId inlinedFunction2(NormalId id);
-
 	G3D::Matrix3 normalIdToMatrix3Internal(NormalId normalId);
 
 	G3D::Vector3 uvwToObject(const G3D::Vector3& uvwPt, NormalId faceId);
