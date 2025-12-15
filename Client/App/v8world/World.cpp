@@ -453,4 +453,73 @@ namespace RBX
 			RBXASSERT(success);
 		}
 	}
+
+	void World::doBreakJoints()
+	{
+		std::set<Joint*>::iterator cIt = this->breakableJoints.begin();
+
+		while (cIt != this->breakableJoints.end())
+		{
+			Joint* currentJoint = *cIt;
+			cIt++;
+
+			if (currentJoint->inKernel() && currentJoint->isBroken())
+			{
+				this->inJointNotification = true;
+				Notifier<World, AutoDestroy>::raise(AutoDestroy(currentJoint));
+				this->inJointNotification = false;
+			}
+		}
+	}
+
+	void World::createJoints(Primitive* p, std::set<Primitive*>* ignoreGroup)
+	{
+		assertNotInStep();
+		this->numLinkCalls++;
+		this->tempPrimitives.fastClear();
+		this->contactManager->getPrimitivesTouchingExtents(p->getFastFuzzyExtents(), p, this->tempPrimitives);
+
+		for (int i = 0; i < this->tempPrimitives.length(); i++)
+		{
+			Primitive* currentPrim = this->tempPrimitives[i];
+
+			if (ignoreGroup == NULL || ignoreGroup->find(currentPrim) == ignoreGroup->end())
+			{
+				if (!Primitive::getJoint(p, currentPrim))
+				{
+					Joint* canJoin = JointBuilder::canJoin(p, currentPrim);
+					if (canJoin)
+					{
+						this->insertJoint(canJoin);
+						this->inJointNotification = true;
+						Notifier<World, AutoJoin>::raise(AutoJoin(canJoin));
+						this->inJointNotification = false;
+					}
+				}
+			}
+		}
+	}
+
+	void World::destroyJoints(Primitive* p, std::set<Primitive*>* ignoreGroup)
+	{
+		assertNotInStep();
+		Joint* nextJoint = p->getFirstJoint();
+
+		while (nextJoint)
+		{
+			Joint* prevJoint = nextJoint;
+			nextJoint = p->getNextJoint(prevJoint);
+			Joint::JointType jointType = prevJoint->getJointType();
+			if (jointType != Joint::FREE_JOINT && jointType != Joint::ANCHOR_JOINT)
+			{
+				Primitive* otherPrim = prevJoint->otherPrimitive(p);
+				if (ignoreGroup == NULL || ignoreGroup->find(otherPrim) == ignoreGroup->end())
+				{
+					this->inJointNotification = true;
+					Notifier<World, AutoDestroy>::raise(AutoDestroy(prevJoint));
+					this->inJointNotification = false;
+				}
+			}
+		}
+	}
 }
