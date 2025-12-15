@@ -84,7 +84,7 @@ namespace RBX
 		return Vector3ToNormalId(m.getColumn(2));
 	}
 
-	const NormalId inlinedFunction1(NormalId id)
+	NormalId inlinedFunction1(NormalId id)
 	{
 		switch(id)
 		{
@@ -106,7 +106,7 @@ namespace RBX
 		}
 	}
 
-	const NormalId inlinedFunction2(NormalId id)
+	NormalId inlinedFunction2(NormalId id)
 	{
 		switch(id)
 		{
