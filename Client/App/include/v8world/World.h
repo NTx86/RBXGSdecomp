@@ -61,11 +61,11 @@ namespace RBX
 	public:
 		void createJoints(Primitive* p);
 	private:
-		void createJoints(Primitive*, std::set<Primitive*>*);
+		void createJoints(Primitive* p, std::set<Primitive*>* ignoreGroup);
 	public:
 		void destroyJoints(Primitive* p);
 	private:
-		void destroyJoints(Primitive*, std::set<Primitive*>*);
+		void destroyJoints(Primitive* p, std::set<Primitive*>* ignoreGroup);
 		void destroyJoint(Joint*);
 		void removeFromBreakable(Joint* j);
 		void doBreakJoints();
