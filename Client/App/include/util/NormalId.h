@@ -17,9 +17,26 @@ namespace RBX
 
 	RBX::NormalId normalIdOpposite(RBX::NormalId normalId);
 	bool validNormalId(NormalId normalId);
+
 	NormalId Vector3ToNormalId(const G3D::Vector3& v);
+	NormalId Matrix3ToNormalId(const G3D::Matrix3& m);
 	NormalId intToNormalId(int num);
+
 	const G3D::Vector3& normalIdToVector3(NormalId normalId);
-	const G3D::Matrix3& normalIdToMatrix3(NormalId normalId); // TODO: implement
-	NormalId Matrix3ToNormalId(const G3D::Matrix3& m); // TODO: implement
+	const G3D::Matrix3& normalIdToMatrix3(NormalId normalId);
+
+	const NormalId inlinedFunction1(NormalId id); // these functions were inlined but are still used in normalIdToMatrix3Internal. names are unknown.
+	const NormalId inlinedFunction2(NormalId id);
+
+	G3D::Matrix3 normalIdToMatrix3Internal(NormalId normalId);
+
+	G3D::Vector3 uvwToObject(const G3D::Vector3& uvwPt, NormalId faceId);
+
+	template<NormalId faceId>
+	G3D::Vector3 uvwToObject(const G3D::Vector3& v);
+
+	G3D::Vector3 objectToUvw(const G3D::Vector3& objectPt, NormalId faceId);
+	G3D::Vector3 mapToUvw_Legacy(const G3D::Vector3& ptInObject, NormalId faceId);
+
+
 }
