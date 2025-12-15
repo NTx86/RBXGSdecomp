@@ -4,7 +4,6 @@
 #include "v8world/Ball.h"
 #include "v8world/Block.h"
 #include "v8world/World.h"
-#include <intrin.h>
 #include <cmath>
 
 namespace RBX 
@@ -401,13 +400,12 @@ namespace RBX
 			fuzzyExtentsStateId = -2;
 			geometry->setGridSize(protectedSize);
 
-			float newSize = geometry->getGridVolume();
-			body->setMass(newSize);
-			body->setMoment(geometry->getMoment(newSize));
-
-			JointK.setDirty();
-
-			_ReadWriteBarrier(); // TODO: is there a better way of doing this?
+			{
+				float newSize = geometry->getGridVolume();
+				body->setMass(newSize);
+				body->setMoment(geometry->getMoment(newSize));
+				JointK.setDirty();
+			}
 
 			if(world)
 				world->onPrimitiveExtentsChanged(this);
