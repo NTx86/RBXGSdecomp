@@ -481,13 +481,13 @@ namespace RBX
 
 		for (int i = 0; i < this->tempPrimitives.length(); i++)
 		{
-			Primitive* current = this->tempPrimitives[i];
+			Primitive* currentPrim = this->tempPrimitives[i];
 
-			if (ignoreGroup == NULL || ignoreGroup->find(current) == ignoreGroup->end())
+			if (ignoreGroup == NULL || ignoreGroup->find(currentPrim) == ignoreGroup->end())
 			{
-				if (!Primitive::getJoint(p, current))
+				if (!Primitive::getJoint(p, currentPrim))
 				{
-					Joint* canJoin = JointBuilder::canJoin(p, current);
+					Joint* canJoin = JointBuilder::canJoin(p, currentPrim);
 					if (canJoin)
 					{
 						this->insertJoint(canJoin);
@@ -505,7 +505,7 @@ namespace RBX
 		assertNotInStep();
 		Joint* nextJoint = p->getFirstJoint();
 
-		while(nextJoint)
+		while (nextJoint)
 		{
 			Joint* prevJoint = nextJoint;
 			nextJoint = p->getNextJoint(prevJoint);
