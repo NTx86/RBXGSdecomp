@@ -36,7 +36,10 @@ namespace RBX
 		JointStage(IStage* upstream, World* world);
 		virtual ~JointStage();
 	public:
-		virtual IStage::StageType getStageType();
+		virtual IStage::StageType getStageType()
+		{
+			return JOINT_STAGE;
+		}
 		virtual void onEdgeAdded(Edge* e);
 		virtual void onEdgeRemoving(Edge* e);
 		void onPrimitiveAdded(Primitive* p);

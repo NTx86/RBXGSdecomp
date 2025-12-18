@@ -41,7 +41,7 @@ namespace RBX
 
 		bool getInEdgeList() const;
 		void setInEdgeList(bool);
-		virtual EdgeType getEdgeType() const;
+		virtual EdgeType getEdgeType() const = 0;
 		Sim::EdgeState getEdgeState() const;
 		void setEdgeState(Sim::EdgeState);
 		Primitive* getPrimitive(int i) const

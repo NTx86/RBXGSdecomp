@@ -5,6 +5,9 @@
 
 namespace RBX
 {
+	int Contact::contactPairMatches = 0;
+	int Contact::contactPairMisses = 0;
+
 	__declspec(noinline) Contact::Contact(Primitive* prim0, Primitive* prim1)
 		: Edge(prim0, prim1),
 		jointK(0),

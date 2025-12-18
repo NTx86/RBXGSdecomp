@@ -12,14 +12,14 @@ namespace RBX
 			G3D::CoordinateFrame parentCoord;
 			G3D::CoordinateFrame childCoord;
 			G3D::CoordinateFrame childCoordInverse;
-			G3D::CoordinateFrame childInParent;
+			mutable G3D::CoordinateFrame childInParent;
 			mutable int stateIndex;
-			virtual void computeChildInParent(const G3D::CoordinateFrame& answer) const;
+			virtual void computeChildInParent(G3D::CoordinateFrame& answer) const = 0;
 			void dirty();
 			//void setBody(RBX::Body* _body){ body = _body;}
 		public:
 			Link();
-			~Link();
+			//~Link();
 			const G3D::CoordinateFrame& getChildInParent() const;
 			Body* getBody() const;
 			void reset(const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
