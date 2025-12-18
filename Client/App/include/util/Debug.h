@@ -23,7 +23,11 @@ namespace RBX {
 		expr; \
 	} \
 	while (0)
+#ifdef RBXASSERTIONS
 #define RBXASSERT(expr) SCOPED( (void)( ( RBX::Debugable::assertAction != RBX::Debugable::CrashOnAssert || !!(expr) ) || (RBX::Debugable::doCrash(), 0) ) )
+#else
+#define RBXASSERT(expr)
+#endif
 
 template <typename To, typename From>
 To rbx_static_cast(From u)

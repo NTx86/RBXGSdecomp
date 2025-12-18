@@ -99,6 +99,11 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.idb
+*.intermediate.manifest
+*.lib
+*.dll
+*.exe
 
 # Chutzpah Test files
 _Chutzpah*
@@ -398,3 +403,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# objdiff stuff
+objdiff.json

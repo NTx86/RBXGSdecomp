@@ -40,20 +40,20 @@ namespace RBX
 	}
 	#pragma warning (pop)
 
-	Primitive::~Primitive() // WIP
+	Primitive::~Primitive()
 	{
 		Geometry::GeometryType type = geometry->getGeometryType();
+
 		if(type != Geometry::GEOMETRY_NONE) {
-			if(geometry) 
-				delete geometry;
-			if(body)
-				delete body;
+			delete geometry;
+			delete body;
 		}
+
 		for(int i = 0; i < 6; i++)
 			delete surfaceData[i];
 
-		RBXASSERT(!inPipeline());
-		RBXASSERT(!clump && !world);
+		RBXASSERT(!world);
+		RBXASSERT(!clump);
 	}
 
 	G3D::Vector3 Primitive::clipToSafeSize(const G3D::Vector3& newSize)
@@ -93,15 +93,10 @@ namespace RBX
 	{
 		return body->getPV().position;
 	}
-
-	const G3D::CoordinateFrame& Primitive::getCoordinateFrameInlined() const
-	{
-		return body->getPV().position;
-	}
 	
 	G3D::CoordinateFrame Primitive::getGridCorner() const
 	{
-		const G3D::CoordinateFrame& pos = getCoordinateFrameInlined();
+		const G3D::CoordinateFrame& pos = body->getPV().position;
 		G3D::Vector3 hVec = -(geometry->getGridSize() * 0.5f);
 
 		return G3D::CoordinateFrame(pos.rotation, pos.pointToWorldSpace(hVec));
@@ -123,22 +118,25 @@ namespace RBX
 		return Math::planarSize(geometry->getGridSize());
 	}
 
-	Extents Primitive::getExtentsWorld() const 
+	Extents Primitive::getExtentsLocal() const
 	{
 		G3D::Vector3 hVec = geometry->getGridSize() * 0.5f;
-		Extents local(-hVec, hVec);
+		return Extents(-hVec, hVec);
+	}
 
-		return local.toWorldSpace(getCoordinateFrame());
+	Extents Primitive::getExtentsWorld() const 
+	{
+		return getExtentsLocal().toWorldSpace(getCoordinateFrame());
 	}
 
 	bool Primitive::hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside) 
 	{
-		G3D::Ray localRay = getCoordinateFrameInlined().toObjectSpace(worldRay);
+		G3D::Ray localRay = body->getPV().position.toObjectSpace(worldRay);
 		G3D::Vector3 localHitPoint;
 
 		if(geometry->hitTest(localRay, localHitPoint, inside))
 		{
-			worldHitPoint = getCoordinateFrameInlined().pointToWorldSpace(localHitPoint);
+			worldHitPoint = body->getPV().position.pointToWorldSpace(localHitPoint);
 			return true;
 		}
 		else return false;
@@ -146,15 +144,12 @@ namespace RBX
 
 	Face Primitive::getFaceInObject(NormalId objectFace)
 	{
-		G3D::Vector3 hVec = geometry->getGridSize() * 0.5;
-		Extents extents(-hVec, hVec);
-
-		return Face::fromExtentsSide(extents, objectFace);
+		return Face::fromExtentsSide(getExtentsLocal(), objectFace);
 	}
 
 	Face Primitive::getFaceInWorld(NormalId objectFace)
 	{
-		return getFaceInObject(objectFace).toWorldSpace(getCoordinateFrameInlined());
+		return getFaceInObject(objectFace).toWorldSpace(body->getPV().position);
 	}
 
 	G3D::CoordinateFrame Primitive::getFaceCoordInObject(NormalId objectFace)
@@ -276,7 +271,7 @@ namespace RBX
 
 	void Primitive::setCoordinateFrame(const G3D::CoordinateFrame& value)
 	{
-		if(value != getCoordinateFrameInlined())
+		if(value != body->getPV().position)
 		{
 			Assembly* assembly = getAssembly();
 			if(!assembly)
@@ -396,7 +391,7 @@ namespace RBX
 		}
 	}
 
-	void Primitive::setGridSize(const G3D::Vector3& gridSize) // near-100% match when Body::setMoment is set as __declspec(noinline)
+	void Primitive::setGridSize(const G3D::Vector3& gridSize) // 100% match when Body::setMoment is set as __declspec(noinline)
 	{
 		G3D::Vector3 protectedSize = clipToSafeSize(gridSize);
 
@@ -405,13 +400,16 @@ namespace RBX
 			fuzzyExtentsStateId = -2;
 			geometry->setGridSize(protectedSize);
 
-			float newSize = geometry->getGridVolume();
-			body->setMass(newSize);
-			body->setMoment(geometry->getMoment(newSize));
+			{
+				float newSize = geometry->getGridVolume();
+				body->setMass(newSize);
+				body->setMoment(geometry->getMoment(newSize));
+				JointK.setDirty();
+			}
 
-			JointK.setDirty();
 			if(world)
 				world->onPrimitiveExtentsChanged(this);
+
 			JointK.setDirty();
 		}
 	}
@@ -432,7 +430,7 @@ namespace RBX
 
 	Extents Primitive::computeFuzzyExtents() const
 	{
-		Extents ext = Extents::fromCenterCorner(getCoordinateFrameInlined().translation, geometry->getCenterToCorner(getCoordinateFrameInlined().rotation));
+		Extents ext = Extents::fromCenterCorner(body->getPV().position.translation, geometry->getCenterToCorner(body->getPV().position.rotation));
 		ext.expand(0.01f);
 
 		return ext;
@@ -522,5 +520,54 @@ namespace RBX
 				counter++;
 		}
 		return counter;
+	}
+
+	void Primitive::insertEdge(Edge* e)
+	{
+		Primitive* p0 = e->getPrimitive(0);
+		Primitive* p1 = e->getPrimitive(1);
+
+		if(Joint::isJoint(e))
+		{
+			EdgeList::insertEdge(p0, e, e->getPrimitive(0)->joints);
+
+			if(p1)
+				EdgeList::insertEdge(p1, e, e->getPrimitive(1)->joints);
+			else
+				RBXASSERT(rbx_static_cast<Joint*>(e)->getJointType() == Joint::ANCHOR_JOINT || rbx_static_cast<Joint*>(e)->getJointType() == Joint::FREE_JOINT);
+		}
+		else
+		{
+			EdgeList::insertEdge(p0, e, e->getPrimitive(0)->contacts);
+			EdgeList::insertEdge(p1, e, e->getPrimitive(1)->contacts);
+		}
+	}
+
+	void Primitive::removeEdge(Edge* e)
+	{
+		Primitive* p0 = e->getPrimitive(0);
+		Primitive* p1 = e->getPrimitive(1);
+
+		if(Joint::isJoint(e))
+		{
+			EdgeList::removeEdge(p0, e, e->getPrimitive(0)->joints);
+
+			if(p1)
+				EdgeList::removeEdge(p1, e, e->getPrimitive(1)->joints);
+			else
+				RBXASSERT(rbx_static_cast<Joint*>(e)->getJointType() == Joint::ANCHOR_JOINT || rbx_static_cast<Joint*>(e)->getJointType() == Joint::FREE_JOINT);
+		}
+		else
+		{
+			EdgeList::removeEdge(p0, e, e->getPrimitive(0)->contacts);
+			EdgeList::removeEdge(p1, e, e->getPrimitive(1)->contacts);
+		}
+	}
+
+	void EdgeList::insertEdge(Primitive* p, Edge* e, EdgeList& list)
+	{
+		e->setNext(p, list.first);
+		list.first = e;
+		list.num++;
 	}
 }

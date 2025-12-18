@@ -74,6 +74,12 @@ namespace RBX
 	{
 		return *jointStage->getKernel();
 	}
+
+	const Kernel& World::getKernel() const
+	{
+		return *jointStage->getKernel();
+	}
+
 	int World::getNumBodies() const
 	{
 		return jointStage->getKernel()->numBodies();
@@ -363,6 +369,155 @@ namespace RBX
 					Primitive* currentPrim = *it;
 					if(currentPrim->getCoordinateFrame().translation.y < -500.0f)
 						fallen.push_back(currentPrim);
+				}
+			}
+		}
+	}
+
+	float World::step(float desiredInterval)
+	{
+		assertNotInStep();
+
+		Profiling::Mark mark(*profilingWorldStep, true);
+		
+		RBXASSERT(desiredInterval > 0.01);
+		RBXASSERT(desiredInterval < 0.1);
+
+		update();
+
+		double startTick = G3D::System::getTick();
+		bool throttling = false;
+		int startTime = G3D::max(1, Math::iRound(floorf(desiredInterval * Constants::worldStepsPerSec())));
+
+		for (int i = 0; i < startTime; i++)
+		{
+			int numOfSteps = worldStepId / Constants::worldStepsPerUiStep();
+
+			if (worldStepId % Constants::worldStepsPerUiStep() == 0)
+			{
+				Profiling::Mark markUI(*profilingUiStep, false);
+				doBreakJoints();
+				touch.fastClear();
+				touchOther.fastClear();
+
+				inStepCode = true;
+				getClumpStage()->stepUi(numOfSteps);
+				getSimJobStage().notifyMovingPrimitives();
+				inStepCode = false;
+			}
+
+			{
+				inStepCode = true;
+				Profiling::Mark markBroadphase(*profilingBroadphase, false);
+				contactManager->stepWorld();
+				inStepCode = false;
+			}
+
+			inStepCode = true;
+			jointStage->stepWorld(worldStepId, numOfSteps, throttling);
+			inStepCode = false;
+
+			if (!World::disableEnvironmentalThrottle && canThrottle)
+				throttling = G3D::System::getTick() > (i + 1) * Constants::worldDt() + startTick;
+			else
+				throttling = false;
+
+			worldStepId++;
+		}
+
+		return Constants::worldDt() * startTime;
+	}
+
+	void World::insertJoint(Joint* j)
+	{
+		assertNotInStep();
+		RBXASSERT(!inJointNotification);
+
+		if (j->getPrimitive(0) && j->getPrimitive(1))
+		{
+			Joint* d = Primitive::getJoint(j->getPrimitive(0), j->getPrimitive(1));
+			if (d)
+			{
+				inJointNotification = true;
+				Notifier<World, AutoDestroy>::raise(AutoDestroy(d));
+				inJointNotification = false;
+			}
+		}
+
+		jointStage->onEdgeAdded(j);
+		numJoints++;
+
+		if (j->isBreakable())
+		{
+			size_t success = breakableJoints.insert(j).second; 
+			RBXASSERT(success);
+		}
+	}
+
+	void World::doBreakJoints()
+	{
+		std::set<Joint*>::iterator cIt = this->breakableJoints.begin();
+
+		while (cIt != this->breakableJoints.end())
+		{
+			Joint* currentJoint = *cIt;
+			cIt++;
+
+			if (currentJoint->inKernel() && currentJoint->isBroken())
+			{
+				this->inJointNotification = true;
+				Notifier<World, AutoDestroy>::raise(AutoDestroy(currentJoint));
+				this->inJointNotification = false;
+			}
+		}
+	}
+
+	void World::createJoints(Primitive* p, std::set<Primitive*>* ignoreGroup)
+	{
+		assertNotInStep();
+		this->numLinkCalls++;
+		this->tempPrimitives.fastClear();
+		this->contactManager->getPrimitivesTouchingExtents(p->getFastFuzzyExtents(), p, this->tempPrimitives);
+
+		for (int i = 0; i < this->tempPrimitives.length(); i++)
+		{
+			Primitive* currentPrim = this->tempPrimitives[i];
+
+			if (ignoreGroup == NULL || ignoreGroup->find(currentPrim) == ignoreGroup->end())
+			{
+				if (!Primitive::getJoint(p, currentPrim))
+				{
+					Joint* canJoin = JointBuilder::canJoin(p, currentPrim);
+					if (canJoin)
+					{
+						this->insertJoint(canJoin);
+						this->inJointNotification = true;
+						Notifier<World, AutoJoin>::raise(AutoJoin(canJoin));
+						this->inJointNotification = false;
+					}
+				}
+			}
+		}
+	}
+
+	void World::destroyJoints(Primitive* p, std::set<Primitive*>* ignoreGroup)
+	{
+		assertNotInStep();
+		Joint* nextJoint = p->getFirstJoint();
+
+		while (nextJoint)
+		{
+			Joint* prevJoint = nextJoint;
+			nextJoint = p->getNextJoint(prevJoint);
+			Joint::JointType jointType = prevJoint->getJointType();
+			if (jointType != Joint::FREE_JOINT && jointType != Joint::ANCHOR_JOINT)
+			{
+				Primitive* otherPrim = prevJoint->otherPrimitive(p);
+				if (ignoreGroup == NULL || ignoreGroup->find(otherPrim) == ignoreGroup->end())
+				{
+					this->inJointNotification = true;
+					Notifier<World, AutoDestroy>::raise(AutoDestroy(prevJoint));
+					this->inJointNotification = false;
 				}
 			}
 		}

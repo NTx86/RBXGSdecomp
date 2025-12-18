@@ -173,7 +173,7 @@ namespace RBX {
 			void setMeInParent(RBX::Link*);
 			void setMeInParent(const G3D::CoordinateFrame& _meInParent);
 			void setMass(float _mass);
-			void setMoment(const G3D::Matrix3& _momentInBody) // noinline for Primitive::setGridSize
+			__declspec(noinline) void setMoment(const G3D::Matrix3& _momentInBody) // noinline for Primitive::setGridSize
 			{
 				if (moment != _momentInBody)
 				{

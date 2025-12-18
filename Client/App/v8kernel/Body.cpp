@@ -92,12 +92,14 @@ void Body::makeCofmDirty()
 	if (cofm && cofm->getIsDirty())
 	{
 		//this match is super fake, i dont know roblox managed to create this cursed assertion
+		#ifdef RBXASSERTIONS
 		if (Debugable::assertAction == Debugable::CrashOnAssert)
 		{
 			if (parent)
 				parent->validateParentCofmDirty();
 			RBXASSERT(getRootSimBody()->getDirty());
 		}
+		#endif
 	}
 	else
 	{
