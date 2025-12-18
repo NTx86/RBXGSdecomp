@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1257"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="App"
 	ProjectGUID="{F6A50BC6-9F70-4186-A1FF-AA4806785EB9}"
 	RootNamespace="RBXGSdecomp"
@@ -324,6 +324,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\Events.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\ExponentialRunningAverage.h"
 					>
 				</File>
 				<File
@@ -661,6 +665,10 @@
 			</File>
 			<File
 				RelativePath=".\util\Debug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\ExponentialRunningAverage.cpp"
 				>
 			</File>
 			<File

@@ -366,6 +366,34 @@ namespace RBX
 		canSleep = computeCanSleep();
 	}
 
+	float Clump::computeMaxRadius() const
+	{
+		typedef std::set<Primitive*>::const_iterator Iterator;
+
+		if(primitives.size() == 1)
+			return (rootPrimitive->getGeometry()->getGridSize() * 0.5f).magnitude();
+		else
+		{
+			float answer = 0.0f;
+
+			RBXASSERT(primitives.size() > 0);
+
+			G3D::Vector3 branchPos = rootPrimitive->getBody()->getBranchCofmPos();
+
+			for(Iterator it = primitives.begin(); it != primitives.end(); it++)
+			{
+				Primitive* current = *it;
+
+				G3D::Vector3 offsetCenter = Math::vector3Abs(current->getBody()->getPV().position.translation - branchPos);
+				G3D::Vector3 offset = offsetCenter + current->getGeometry()->getGridSize() * 0.5f;
+
+				answer = G3D::max(answer, offset.magnitude());
+			}
+
+			return answer;
+		}
+	}
+
 #pragma warning (push)
 #pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
 	Clump::Clump(Primitive* root)
