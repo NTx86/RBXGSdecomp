@@ -8,10 +8,11 @@ namespace RBX
 
 	struct RaiseRange
 	{
+	public:
 		size_t index;
 		size_t upper;
 		RaiseRange* previous;
-
+	public:
 		void removeIndex(unsigned int);
 	};
 
