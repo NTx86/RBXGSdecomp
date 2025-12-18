@@ -83,7 +83,8 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			UseOfATL="2"
+			CharacterSet="0"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -154,7 +155,8 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			UseOfATL="2"
+			CharacterSet="0"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -225,7 +227,8 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			UseOfATL="2"
+			CharacterSet="0"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -311,6 +314,18 @@
 				Name="util"
 				>
 				<File
+					RelativePath=".\include\util\Association.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\base64.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\boost.hpp"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\ComputeProp.h"
 					>
 				</File>
@@ -343,7 +358,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Handle.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\HitTestFilter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Http.h"
 					>
 				</File>
 				<File
@@ -356,6 +379,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\ISelectable3d.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Log.h"
 					>
 				</File>
 				<File
@@ -387,6 +414,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\standardout.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\StlExtra.h"
 					>
 				</File>
@@ -400,6 +431,10 @@
 				</File>
 				<File
 					RelativePath=".\include\util\Units.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\Utilities.h"
 					>
 				</File>
 				<File
@@ -615,6 +650,86 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="reflection"
+				>
+				<File
+					RelativePath=".\include\reflection\descriptor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\enumconverter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\function.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\member.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\object.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\property.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\reflection.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\signal.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\reflection\type.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="v8tree"
+				>
+				<File
+					RelativePath=".\include\v8tree\Instance.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8tree\Service.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="v8xml"
+				>
+				<File
+					RelativePath=".\include\v8xml\Serializer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8xml\SerializerV2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8xml\XmlElement.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8xml\XmlSerializer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="v8datamodel"
+				>
+				<File
+					RelativePath=".\include\v8datamodel\BrickColor.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="v8kernel"
@@ -660,6 +775,10 @@
 			Name="util"
 			>
 			<File
+				RelativePath=".\util\boost.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\ContentProvider.cpp"
 				>
 			</File>
@@ -681,6 +800,18 @@
 			</File>
 			<File
 				RelativePath=".\util\Guid.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Handle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Http.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Log.cpp"
 				>
 			</File>
 			<File
@@ -712,11 +843,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\standardout.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\UIEvent.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\util\Units.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Utilities.cpp"
 				>
 			</File>
 		</Filter>
@@ -796,6 +935,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8world\MacroTypes.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8world\Mechanism.cpp"
 				>
 			</File>
@@ -845,6 +988,78 @@
 			</File>
 			<File
 				RelativePath=".\v8world\World.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="reflection"
+			>
+			<File
+				RelativePath=".\reflection\reflection_function.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\reflection\reflection_object.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\reflection\reflection_property.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\reflection\signal.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\reflection\type.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="v8tree"
+			>
+			<File
+				RelativePath=".\v8tree\EnumProperty.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8tree\Instance.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8tree\Property.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8tree\Service.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="v8datamodel"
+			>
+			<File
+				RelativePath=".\v8datamodel\BrickColor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8datamodel\PartInstance.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="v8xml"
+			>
+			<File
+				RelativePath=".\v8xml\SerializerV2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8xml\XmlElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8xml\XmlSerializer.cpp"
 				>
 			</File>
 		</Filter>
