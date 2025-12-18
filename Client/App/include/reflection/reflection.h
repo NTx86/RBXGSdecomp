@@ -1,6 +1,8 @@
 #pragma once
 #include "reflection/object.h"
 
+class ArchiveBinder;
+
 namespace RBX
 {
 	class IReferenceBinder;
@@ -8,6 +10,9 @@ namespace RBX
 	// NOTE: may not be intended for this file
 	class IIDREF
 	{
+		friend class MergeBinder;
+		friend class ::ArchiveBinder;
+
 	private:
 		virtual void assignIDREF(Reflection::DescribedBase*, const InstanceHandle&) const;
 	public:

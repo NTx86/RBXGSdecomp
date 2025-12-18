@@ -1,5 +1,6 @@
 #include "v8tree/Instance.h"
 #include "reflection/function.h"
+#include <algorithm>
 
 namespace RBX
 {
@@ -49,9 +50,14 @@ namespace RBX
 
 	bool Instance::isAncestorOf(const Instance* descendent) const
 	{
-		for (const Instance* p = descendent; p != NULL; p = p->parent)
+		const Instance* p = descendent;
+
+		while(p != NULL)
+		{
+			p = p->parent;
 			if (p == this)
 				return true;
+		}
 
 		return false;
 	}
@@ -171,4 +177,132 @@ namespace RBX
 			}
 		}
 	}
+
+	void Instance::removeAllChildren()
+	{
+		while (&(*children))
+		{
+			(*(children->end() - 1))->setParent(NULL);
+		}
+	}
+
+	void Instance::onChildChanged(Instance* instance, const PropertyChanged& event)
+	{
+		Instance* p = parent;
+
+		if (p)
+			p->onChildChanged(instance, event);
+	}
+
+	void Instance::readProperties(const XmlElement* container, IReferenceBinder& binder)
+	{
+		for (const XmlElement* i = container->firstChild(); i != NULL; i = i->nextSibling())
+			readProperty(i, binder);
+	}
+
+	bool Instance::isDescendentOf(const Instance* ancestor) const
+	{
+		Instance* current = parent;
+
+		while (true)
+		{
+			if (ancestor == current)
+				return true;
+			if (!current)
+				return false;
+			current = current->parent;
+		}
+	};
+
+	void Instance::remove()
+	{
+		boost::shared_ptr<const std::vector<boost::shared_ptr<Instance>>> r = children.read();
+
+		setParent(NULL);
+
+		if (r)
+			std::for_each(r->begin(), r->end(), boost::bind(&Instance::remove, this));
+	}
+
+	void Instance::readChild(const XmlElement* childElement, IReferenceBinder& binder)
+	{
+		const XmlAttribute* classAttrib = childElement->findAttribute(tag_class);
+
+		if (classAttrib)
+		{
+			const Name* className;
+			if (classAttrib->getValue(className))
+			{
+				boost::shared_ptr<Instance> childInstance = createChild(*className);
+				if (childInstance)
+				{
+					childInstance->read(childElement, binder);
+					if (childInstance)
+						childInstance->setParent(this);
+				}
+				else
+				{
+					const XmlAttribute* nameRef = childElement->findAttribute(name_referent);
+					if (nameRef)
+						binder.announceID(nameRef, NULL);
+				}
+			}
+		}
+	}
+
+	void Instance::readChildren(const XmlElement* element, IReferenceBinder& binder)
+	{
+		if(element)
+		{
+			for (const XmlElement* current = element->findFirstChildByTag(tag_Item); current != NULL; current = element->findNextChildWithSameTag(current))
+			{
+				readChild(current, binder);
+			}
+		}
+	}
+
+	void Instance::read(const XmlElement* element, IReferenceBinder& binder)
+	{
+		const XmlAttribute* nameRef = element->findAttribute(name_referent);
+		if (nameRef)
+		{
+			binder.announceID(nameRef, this);
+		}
+
+		if (element->getTag() == tag_Item)
+		{
+			const XmlElement* properties = element->findFirstChildByTag(tag_Properties);
+			if (properties)
+			{
+				readProperties(properties, binder);
+			}
+			readChildren(element, binder);
+		}
+		else
+			readProperty(element, binder);
+	}
+
+	void Instance::predelete(Instance* instance)
+	{
+		instance->predelete();
+	}
+
+	void Instance::onAncestorChanged(const AncestorChanged& event)
+	{
+		typedef std::vector<boost::shared_ptr<Instance>>::const_iterator Iterator;
+
+		if (&(*children))
+		{
+			boost::shared_ptr<const std::vector<boost::shared_ptr<Instance>>> r = children.read();
+
+			for (Iterator it = r->begin(); it != r->end(); it++)
+			{
+				(*it)->onAncestorChanged(event);
+			}
+		}
+
+		event_ancestryChanged.fire(this, shared_from(event.oldParent));
+		Notifier<Instance, AncestorChanged>::raise(event);
+	}
+
 }

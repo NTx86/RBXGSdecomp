@@ -8,11 +8,10 @@ namespace RBX
 
 	struct RaiseRange
 	{
-	public:
-		unsigned int index;
-		unsigned int upper;
+		size_t index;
+		size_t upper;
 		RaiseRange* previous;
-	public:
+
 		void removeIndex(unsigned int);
 	};
 
@@ -61,30 +60,27 @@ namespace RBX
 		{
 			listener->onEvent((Class*)this, event);
 		}
-		// TODO: does not match (this function is very weird)
 		void raise(Event event) const
 		{
-			RaiseRange range;
-			range.index = 0;
-			range.upper = (int)listeners.size();
+			RaiseRange range = {0, listeners.size(), raiseRange};
 
-			RaiseRange* oldRange = this->raiseRange;
-			this->raiseRange = &range;
+			raiseRange = &range;
 
-			if (range.upper != 0)
+			for(; range.index < range.upper; range.index++)
 			{
-				while (range.index < range.upper)
-				{
-					Listener<Class, Event>* listener = listeners[range.index];
-					raise(event, listener);
-					++range.index;
-				}
+				raise(event, listeners[range.index]);
 			}
 
-			this->raiseRange = oldRange;
+			raiseRange = range.previous;
 		}
 		void raise() const;
-		virtual void onAddListener(Listener<Class, Event>*) const;
-		virtual void onRemoveListener(Listener<Class, Event>*) const;
+		virtual void onAddListener(Listener<Class, Event>*) const
+		{
+			return;
+		}
+		virtual void onRemoveListener(Listener<Class, Event>*) const
+		{
+			return;
+		}
 	};
 }

@@ -86,9 +86,21 @@ public:
 	XmlNameValuePair(const RBX::Name&, RBX::InstanceHandle);
 	XmlNameValuePair(const RBX::Name&, float);
 	XmlNameValuePair(const RBX::Name&, bool);
-	XmlNameValuePair(const RBX::Name&, const RBX::Name*);
+	XmlNameValuePair(const RBX::Name& tag, const RBX::Name* name)
+		: tag(tag),
+		  valueType(NAME),
+	      nameValue(name)
+	{
+	}
+
 	XmlNameValuePair(const RBX::Name&, const unsigned);
-	XmlNameValuePair(const RBX::Name&, const int);
+	XmlNameValuePair(const RBX::Name& tag, const int value)
+		: tag(tag),
+		  valueType(INT),
+	      intValue(value)
+	{
+	}
+
 	XmlNameValuePair(const RBX::Name&, RBX::ContentId);
 	XmlNameValuePair(const RBX::Name&, const char*);
 	XmlNameValuePair(const RBX::Name&, const std::string&);
@@ -153,8 +165,13 @@ class XmlAttribute : public RBX::Sibling<XmlAttribute>, public XmlNameValuePair
 {
 public:
 	XmlAttribute(const RBX::Name&);
+
 	template<typename T>
-	XmlAttribute(const RBX::Name& tag, T value);
+	XmlAttribute(const RBX::Name& tag, T value)
+		: XmlNameValuePair(tag, value)
+	{
+	}
+
 	~XmlAttribute();
 };
 
@@ -168,8 +185,13 @@ public:
 		: XmlNameValuePair(tag)
 	{
 	}
+
 	template<typename T>
-	XmlElement(const RBX::Name& tag, T value);
+	XmlElement(const RBX::Name& tag, T value)
+		: XmlNameValuePair(tag, value)
+	{
+	}
+
 	~XmlElement()
 	{
 		XmlAttribute* attribute = attributes.firstChild();
@@ -193,10 +215,17 @@ public:
 	bool isXsiNil() const;
 
 protected:
-	void addAttribute(XmlAttribute*);
+	void addAttribute(XmlAttribute* attribute)
+	{
+		attributes.pushBackChild(attribute);
+	}
 public:
 	template<typename T>
-	void addAttribute(const RBX::Name& _tag, T value);
+	void addAttribute(const RBX::Name& _tag, T value)
+	{
+		addAttribute(new XmlAttribute(_tag, value));
+	}
+
 	XmlAttribute* getFirstAttribute()
 	{
 		return attributes.firstChild();

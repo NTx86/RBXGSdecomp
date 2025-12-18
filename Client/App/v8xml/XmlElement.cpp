@@ -46,18 +46,17 @@ const RBX::Name& tag_xsinoNamespaceSchemaLocation = RBX::Name::declare("xsi:noNa
 
 void XmlNameValuePair::clearValue() const
 {
-	if (valueType == HANDLE)
+	switch(valueType)
 	{
+	case HANDLE:
 		delete handleValue;
-	}
-	else if (valueType == STRING)
-	{
+		break;
+	case STRING:
 		delete stringValue;
-	}
-	// TODO: this if statement is meant to be at the top
-	else if (valueType == CONTENTID)
-	{
+		break;
+	case CONTENTID:
 		delete contentIdValue;
+		break;
 	}
 
 	valueType = NONE;
@@ -261,16 +260,14 @@ bool XmlNameValuePair::isValueType<std::string>() const
 
 bool XmlNameValuePair::isValueEqual(const RBX::Name* value) const
 {
-	if (valueType != NAME)
+	switch(valueType)
 	{
-		if (valueType != STRING)
-			return false;
-
-		return *value == *stringValue;
-	}
-	else
-	{
+	case NAME:
 		return value == nameValue;
+	case STRING:
+		return *value == *stringValue;
+	default:
+		return false;
 	}
 }
 
@@ -313,6 +310,21 @@ std::string XmlNameValuePair::toString(XmlWriter* writer) const
 	}
 }
 
+void XmlNameValuePair::replaceHandles(const std::map<RBX::Instance*, RBX::InstanceHandle>& isolationMap)
+{
+	typedef std::map<RBX::Instance*, RBX::InstanceHandle>::const_iterator Iter;
+
+	if(valueType == HANDLE)
+	{
+		Iter r = isolationMap.find(handleValue->getTarget().get());
+
+		if(r != isolationMap.end())
+		{
+			*handleValue = r->second;
+		}
+	}
+}
+
 XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, const char* text)
 	: tag(tag),
 	  valueType(STRING),
@@ -334,37 +346,13 @@ XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, RBX::InstanceHandle han
 {
 }
 
-XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, const RBX::Name* name)
-	: tag(tag),
-	  valueType(NAME),
-	  nameValue(name)
-{
-}
-
 XmlNameValuePair::~XmlNameValuePair()
 {
 	clearValue();
 }
 
-template<typename T>
-XmlAttribute::XmlAttribute(const RBX::Name& tag, T value)
-	: XmlNameValuePair(tag, value)
-{
-}
-
 XmlAttribute::~XmlAttribute()
 {
-}
-
-void XmlElement::addAttribute(XmlAttribute* attribute)
-{
-	attributes.pushBackChild(attribute);
-}
-
-template<typename T>
-void XmlElement::addAttribute(const RBX::Name& _tag, T value)
-{
-	addAttribute(new XmlAttribute(_tag, value));
 }
 
 XmlAttribute* XmlElement::findAttribute(const RBX::Name& _tag)
@@ -431,10 +419,4 @@ XmlElement* XmlElement::addChild(XmlElement* element)
 {
 	pushBackChild(element);
 	return element;
-}
-
-template<typename T>
-XmlElement::XmlElement(const RBX::Name& tag, T value)
-	: XmlNameValuePair(tag, value)
-{
 }

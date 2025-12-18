@@ -10,8 +10,8 @@ namespace RBX
 	class IReferenceBinder
 	{
 	public:
-		virtual void announceID(const XmlNameValuePair*, Instance*);
-		virtual void announceIDREF(const XmlNameValuePair*, Reflection::DescribedBase*, const IIDREF*);
+		virtual void announceID(const XmlNameValuePair* valueID, Instance* target);
+		virtual void announceIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref);
 	protected:
 		void assign(const IIDREF*, Reflection::DescribedBase*, const InstanceHandle&);
 	public:
@@ -26,29 +26,21 @@ namespace RBX
 	private:
 		struct IDREFItem
 		{
-		public:
 			const IIDREF* idref;
 			Reflection::DescribedBase* propertyOwner;
 			InstanceHandle value;
-		  
-		public:
-			//IDREFItem(const IDREFItem&);
-			IDREFItem();
-			~IDREFItem();
-		public:
-			//IDREFItem& operator=(const IDREFItem&);
 		};
 
 	private:
 		std::vector<IDREFItem> deferredIDREFItems;
 
 	public:
-		virtual void announceID(const XmlNameValuePair*, Instance*);
-		virtual void announceIDREF(const XmlNameValuePair*, Reflection::DescribedBase*, const IIDREF*);
+		virtual void announceID(const XmlNameValuePair* valueID, Instance* target);
+		virtual void announceIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref);
 		virtual bool resolveRefs();
 	protected:
-		virtual bool processID(const XmlNameValuePair*, Instance*);
-		virtual bool processIDREF(const XmlNameValuePair*, Reflection::DescribedBase*, const IIDREF*);
+		virtual bool processID(const XmlNameValuePair* valueID, Instance* source);
+		virtual bool processIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref);
 	public:
 		//MergeBinder(const MergeBinder&);
 		MergeBinder();
@@ -63,7 +55,6 @@ class ArchiveBinder : public RBX::MergeBinder
 private:
 	struct IDREFBinding
 	{
-	public:
 		const XmlNameValuePair* valueIDREF;
 		RBX::Reflection::DescribedBase* propertyOwner;
 		const RBX::IIDREF* idref;
@@ -74,9 +65,9 @@ private:
 	std::list<IDREFBinding> idrefBindings;
 
 public:
-	virtual bool processID(const XmlNameValuePair*, RBX::Instance*);
-	virtual bool processIDREF(const XmlNameValuePair*, RBX::Reflection::DescribedBase*, const RBX::IIDREF*);
-	bool resolveIDREF(IDREFBinding);
+	virtual bool processID(const XmlNameValuePair* valueID, RBX::Instance* source);
+	virtual bool processIDREF(const XmlNameValuePair* valueIDREF, RBX::Reflection::DescribedBase* propertyOwner, const RBX::IIDREF* idref);
+	bool resolveIDREF(IDREFBinding binding);
 	virtual bool resolveRefs();
 public:
 	//ArchiveBinder(const ArchiveBinder&);
@@ -101,6 +92,6 @@ public:
   
 public:
 	static XmlElement* newRootElement();
-	static void isolateHandles(XmlElement*);
+	static void isolateHandles(XmlElement* root);
 	static void load(XmlElement*, RBX::DataModel*);
 };
