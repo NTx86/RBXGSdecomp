@@ -394,6 +394,24 @@ namespace RBX
 		return result;
 	}
 
+	G3D::Vector3 Block::getCenterToCorner(const G3D::Matrix3& rotation) const
+	{
+		if (cornerRadius < 5.0f)
+			return G3D::Vector3(cornerRadius, cornerRadius, cornerRadius);
+		else
+		{
+			G3D::Vector3 startValue = rotation * vertices[0];
+			G3D::Vector3 maxValue(fabs(startValue.x), fabs(startValue.y), fabs(startValue.z)); // might be Math::vector3Abs however it doesnt inline here
+			for (int i = 1; i <= 3; i++)
+			{
+				G3D::Vector3 newValue = rotation * vertices[i];
+				G3D::Vector3 absValue(fabs(newValue.x), fabs(newValue.y), fabs(newValue.z));
+				maxValue = maxValue.max(absValue);
+			}
+			return maxValue;
+		}
+	}
+
 	// TODO: remove from both here and in the header
 	void Block::matchDummy()
 	{
