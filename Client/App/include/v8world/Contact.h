@@ -33,8 +33,8 @@ namespace RBX
 		ContactConnector* createConnector();
 		void deleteConnector(ContactConnector*& c);
 		void deleteConnectorInline(ContactConnector*& c); //for matching only
-		virtual void deleteAllConnectors();
-		virtual bool stepContact();
+		virtual void deleteAllConnectors() = 0;
+		virtual bool stepContact() = 0;
 	public:
 		Contact(Primitive* prim0, Primitive* prim1);
 		virtual ~Contact() {}
@@ -43,7 +43,7 @@ namespace RBX
 		{
 			return steppingIndex;
 		}
-		virtual bool computeIsColliding(float);
+		virtual bool computeIsColliding(float) = 0;
 		bool computeIsAdjacent(float spaceAllowed);
 		void onPrimitiveContactParametersChanged();
 		bool step(int uiStepId);

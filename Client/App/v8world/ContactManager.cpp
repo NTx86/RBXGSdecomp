@@ -4,6 +4,8 @@
 
 namespace RBX
 {
+	bool ContactManager::ignoreBool = false;
+
 	ContactManager::ContactManager(World* world)
 	{
 		SpatialHash* hash = new SpatialHash(world, this);

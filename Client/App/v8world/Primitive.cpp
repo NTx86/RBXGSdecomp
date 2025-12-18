@@ -8,6 +8,9 @@
 
 namespace RBX 
 {
+	bool Primitive::ignoreBool = false;
+	bool Primitive::disableSleep = false;
+
 	#pragma warning (push)
 	#pragma warning (disable : 4355) // warning C4355: 'this' : used in base member initializer list
 	Primitive::Primitive(Geometry::GeometryType geometryType) :
@@ -569,5 +572,26 @@ namespace RBX
 		e->setNext(p, list.first);
 		list.first = e;
 		list.num++;
+	}
+
+	void EdgeList::removeEdge(Primitive* p, Edge* e, EdgeList& list)
+	{
+		if(list.first == e)
+		{
+			list.first = list.first->getNext(p);
+		}
+		else
+		{
+			Edge* currentEdge = list.first;
+
+			while(currentEdge->getNext(p) != e)
+			{
+				currentEdge = currentEdge->getNext(p);
+			}
+
+			currentEdge->setNext(p, e->getNext(p));
+		}
+
+		list.num--;
 	}
 }

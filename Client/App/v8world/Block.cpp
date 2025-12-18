@@ -71,6 +71,8 @@ namespace RBX
 		}
 	};
 
+	BlockTemplate::BlockTemplates BlockTemplate::blockTemplates; // TODO: check if correct
+
 	const int Block::BLOCK_FACE_TO_VERTEX[6][4] = {
 		{0, 2, 3, 1},
 		{0, 1, 5, 4},
@@ -80,7 +82,7 @@ namespace RBX
 		{1, 3, 7, 5}
 	};
 
-	const int BLOCK_FACE_VERTEX_TO_EDGE[6][4] = {
+	const int Block::BLOCK_FACE_VERTEX_TO_EDGE[6][4] = {
 		{4, 11, 5, 8},
 		{8, 3, 9, 0},
 		{0, 7, 1, 4},

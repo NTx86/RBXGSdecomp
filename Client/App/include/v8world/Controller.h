@@ -72,7 +72,7 @@ namespace RBX
 		//NullController(const NullController&);
 		NullController() : Controller() {}
 
-		virtual ~NullController();
+		//virtual ~NullController();
 
 		//NullController& operator=(const NullController&);
 
