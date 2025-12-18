@@ -69,7 +69,7 @@ void mulMatrixMatrixTranspose(const G3D::Matrix3& _mat0, const G3D::Matrix3& _ma
 
 //this is cursed but its the only way i got it to match
 //this might be actually how roblox wrote it because pointers are used in mulMatrixMatrixTranspose too
-void matrixMulInline(const G3D::Matrix3& _mat, const G3D::Vector3& _vec, G3D::Matrix3& _answer)
+void mulMatrixDiagVector(const G3D::Matrix3& _mat, const G3D::Vector3& _vec, G3D::Matrix3& _answer)
 {
 	const float* matrix = &_mat[0][0];
 	float* answer = _answer[0];
@@ -89,49 +89,36 @@ G3D::Vector3 computeRotVel(const G3D::Matrix3& rot, const G3D::Vector3& momentRe
 {
 	Matrix3 temp;
 	Matrix3 iWorldInv;
-	matrixMulInline(rot, momentRecip, temp);
+	mulMatrixDiagVector(rot, momentRecip, temp);
 	mulMatrixMatrixTranspose(temp, rot, iWorldInv);
 	return iWorldInv * angMomentum;
 }
 
-//temporary for now?
-G3D::Vector3& denormFixFunc()
-{
-	static G3D::Vector3 denormFix = Vector3(9.9999997e-21f, 9.9999997e-21f, 9.9999997e-21f);
-	return denormFix;
-}
-
 void SimBody::step(float dt)
 {
-	//line 103
-	//static G3D::Vector3 denormFix = Vector3(9.9999997e-21f, 9.9999997e-21f, 9.9999997e-21f);
-	G3D::Vector3& denormFix = denormFixFunc();
-	//line 109
+	const float someConstant = 0.99980003f;
+	static G3D::Vector3 denormFix = Vector3(9.9999997e-21f, 9.9999997e-21f, 9.9999997e-21f);
+
 	updateIfDirty();
-	//line 115?
-	float someConstant = 0.99980003f;
-	//line 117
-	angMomentum = torque * dt + angMomentum * someConstant;
+
+	angMomentum *= someConstant;
+	angMomentum += dt * torque;
+
 	pv.velocity.rotational = computeRotVel(getPV().position.rotation, momentRecip, angMomentum) + denormFix;
-	//line 118
-	Quaternion& rotateQuat = Quaternion::Quaternion(getPV().velocity.rotational, 0) * qOrientation * 0.5 * dt;
-	//line 119
+
+	Quaternion rotateQuat = Quaternion(getPV().velocity.rotational, 0) * qOrientation * 0.5 * dt;
 	qOrientation += rotateQuat;
-	// line 121
 	qOrientation *= precentInline(qOrientation.magnitude());
 	qOrientation.toRotationMatrix(pv.position.rotation);
-	//line 123
+
 	pv.velocity.linear += force * massRecip * dt;
 	pv.position.translation += getPV().velocity.linear * dt;
-	//line 129
+
 	force = Vector3(0, constantForceY, 0);
 	torque = Vector3(0, 0, 0);
-	//line 131
-	angMomentum += denormFix;
-	//line 132
-	pv.velocity.linear += denormFix;
 
-	
+	angMomentum += denormFix;
+	pv.velocity.linear += denormFix;
 }
 
 PV SimBody::getOwnerPV()
