@@ -52,6 +52,21 @@ namespace RBX
 		Instance::onDescendentRemoving(instance);
 	}
 
+	void ServiceProvider::onAddListener(Listener<ServiceProvider, ServiceAdded>* listener) const
+	{
+		typedef std::vector<boost::shared_ptr<Instance>>::const_iterator Iterator;
+
+		Iterator iter = serviceArray.begin();
+		Iterator end = serviceArray.end();
+		for (; iter != end; iter++)
+		{
+			if (fastDynamicCast<Service>((*iter).get()))
+			{
+				Notifier<ServiceProvider, ServiceAdded>::raise(ServiceAdded((*iter).get()), listener);
+			}
+		}
+	}
+
 	void ServiceProvider::clearServices()
 	{
 		RBXASSERT(numChildren()==0);

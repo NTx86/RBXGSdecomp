@@ -48,9 +48,9 @@ namespace RBX
 
 	extern const char* sServiceProvider;
 	class ServiceProvider : public DescribedNonCreatable<ServiceProvider, Instance, &sServiceProvider>,
-							public Notifier<RBX::ServiceProvider, Closing>,
-							public Notifier<RBX::ServiceProvider, ServiceAdded>,
-							public Notifier<RBX::ServiceProvider, ServiceRemoving>
+							public Notifier<ServiceProvider, Closing>,
+							public Notifier<ServiceProvider, ServiceAdded>,
+							public Notifier<ServiceProvider, ServiceRemoving>
 	{
 	private:
 		std::vector<boost::shared_ptr<Instance>> serviceArray;
