@@ -1,9 +1,12 @@
 #pragma once
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/bind.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include "reflection/reflection.h"
+#include "reflection/object.h"
 #include "reflection/property.h"
+#include "v8xml/SerializerV2.h"
 #include "util/Debug.h"
 #include "util/Events.h"
 #include "util/Association.h"
@@ -168,7 +171,7 @@ namespace RBX
 	public:
 		//Instance(const Instance&);
 	protected:
-		Instance(const char*);
+		Instance(const char* name);
 		Instance();
 		virtual ~Instance();
 	public:
@@ -177,6 +180,7 @@ namespace RBX
 	protected:
 		virtual void onGuidChanged();
 	public:
+
 		void remove();
 		const Association<Instance>& association() const;
 		Association<Instance>& association();
@@ -187,17 +191,20 @@ namespace RBX
 			return getClassName().toString();
 		}
 		void setParent(Instance*);
-		void setParent2(boost::shared_ptr<Instance>);
+		void setParent2(boost::shared_ptr<Instance> instance) // 100% match with /GS flag
+		{
+			setParent(instance.get());
+		}
 		void promoteChildren();
 		const std::string& getName() const
 		{
 			return name;
 		}
-		virtual void setName(const std::string&);
-		bool isAncestorOf(const Instance*) const;
-		bool isAncestorOf2(boost::shared_ptr<Instance>);
+		virtual void setName(const std::string& value);
+		bool isAncestorOf(const Instance* descendent) const;
+		bool isAncestorOf2(boost::shared_ptr<Instance> descendent);
 		bool isDescendentOf2(boost::shared_ptr<Instance>);
-		bool isDescendentOf(const Instance*) const;
+		bool isDescendentOf(const Instance* ancestor) const;
 		size_t numChildren() const;
 		int findChildIndex(const Instance*) const;
 		const Instance* getChild(size_t) const;
@@ -210,7 +217,7 @@ namespace RBX
 		{
 			return children.read();
 		}
-		bool canAddChild(const boost::shared_ptr<Instance>&) const;
+		bool canAddChild(const boost::shared_ptr<Instance>& instance) const;
 		bool canAddChild(const Instance*) const;
 		bool canSetParent(const Instance*) const;
 		Instance* getParent() const
@@ -223,11 +230,11 @@ namespace RBX
 	protected:
 		virtual bool askAddChild(const Instance*) const;
 		virtual bool askSetParent(const Instance*) const;
-		virtual void onAddListener(Listener<Instance, DescendentAdded>*) const;
-		virtual void onAddListener(Listener<Instance, ChildAdded>*) const;
-		virtual void onAncestorChanged(const AncestorChanged&);
-		virtual void onDescendentAdded(Instance*);
-		virtual void onDescendentRemoving(const boost::shared_ptr<Instance>&);
+		virtual void onAddListener(Listener<Instance, DescendentAdded>* listener) const;
+		virtual void onAddListener(Listener<Instance, ChildAdded>* listener) const;
+		virtual void onAncestorChanged(const AncestorChanged& event);
+		virtual void onDescendentAdded(Instance* instance);
+		virtual void onDescendentRemoving(const boost::shared_ptr<Instance>& instance);
 		virtual void onChildAdded(Instance*);
 		virtual void onChildRemoving(Instance*);
 		virtual void onChildRemoved(Instance*);
@@ -238,18 +245,18 @@ namespace RBX
 		virtual void readProperty(const XmlElement*, IReferenceBinder&);
 	public:
 		virtual void onServiceProvider(const ServiceProvider*, const ServiceProvider*);
-		void readProperties(const XmlElement*, IReferenceBinder&);
+		void readProperties(const XmlElement* container, IReferenceBinder& binder);
 		virtual boost::shared_ptr<Instance> createChild(const Name&);
 		virtual XmlElement* write();
 		void writeChildren(XmlElement*);
 		XmlElement* writeDelete();
-		void read(const XmlElement*, IReferenceBinder&);
-		void readChildren(const XmlElement*, IReferenceBinder&);
-		void readChild(const XmlElement*, IReferenceBinder&);
-		void raisePropertyChanged(const Reflection::PropertyDescriptor&);
+		void read(const XmlElement* element, IReferenceBinder& binder);
+		void readChildren(const XmlElement* element, IReferenceBinder& binder);
+		void readChild(const XmlElement* childElement, IReferenceBinder& binder);
+		void raisePropertyChanged(const Reflection::PropertyDescriptor& descriptor);
 	protected:
 		void raiseChanged(const Reflection::PropertyDescriptor&);
-		virtual void onChildChanged(Instance*, const PropertyChanged&);
+		virtual void onChildChanged(Instance* instance, const PropertyChanged& event);
 	public:
 		//Instance& operator=(const Instance&);
 	public:
@@ -267,7 +274,7 @@ namespace RBX
 		}
 	  
 	private:
-		static void predelete(Instance*);
+		static void predelete(Instance* instance);
 	public:
 		static XmlElement* toNewXmlRoot(Instance*);
 		static boost::shared_ptr<Instance> fromXmlRoot(XmlElement*);
