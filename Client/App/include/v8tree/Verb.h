@@ -10,7 +10,7 @@ namespace RBX
 {
 	class VerbContainer;
 
-	class IDataState : public StateStack<XmlState>
+	class IDataState : public StateStack<XmlState> // NOTE: may not be intended for this file
 	{
 	public:
 		virtual void setDirty(bool);

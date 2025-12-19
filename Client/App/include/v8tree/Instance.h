@@ -310,7 +310,7 @@ namespace RBX
 		}
 	};
 
-	class XmlState : public Debugable // all functions inlined
+	class XmlState : public Debugable // NOTE: may not be intended for this file
 	{
 	protected:
 		XmlElement root;
