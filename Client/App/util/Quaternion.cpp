@@ -92,22 +92,22 @@ namespace RBX
 		Quaternion QuatMul = *this * 2.0f;
 
 		float v5 = x * QuatMul.x;
-		float v6 = x * QuatMul.y; //gets loaded to non-float stack
+		float v6 = x * QuatMul.y;
 		float v7 = x * QuatMul.z;
 
 		float v8 = w * QuatMul.x;
 		float v9 = w * QuatMul.y;
-		float zz = w * QuatMul.z; //this should be loaded to non-float stack
+		float zz = w * QuatMul.z;
 
 		float v10 = y * QuatMul.y;
 		float v15 = y * QuatMul.z;
 		float v12 = z * QuatMul.z;
 
 		rot[0][0] = 1.0 - (v12 + v10);
-		rot[0][1] = v6 - zz; //the stack value gets loaded here
+		rot[0][1] = v6 - zz;
 		rot[0][2] = v9 + v7;
 
-		rot[1][0] = v9 + zz;
+		rot[1][0] = v6 + zz;
 		rot[1][1] = 1.0 - (v12 + v5);
 		rot[1][2] = v15 - v8;
 
