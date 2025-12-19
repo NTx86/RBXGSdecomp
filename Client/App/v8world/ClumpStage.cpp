@@ -475,7 +475,7 @@ namespace RBX
 		while (!rigidTwos.empty())
 		{
 			RBXASSERT(!anchors.empty());
-			RigidJoint* r = *rigidTwos.end();
+			RigidJoint* r = *rigidTwos.begin();
 
 			Clump* c0 = r->getPrimitive(0)->getClump();
 			Clump* c1 = r->getPrimitive(1)->getClump();
