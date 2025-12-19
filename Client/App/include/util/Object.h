@@ -17,7 +17,7 @@ namespace RBX
 	public:
 		virtual ~Object() {} //TODO:check
 		Object(const Object&);
-		Object();
+		Object() {}
 	public:
 		//Object& operator=(const Object&);
 	};
@@ -39,7 +39,7 @@ namespace RBX
 	public:
 		//Creatable(const Creatable&);
 	protected:
-		Creatable();
+		Creatable() {}
 		virtual ~Creatable() {} // TODO:check
 	public:
 		//Creatable& operator=(const Creatable&);
@@ -75,7 +75,7 @@ namespace RBX
 	public:
 		//AbstractFactoryProduct(const AbstractFactoryProduct&);
 	protected:
-		AbstractFactoryProduct();
+		AbstractFactoryProduct() {}
 	public:
 		virtual const Name& getClassName() const;
 	public:
