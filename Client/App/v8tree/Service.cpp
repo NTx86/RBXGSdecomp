@@ -111,6 +111,6 @@ namespace RBX
 	// TODO: check match
 	bool ServiceProvider::askAddChild(const Instance* instance) const
 	{
-		return dynamic_cast<const Service*>(instance) != NULL;
+		return fastDynamicCast<const Service>(instance) != NULL;
 	}
 }

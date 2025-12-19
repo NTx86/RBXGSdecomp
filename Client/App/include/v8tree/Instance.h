@@ -292,6 +292,12 @@ namespace RBX
 			return dynamic_cast<To*>(instance);
 		}
 
+		template<typename To>
+		static To* fastDynamicCast(const Instance* instance)
+		{
+			return dynamic_cast<To*>(instance);
+		}
+
 		// TODO: remove the __forceinline
 		template<typename Class>
 		static __forceinline Class* findFirstAncestorOfClass(Instance* instance)
