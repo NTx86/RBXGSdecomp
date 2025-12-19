@@ -5,8 +5,6 @@
 
 namespace RBX
 {
-	class Instance;
-
 	// TODO: check if matches
 	template<typename Class>
 	boost::shared_ptr<Class> shared_from(Class* r)
@@ -101,7 +99,7 @@ namespace RBX
 			}
 			else
 			{
-				return boost::shared_dynamic_cast<Instance>(iter->second->create());
+				return boost::shared_dynamic_cast<T>(iter->second->create());
 			}
 		}
 	};
