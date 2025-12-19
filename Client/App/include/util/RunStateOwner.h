@@ -64,8 +64,7 @@ namespace RBX
 
 	class IRunView
 	{
-		friend class RunService;
-
+	public:
 		virtual void InvalidateRunView();
 		virtual void AdjustThrottle(double);
 		//IRunView(const IRunView&);
