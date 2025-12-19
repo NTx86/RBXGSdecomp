@@ -10,22 +10,6 @@ namespace RBX
 {
 	class VerbContainer;
 
-	class XmlState : public Debugable // all functions inlined
-	{
-	protected:
-		XmlElement root;
-	public:
-		//XmlState(const XmlState&);
-		XmlState();
-		const XmlElement* getData() const;
-		virtual void addState(XmlElement*, Instance&);
-		void addAllProperties(Instance&);
-		void addParentProperty(Instance&);
-		void addDelete(Instance&);
-		void addProperty(Reflection::Property&);
-		~XmlState();
-	};
-
 	class IDataState : public StateStack<XmlState>
 	{
 	public:
