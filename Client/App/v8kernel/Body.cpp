@@ -91,8 +91,8 @@ void Body::makeCofmDirty()
 {
 	if (cofm && cofm->getIsDirty())
 	{
-		//this match is super fake, i dont know roblox managed to create this cursed assertion
-		#ifdef RBXASSERTIONS
+		// TODO: this match is super fake, i dont know roblox managed to create this cursed assertion
+		#if defined(_DEBUG) || defined(_RELEASEASSERT)
 		if (Debugable::assertAction == Debugable::CrashOnAssert)
 		{
 			if (parent)
