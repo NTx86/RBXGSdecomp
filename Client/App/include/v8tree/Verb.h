@@ -1,3 +1,4 @@
+#pragma once
 #include "util/StateStack.h"
 #include "util/Name.h"
 #include "util/Debug.h"

@@ -1,3 +1,4 @@
+#pragma once
 #include "reflection/reflection.h"
 #include "reflection/signal.h"
 #include "util/Events.h"

@@ -1,3 +1,4 @@
+#pragma once
 #include "util/Name.h"
 #include <vector>
 #include <string>
