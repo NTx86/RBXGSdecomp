@@ -418,7 +418,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\RunStateOwner.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\standardout.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\StateStack.h"
 					>
 				</File>
 				<File
@@ -705,6 +713,10 @@
 					RelativePath=".\include\v8tree\Service.h"
 					>
 				</File>
+				<File
+					RelativePath=".\include\v8tree\Verb.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="v8xml"
@@ -844,6 +856,10 @@
 			</File>
 			<File
 				RelativePath=".\util\RunningAverage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\RunStateOwner.cpp"
 				>
 			</File>
 			<File
@@ -1036,6 +1052,10 @@
 			</File>
 			<File
 				RelativePath=".\v8tree\Service.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8tree\Verb.cpp"
 				>
 			</File>
 		</Filter>
