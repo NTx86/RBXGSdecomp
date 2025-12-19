@@ -398,6 +398,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\util\Object.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\Profiling.h"
 					>
 				</File>
