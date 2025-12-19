@@ -1,0 +1,3 @@
+[submodule "Client/Network/raknet"]
+	path = Client/Network/RakNet30
+	url = https://github.com/RBLXDecomp/raknet
