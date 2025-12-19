@@ -105,8 +105,8 @@ namespace RBX
 		void pause();
 		void reset();
 		void endRunThread(bool join);
-		void raiseHeartbeat(float, float);
-		void raiseStepped(float, float);
+		void raiseHeartbeat(float time, float step);
+		void raiseStepped(float time, float step);
 		RunState getRunState() const;
 		bool isEditState() const;
 		bool isRunState() const;
@@ -117,9 +117,9 @@ namespace RBX
 		void removeRunView(IRunView*);
 		void invalidateRunViews();
 		void runViewValid(IRunView*);
-		virtual void onAncestorChanged(const AncestorChanged&);
+		virtual void onAncestorChanged(const AncestorChanged& event);
 	private:
-		void runProc(boost::shared_ptr<DataModel>);
+		void runProc(boost::shared_ptr<DataModel> dataModel);
 	public:
 		//RunService& operator=(const RunService&);
 	};
