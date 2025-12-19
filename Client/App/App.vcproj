@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;RBXASSERTIONS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_VC80_UPGRADE=0x0710"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -84,7 +84,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfATL="2"
-			CharacterSet="0"
+			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -110,7 +110,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;MBCS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_RELEASE;_VC80_UPGRADE=0x0710"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -156,7 +156,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfATL="2"
-			CharacterSet="0"
+			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -182,7 +182,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;MBCS;RBXASSERTIONS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_RELEASE;_RELEASEASSERT;_VC80_UPGRADE=0x0710"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -228,7 +228,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfATL="2"
-			CharacterSet="0"
+			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -254,7 +254,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIB;VC80_UPGRADE=0x0710;MBCS;RBXASSERTIONS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_RELEASE;_RELEASEASSERT;_VC80_UPGRADE=0x0710"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
