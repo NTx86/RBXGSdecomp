@@ -118,7 +118,7 @@ void SerializerV2::isolateHandles(XmlElement* root)
 
 XmlElement* SerializerV2::newRootElement()
 {
-	static const RBX::Name& tag_xmlnsxmime = RBX::Name::declare("xlmns:xmime", -1);
+	static const RBX::Name& tag_xmlnsxmime = RBX::Name::declare("xmlns:xmime", -1);
 
 	XmlElement* thisElement = new XmlElement(tag_roblox);
 	thisElement->addAttribute(tag_xmlnsxmime,"http://www.w3.org/2005/05/xmlmime");
