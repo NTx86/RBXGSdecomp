@@ -17,9 +17,11 @@ namespace RBX
 		{
 		private:
 			SystemAddress serverId;
-			Reflection::SignalDesc<Client, void(std::string, boost::shared_ptr<Instance>)> event_ConnectionAccepted;
-			Reflection::SignalDesc<Client, void(std::string, int)> event_ConnectionFailed;
-			Reflection::SignalDesc<Client, void(std::string)> event_ConnectionRejected;
+		public:
+			static Reflection::SignalDesc<Client, void(std::string, boost::shared_ptr<Instance>)> event_ConnectionAccepted;
+			static Reflection::SignalDesc<Client, void(std::string, int)> event_ConnectionFailed;
+			static Reflection::SignalDesc<Client, void(std::string)> event_ConnectionRejected;
+
 		public:
 			//Client(const Client&);
 			Client();
