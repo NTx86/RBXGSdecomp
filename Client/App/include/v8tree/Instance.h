@@ -315,4 +315,20 @@ namespace RBX
 			return NULL;
 		}
 	};
+
+	class XmlState : public Debugable // NOTE: may not be intended for this file
+	{
+	protected:
+		XmlElement root;
+	public:
+		//XmlState(const XmlState&);
+		XmlState();
+		const XmlElement* getData() const;
+		virtual void addState(XmlElement*, Instance&);
+		void addAllProperties(Instance&);
+		void addParentProperty(Instance&);
+		void addDelete(Instance&);
+		void addProperty(Reflection::Property&);
+		~XmlState();
+	};
 }
