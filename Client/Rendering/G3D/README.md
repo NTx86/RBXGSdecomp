@@ -1,1 +1,0 @@
-Extract the source directory from [g3d-src-6_09.zip](https://sourceforge.net/projects/g3d/files/g3d-cpp/6.09/) here.
