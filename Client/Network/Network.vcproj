@@ -219,7 +219,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\IdManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Replicator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Streaming.cpp"
 				>
 			</File>
 			<Filter
@@ -477,11 +485,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\Network\Client.h"
+				RelativePath=".\Client.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\Network\Replicator.h"
+				RelativePath=".\IdManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Replicator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Streaming.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Network\SuperSafeChanged.h"
 				>
 			</File>
 			<Filter

@@ -2,6 +2,12 @@
 #include "API.h"
 #include "Client.h"
 
+const char* Exposer::IDTOString(int id)
+{
+	Exposer exposer;
+	return exposer.PacketLogger::IDTOString((unsigned char)id);
+}
+
 namespace RBX
 {
 	namespace Network

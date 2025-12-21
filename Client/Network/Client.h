@@ -7,6 +7,14 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
+class Exposer : protected PacketLogger
+{
+public:
+	Exposer() : PacketLogger() {}
+
+	static const char* IDTOString(int id);
+};
+
 namespace RBX
 {
 	namespace Network
@@ -29,7 +37,10 @@ namespace RBX
 			void connect(std::string, int, int, int);
 			void disconnect(int blockDuration);
 			virtual PluginReceiveResult OnReceive(RakPeerInterface*, Packet*);
-			virtual XmlElement* write();
+			virtual XmlElement* write()
+			{
+				return NULL;
+			}
 		protected:
 			virtual void onServiceProvider(const ServiceProvider* oldProvider, const ServiceProvider* newProvider);
 			virtual void onEvent(const ServiceProvider* source, Closing event);
