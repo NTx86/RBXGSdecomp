@@ -36,8 +36,8 @@ namespace RBX
 		static boost::shared_ptr<GlobalSettings> singleton();
 	};
 
-	template<typename DerivedClass, const char** ClassName>
-	class GlobalSettingsItem : public DescribedCreatable<DerivedClass, GlobalSettings::Item, ClassName>, public Service
+	template<typename Class, const char** ClassName>
+	class GlobalSettingsItem : public DescribedCreatable<Class, GlobalSettings::Item, ClassName>, public Service
 	{
 	private:
 		static GlobalSettingsItem* sing;
@@ -49,6 +49,6 @@ namespace RBX
 	public:
 		//GlobalSettingsItem& operator=(const GlobalSettingsItem&);
 
-		static DerivedClass& singleton();
+		static Class& singleton();
 	};
 }
