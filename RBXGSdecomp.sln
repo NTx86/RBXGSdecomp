@@ -5,6 +5,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "App", "Client\App\App.vcpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Network", "Client\Network\Network.vcproj", "{DFFF620C-831C-4E16-B5C4-3942A22D453B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics3D", "Client\Rendering\g3d\graphics3D.vcproj", "{E928D86E-80C7-476A-80C8-B3611300207A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLG3D", "Client\Rendering\g3d\GLG3D.vcproj", "{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -29,6 +33,22 @@ Global
 		{DFFF620C-831C-4E16-B5C4-3942A22D453B}.ReleaseAssert|Win32.Build.0 = ReleaseAssert|Win32
 		{DFFF620C-831C-4E16-B5C4-3942A22D453B}.ReleaseAssertDLL|Win32.ActiveCfg = ReleaseAssert|Win32
 		{DFFF620C-831C-4E16-B5C4-3942A22D453B}.ReleaseAssertDLL|Win32.Build.0 = ReleaseAssert|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.Debug|Win32.Build.0 = Debug|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.Release|Win32.ActiveCfg = Release|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.Release|Win32.Build.0 = Release|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.ReleaseAssert|Win32.ActiveCfg = Release|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.ReleaseAssert|Win32.Build.0 = Release|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.ReleaseAssertDLL|Win32.ActiveCfg = Release|Win32
+		{E928D86E-80C7-476A-80C8-B3611300207A}.ReleaseAssertDLL|Win32.Build.0 = Release|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.Debug|Win32.Build.0 = Debug|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.Release|Win32.ActiveCfg = Release|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.Release|Win32.Build.0 = Release|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.ReleaseAssert|Win32.ActiveCfg = Release|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.ReleaseAssert|Win32.Build.0 = Release|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.ReleaseAssertDLL|Win32.ActiveCfg = Release|Win32
+		{A75B0993-B58E-42C2-AA1E-A7F91B39C96B}.ReleaseAssertDLL|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
