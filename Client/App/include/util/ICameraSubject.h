@@ -5,7 +5,7 @@
 namespace RBX
 {
 	class Primitive;
-	class ICameraSubject : public ILocation
+	class ICameraSubject : public virtual ILocation
 	{
 	public:
 		//ICameraSubject(const ICameraSubject&);
