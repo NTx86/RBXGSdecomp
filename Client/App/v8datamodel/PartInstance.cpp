@@ -1,5 +1,6 @@
+#include "v8datamodel/PartInstance.h"
+#include <G3D/CoordinateFrame.h>
 #include "reflection/type.h"
-#include <g3d/coordinateframe.h>
 
 namespace RBX
 {

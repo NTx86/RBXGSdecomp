@@ -306,6 +306,36 @@ namespace RBX
 			//RefPropDescriptor& operator=(RefPropDescriptor&);
 		};
 
+		// EnumPropDescriptor
+		template<typename Class, typename Enum>
+		class EnumPropDescriptor : public EnumPropertyDescriptor
+		{
+		private:
+			std::auto_ptr<typename TypedPropertyDescriptor<Enum>::GetSet> getset;
+		  
+		public:
+			//EnumPropDescriptor(EnumPropDescriptor&);
+		public:
+			virtual bool isReadOnly() const;
+			Enum getValue(const DescribedBase*) const;
+			void setValue(DescribedBase*, Enum) const;
+			virtual bool equalValues(const DescribedBase*, DescribedBase*) const;
+			virtual int getEnumValue(const DescribedBase*) const;
+			virtual bool setEnumValue(DescribedBase*, int) const;
+			virtual unsigned getIndexValue(const DescribedBase*) const;
+			virtual bool setIndexValue(DescribedBase*, unsigned) const;
+			virtual bool hasStringValue() const;
+			virtual std::string getStringValue(const DescribedBase*) const;
+			virtual bool setStringValue(DescribedBase*, const Name&) const;
+			virtual bool setStringValue(DescribedBase*, const std::string&) const;
+			virtual void readValue(DescribedBase*, const XmlElement*, IReferenceBinder&) const;
+			virtual void writeValue(const DescribedBase*, XmlElement*) const;
+		public:
+			virtual ~EnumPropDescriptor();
+		public:
+			//EnumPropDescriptor& operator=(EnumPropDescriptor&);
+		};
+
 		// BoundFuncDesc
 		template<typename Class, typename Function, int ArgCount>
 		class BoundFuncDesc;
