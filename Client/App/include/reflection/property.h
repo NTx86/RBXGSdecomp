@@ -1,5 +1,6 @@
 #pragma once
 #include "reflection/member.h"
+#include "reflection/enumconverter.h"
 #include "v8xml/XmlElement.h"
 #include "util/Handle.h"
 
@@ -172,6 +173,26 @@ namespace RBX
 			virtual ~RefPropertyDescriptor();
 		public:
 			//RefPropertyDescriptor& operator=(const RefPropertyDescriptor&);
+		};
+
+		class EnumPropertyDescriptor : public PropertyDescriptor
+		{
+		public:
+			const EnumDescriptor& enumDescriptor;
+		  
+		public:
+			virtual unsigned getIndexValue(const DescribedBase*) const;
+			virtual bool setIndexValue(DescribedBase*, unsigned) const;
+			virtual int getEnumValue(const DescribedBase*) const;
+			virtual bool setEnumValue(DescribedBase*, int) const;
+		public:
+			//EnumPropertyDescriptor(const EnumPropertyDescriptor&);
+		protected:
+			EnumPropertyDescriptor(ClassDescriptor&, const EnumDescriptor&, const char*, const char*, Functionality);
+		public:
+			virtual ~EnumPropertyDescriptor();
+		public:
+			//EnumPropertyDescriptor& operator=(const EnumPropertyDescriptor&);
 		};
 	}
 }

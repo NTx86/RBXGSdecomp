@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
+				AdditionalIncludeDirectories=".\include;..\Rendering\png;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RenderLib\include;..\Rendering\AppDraw\include;..\boost_1_34_1\src;.\lua-5.1.1\src;..\Rendering\SDL-1.2.6\include;..\Network\include;..\RbxGraphics\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_VC80_UPGRADE=0x0710"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -109,7 +109,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
+				AdditionalIncludeDirectories=".\include;..\Rendering\png;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RenderLib\include;..\Rendering\AppDraw\include;..\boost_1_34_1\src;.\lua-5.1.1\src;..\Rendering\SDL-1.2.6\include;..\Network\include;..\RbxGraphics\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_RELEASE;_VC80_UPGRADE=0x0710"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -181,7 +181,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
+				AdditionalIncludeDirectories=".\include;..\Rendering\png;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RenderLib\include;..\Rendering\AppDraw\include;..\boost_1_34_1\src;.\lua-5.1.1\src;..\Rendering\SDL-1.2.6\include;..\Network\include;..\RbxGraphics\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_RELEASE;_RELEASEASSERT;_VC80_UPGRADE=0x0710"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -253,7 +253,7 @@
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\boost_1_34_1;.\include;..\Rendering\G3D\include\;&quot;..\Rendering\SDL-1.2.6\include\&quot;"
+				AdditionalIncludeDirectories=".\include;..\Rendering\png;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RenderLib\include;..\Rendering\AppDraw\include;..\boost_1_34_1\src;.\lua-5.1.1\src;..\Rendering\SDL-1.2.6\include;..\Network\include;..\RbxGraphics\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_RELEASE;_RELEASEASSERT;_VC80_UPGRADE=0x0710"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -367,6 +367,22 @@
 				</File>
 				<File
 					RelativePath=".\include\util\Http.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\ICameraSubject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\IControllable.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\ILocation.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\util\IMetric.h"
 					>
 				</File>
 				<File
@@ -745,6 +761,30 @@
 					RelativePath=".\include\v8datamodel\BrickColor.h"
 					>
 				</File>
+				<File
+					RelativePath=".\include\v8datamodel\ICameraOwner.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8datamodel\IPrimaryPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8datamodel\PartInstance.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8datamodel\PVInstance.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8datamodel\Surface.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\v8datamodel\Surfaces.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -1068,6 +1108,10 @@
 			</File>
 			<File
 				RelativePath=".\v8datamodel\PartInstance.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8datamodel\PVInstance.cpp"
 				>
 			</File>
 		</Filter>
