@@ -84,5 +84,18 @@ namespace RBX
 		static const ServiceProvider* findServiceProvider(const Instance*);
 	private:
 		static size_t newIndex();
+	public:
+		template<typename Class>
+		Class* find() const;
+	
+		template<typename Class>
+		Class* create() const;
+	
+	private:
+		template<typename Class>
+		static size_t doGetClassIndex();
+		
+		template<typename Class>
+		static void callDoGetClassIndex();
 	};
 }

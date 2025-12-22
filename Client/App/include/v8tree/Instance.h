@@ -175,8 +175,16 @@ namespace RBX
 		Instance();
 		virtual ~Instance();
 	public:
-		void assignGuid(const Guid::Data&);
-		const Guid& getGuid() const;
+		void assignGuid(const Guid::Data& id)
+		{
+			guid.assign(id);
+			onGuidChanged();
+		}
+
+		const Guid& getGuid() const
+		{
+			return guid;
+		}
 	protected:
 		virtual void onGuidChanged();
 	public:

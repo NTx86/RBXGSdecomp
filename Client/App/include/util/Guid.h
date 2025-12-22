@@ -34,7 +34,10 @@ namespace RBX
 		bool operator <(const Guid& other) const;
 
 		void assign(Data);
-		void extract(Data&) const;
+		void extract(Data& data) const
+		{
+			data = this->data;
+		}
 
 		void copyDataFrom(const Guid& guid) // TODO: is this correct?
 		{

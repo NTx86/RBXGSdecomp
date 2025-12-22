@@ -745,6 +745,10 @@
 					RelativePath=".\include\v8datamodel\BrickColor.h"
 					>
 				</File>
+				<File
+					RelativePath=".\include\v8datamodel\GlobalSettings.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -1064,6 +1068,10 @@
 			>
 			<File
 				RelativePath=".\v8datamodel\BrickColor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8datamodel\GlobalSettings.cpp"
 				>
 			</File>
 			<File

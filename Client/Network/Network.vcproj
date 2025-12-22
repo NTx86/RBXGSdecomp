@@ -164,6 +164,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".\include;.\include\network;..\App\include;.\RakNet30\source;..\Rendering\g3d\include;..\Rendering\g3d\include\zlib;..\Rendering\g3d\png;..\boost_1_34_1\src;..\App\lua-5.1.1\src;..\Rendering\AppDraw\include;..\Rendering\sdl-1.2.6\include;..\Rendering\RenderLib\include;..\RbxGraphics\include"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;_RELEASEASSERT;_VC80_UPGRADE=0x0710"
 				RuntimeLibrary="2"
@@ -209,6 +210,26 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\API.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Client.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IdManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Replicator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Streaming.cpp"
+				>
+			</File>
 			<Filter
 				Name="RakNet"
 				>
@@ -459,6 +480,30 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\include\Network\API.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Client.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IdManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Replicator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Streaming.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Network\SuperSafeChanged.h"
+				>
+			</File>
 			<Filter
 				Name="RakNet"
 				>
