@@ -764,6 +764,7 @@
 				<File
 					RelativePath=".\include\v8datamodel\GlobalSettings.h"
 					>
+				</File>
 				<File
 					RelativePath=".\include\v8datamodel\ICameraOwner.h"
 					>
