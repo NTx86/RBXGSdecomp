@@ -91,8 +91,8 @@ namespace RBX
 		boost::mutex viewMutex;
 		std::map<IRunView*, bool> views;
 		int invalidRunViewCount;
-		bool runDisabled;
 	public:
+		bool runDisabled;
 		static Reflection::SignalDesc<RunService, void(float, float)> event_Stepped;
 	private:
 		void start();
