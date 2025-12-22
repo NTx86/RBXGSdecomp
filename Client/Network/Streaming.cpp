@@ -8,11 +8,54 @@ namespace RBX
 	{
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, bool value)
 		{
-			if (value)
-				stream.Write1();
-			else
-				stream.Write0();
+			stream.Write(value);
+			return stream;
+		}
 
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, int value)
+		{
+			stream.Write(value);
+			return stream;
+		}
+
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, unsigned int value)
+		{
+			stream.Write(value);
+			return stream;
+		}
+
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, unsigned char value)
+		{
+			stream.Write(value);
+			return stream;
+		}
+
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, float value)
+		{
+			stream.Write(value);
+			return stream;
+		}
+
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const std::string& value)
+		{
+			stream.Write((unsigned)value.size());
+			stringCompressor->EncodeString(value.c_str(), (int)value.size() + 1, &stream);
+			return stream;
+		}
+
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const G3D::Vector3& value)
+		{
+			stream << value.x;
+			stream << value.y;
+			stream << value.z;
+			return stream;
+		}
+
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const G3D::Color3& value)
+		{
+			stream << value.r;
+			stream << value.g;
+			stream << value.b;
 			return stream;
 		}
 
@@ -22,21 +65,28 @@ namespace RBX
 			return stream;
 		}
 
-		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned char& value)
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, int& value)
 		{
-			stream.ReadBits(&value, 8);
+			stream.Read(value);
 			return stream;
 		}
 
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned int& value)
 		{
-			stream.ReadBits((unsigned char*)&value, 32);
+			stream.Read(value);
+			return stream;
+		}
+
+
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned char& value)
+		{
+			stream.Read(value);
 			return stream;
 		}
 
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, float& value)
 		{
-			stream.ReadBits((unsigned char*)&value, 32);
+			stream.Read(value);
 			return stream;
 		}
 
@@ -50,6 +100,14 @@ namespace RBX
 			value = strBuf;
 
 			delete[] strBuf;
+			return stream;
+		}
+
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, G3D::Vector3& value)
+		{
+			stream >> value.x;
+			stream >> value.y;
+			stream >> value.z;
 			return stream;
 		}
 

@@ -26,16 +26,21 @@ namespace RBX
 
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, bool value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, int value);
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, unsigned int value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, unsigned char value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, float value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const std::string& value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const G3D::Vector3& value);
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const G3D::Color3& value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, const G3D::CoordinateFrame& cf);
 
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, bool& value);
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, int& value);
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned int& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned char& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, float& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, std::string& value);
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, G3D::Vector3& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, G3D::Color3& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, BrickColor& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, ContentId& value);
