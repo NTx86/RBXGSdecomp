@@ -121,7 +121,7 @@ namespace RBX
 			void deserializeRef(Reflection::Property&, RakNet::BitStream&);
 			virtual ~IdSerializer();
 			//IdSerializer& operator=(const IdSerializer&);
-
+		protected:
 			static void setRefValue(WaitItem&, Instance*);
 		};
 	}
