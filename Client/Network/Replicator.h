@@ -28,7 +28,7 @@ namespace RBX
 			//Peer(const Peer&);
 		protected:
 			Peer();
-			~Peer();
+			virtual ~Peer();
 			virtual bool askAddChild(const Instance*) const;
 			RakPeerInterface* peerInterface();
 			void updateLogger();
@@ -36,6 +36,7 @@ namespace RBX
 			virtual void onEvent(const RunService* source, Heartbeat event);
 			virtual void Update(RakPeerInterface*);
 			virtual void onServiceProvider(const ServiceProvider* oldProvider, const ServiceProvider* newProvider);
+		public:
 			//Peer& operator=(const Peer&);
 		};
 	}

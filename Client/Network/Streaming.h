@@ -106,6 +106,7 @@ namespace RBX
 
 		private:
 			SharedStringDictionary scopeNames;
+		protected:
 			std::map<Guid::Data, std::vector<WaitItem>> waitItems;
 		public:
 			//IdSerializer(const IdSerializer&);
@@ -119,9 +120,9 @@ namespace RBX
 			size_t numWaitingRefs() const;
 			void serializeRef(const Reflection::ConstProperty&, RakNet::BitStream&);
 			void deserializeRef(Reflection::Property&, RakNet::BitStream&);
-			~IdSerializer();
+			virtual ~IdSerializer();
 			//IdSerializer& operator=(const IdSerializer&);
-
+		protected:
 			static void setRefValue(WaitItem&, Instance*);
 		};
 	}

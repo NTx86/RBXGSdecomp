@@ -33,7 +33,7 @@ namespace RBX
 		public:
 			//Client(const Client&);
 			Client();
-			~Client();
+			virtual ~Client();
 			void connect(std::string, int, int, int);
 			void disconnect(int blockDuration);
 			virtual PluginReceiveResult OnReceive(RakPeerInterface*, Packet*);

@@ -26,7 +26,7 @@ namespace RBX
 	public:
 		//IdManager(const IdManager&);
 		IdManager();
-		~IdManager();
+		virtual ~IdManager();
 		//IdManager& operator=(const IdManager&);
 	};
 }
