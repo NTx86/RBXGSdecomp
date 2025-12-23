@@ -18,8 +18,8 @@ namespace RBX
 	extern const char* sPVInstance;
 	class PVInstance : public Reflection::Described<PVInstance, &sPVInstance, Instance>,
 					   public IControllable,
-					   public IPrimaryPart,
-					   public ILocation
+					   public virtual IPrimaryPart,
+					   public virtual ILocation
 	{
 	protected:
 		ComputeProp<bool, PVInstance> IsControllable;
@@ -42,7 +42,7 @@ namespace RBX
 	public:
 		//PVInstance(const PVInstance&);
 	protected:
-		PVInstance(const char*);
+		PVInstance(const char* name);
 	public:
 		virtual ~PVInstance();
 	public:

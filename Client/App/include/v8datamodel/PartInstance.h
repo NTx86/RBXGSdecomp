@@ -27,10 +27,9 @@ namespace RBX
 						 public Notifier<PartInstance, CanAggregateChanged>,
 						 public IMoving,
 						 public IRenderable,
-						 //public IPrimaryPart,
-						 public ICameraSubject,
-						 public ISelectable3d
-						 //public ILocation
+						 public virtual IPrimaryPart,
+						 public virtual ICameraSubject,
+						 public virtual ISelectable3d
 	{
 	public:
 		enum FormFactor

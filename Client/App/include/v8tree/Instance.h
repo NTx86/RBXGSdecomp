@@ -324,7 +324,7 @@ namespace RBX
 		}
 	};
 
-	class XmlState : public Debugable // NOTE: may not be intended for this file
+	class XmlState : public virtual Debugable // NOTE: may not be intended for this file
 	{
 	protected:
 		XmlElement root;
