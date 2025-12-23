@@ -99,7 +99,7 @@ namespace RBX
 	public:
 		//RunService(const RunService&);
 		RunService();
-		~RunService();
+		virtual ~RunService();
 		void setRunState(RunState newState);
 		void run();
 		void pause();

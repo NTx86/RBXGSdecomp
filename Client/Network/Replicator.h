@@ -28,7 +28,7 @@ namespace RBX
 			//Peer(const Peer&);
 		protected:
 			Peer();
-			~Peer();
+			virtual ~Peer();
 			virtual bool askAddChild(const Instance*) const;
 			RakPeerInterface* peerInterface();
 			void updateLogger();

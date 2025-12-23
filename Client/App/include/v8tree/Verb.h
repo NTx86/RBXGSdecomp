@@ -33,7 +33,7 @@ namespace RBX
 		Verb(VerbContainer*, const Name&);
 		Verb(VerbContainer*, std::string);
 	public:
-		~Verb();
+		virtual ~Verb();
 		virtual bool isEnabled() const;
 		virtual bool isChecked() const;
 		const Name& getName() const;
@@ -49,7 +49,7 @@ namespace RBX
 	public:
 		VerbContainer(const VerbContainer& parent);
 		VerbContainer(VerbContainer*);
-		~VerbContainer();
+		virtual ~VerbContainer();
 
 		Verb* getVerb(std::string name);
 		Verb* getVerb(const Name& name);

@@ -119,7 +119,7 @@ namespace RBX
 			size_t numWaitingRefs() const;
 			void serializeRef(const Reflection::ConstProperty&, RakNet::BitStream&);
 			void deserializeRef(Reflection::Property&, RakNet::BitStream&);
-			~IdSerializer();
+			virtual ~IdSerializer();
 			//IdSerializer& operator=(const IdSerializer&);
 
 			static void setRefValue(WaitItem&, Instance*);
