@@ -106,6 +106,7 @@ namespace RBX
 
 		private:
 			SharedStringDictionary scopeNames;
+		protected:
 			std::map<Guid::Data, std::vector<WaitItem>> waitItems;
 		public:
 			//IdSerializer(const IdSerializer&);
