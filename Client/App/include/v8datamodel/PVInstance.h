@@ -46,30 +46,56 @@ namespace RBX
 	public:
 		virtual ~PVInstance();
 	public:
-		Controller::ControllerType getControllerType() const;
-		void setControllerType(Controller::ControllerType);
-		bool getShowControllerFlag() const;
-		void setShowControllerFlag(bool);
+		Controller::ControllerType getControllerType() const
+		{
+			return controllerType;
+		}
+		void setControllerType(Controller::ControllerType _control);
+		bool getShowControllerFlag() const
+		{
+			return showControllerFlag;
+		}
+		void setShowControllerFlag(bool _showControllerFlag);
 	protected:
-		virtual size_t topHashCode() const;
-		virtual size_t childHashCode() const;
-		virtual void onChildAdded(Instance*);
-		virtual void onChildRemoving(Instance*);
-		virtual void onDescendentAdded(Instance*);
-		virtual void onDescendentRemoving(const boost::shared_ptr<Instance>&);
-		virtual void readProperty(const XmlElement*, IReferenceBinder&);
+		virtual size_t topHashCode() const
+		{
+			return 0;
+		}
+		virtual size_t childHashCode() const
+		{
+			return 0;
+		}
+		virtual void onChildAdded(Instance* instance);
+		virtual void onChildRemoving(Instance* instance);
+		virtual void onDescendentAdded(Instance* instance);
+		virtual void onDescendentRemoving(const boost::shared_ptr<Instance>& instance);
+		virtual void readProperty(const XmlElement* propertyElement, IReferenceBinder& binder);
 	public:
-		virtual bool isControllable() const;
+		virtual bool isControllable() const
+		{
+			return IsControllable.getValue();
+		}
 	protected:
-		void renderCoordinateFrame(Adorn*);
+		void renderCoordinateFrame(Adorn* adorn);
 		void onControllerChanged();
 		virtual void onChildControllerChanged();
 		virtual void onParentControllerChanged();
 		virtual void onExtentsChanged() const;
 	public:
-		void moveToPoint(G3D::Vector3);
-		Controller* getTopPVController() const;
-		bool isChaseable() const;
+		void moveToPoint(G3D::Vector3 point);
+		// TODO: does not match
+		Controller* getTopPVController() const
+		{
+			G3D::ReferenceCountedPointer<Controller> controller = TopPVController.getValue();
+			if (controller.notNull())
+				return controller.pointer();
+			else
+				return NullController::getStaticNullController();
+		}
+		bool isChaseable() const
+		{
+			return getTopPVController()->hasIntelligence() && IsControllable.getValue();
+		}
 		virtual Extents getExtentsWorld() const;
 		virtual Extents getExtentsLocal() const;
 		virtual const Primitive* getBiggestPrimitive() const;
@@ -78,11 +104,23 @@ namespace RBX
 		void writeVelocityData(XmlState*);
 		const PVInstance* getTopLevelPVParent() const;
 		PVInstance* getTopLevelPVParent();
-		bool isTopLevelPVInstance() const;
-		void setPVGridOffsetLegacy(const G3D::CoordinateFrame&);
+		// TODO: does not match
+		bool isTopLevelPVInstance() const
+		{
+			if (fastDynamicCast<PVInstance>(getParent()))
+			{
+				RBXASSERT(fastDynamicCast<PVInstance>(getParent()) == getParent());
+				return getTypedRoot<PVInstance>() == getParent();
+			}
+			else
+			{
+				return true;
+			}
+		}
+		void setPVGridOffsetLegacy(const G3D::CoordinateFrame& _offset);
 		G3D::CoordinateFrame* getLegacyOffset();
 		void clearLegacyOffset();
-		virtual void legacyTraverseState(const G3D::CoordinateFrame&);
+		virtual void legacyTraverseState(const G3D::CoordinateFrame& parentState);
 	public:
 		//PVInstance& operator=(const PVInstance&);
 	};

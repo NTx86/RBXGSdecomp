@@ -90,6 +90,9 @@ namespace RBX
 	
 		template<typename Class>
 		Class* create() const;
+
+		template<typename Class>
+		static Class* create(const Instance* context);
 	
 	private:
 		template<typename Class>

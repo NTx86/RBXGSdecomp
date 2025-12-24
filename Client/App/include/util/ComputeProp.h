@@ -29,6 +29,10 @@ namespace RBX
 			}
 			return val;
 		}
+		operator T() const
+		{
+			return getValue();
+		}
 		const T* getValuePointer() const;
 		const T& getValueRef() const;
 		bool setDirty() const
