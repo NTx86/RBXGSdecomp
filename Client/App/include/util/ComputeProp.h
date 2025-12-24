@@ -19,8 +19,7 @@ namespace RBX
 			  getFunc(getFunc)
 		{
 		}
-		T getValue() const;
-		operator T() const
+		T getValue() const
 		{
 			if (dirty)
 			{
