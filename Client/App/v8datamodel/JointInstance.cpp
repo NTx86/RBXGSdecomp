@@ -6,7 +6,7 @@ namespace RBX
 {
 	const char *sJointInstance = "JointInstance";
 
-	JointInstance::JointInstance(RBX::Joint* joint) 
+	JointInstance::JointInstance(Joint* joint) 
 		: joint(joint)
 	{
 		joint->setJointOwner(this);
@@ -23,7 +23,7 @@ namespace RBX
 		joint = NULL;
 	}
 
-	void JointInstance::render3dAdorn(RBX::Adorn* adorn) 
+	void JointInstance::render3dAdorn(Adorn* adorn) 
 	{
 		RBXASSERT(shouldRender3dAdorn());
 

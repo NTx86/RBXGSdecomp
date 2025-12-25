@@ -1,6 +1,7 @@
 #pragma once
 #include "v8world/Joint.h"
 #include "v8tree/Instance.h"
+#include "v8datamodel/PartInstance.h"
 #include "util/IRenderable.h"
 #include "reflection/object.h"
 
@@ -11,13 +12,11 @@ namespace RBX {
 		: public DescribedNonCreatable<JointInstance, Instance, &sJointInstance>
 		, public IRenderable, public IJointOwner {
 	protected:
-		RBX::Joint* joint;
+		Joint* joint;
 		
-		// NEEDS: PartInstance::showSpanningTree (or some debug inline)
 		virtual bool shouldRender3dAdorn() const 
 		{
-			// return PartInstance::showSpanningTree;
-			return true;
+			return PartInstance::showSpanningTree;
 		}
 
 		virtual void render3dAdorn(Adorn* adorn);
