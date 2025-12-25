@@ -25,7 +25,10 @@ namespace RBX
 	public:
 		void notifyMoved();
 		virtual bool reportTouches() const;
-		bool getCanAggregate() const;
+		bool getCanAggregate() const
+		{
+			return stepsToSleep == 0;
+		}
 		//IMoving& operator=(const IMoving&);
 	};
 

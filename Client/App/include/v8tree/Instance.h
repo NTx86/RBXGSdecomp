@@ -216,7 +216,10 @@ namespace RBX
 		size_t numChildren() const;
 		int findChildIndex(const Instance*) const;
 		const Instance* getChild(size_t) const;
-		Instance* getChild(size_t);
+		Instance* getChild(size_t index)
+		{
+			return (*children)[index].get();
+		}
 		Instance* findFirstChildByName(const std::string&) const;
 		Instance* findFirstChildByNameRecursive(const std::string&) const;
 		boost::shared_ptr<Instance> findFirstChildByName2(std::string, bool);

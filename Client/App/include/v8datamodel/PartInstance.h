@@ -19,7 +19,10 @@ namespace RBX
   
 	public:
 		//CanAggregateChanged(const CanAggregateChanged&);
-		CanAggregateChanged(bool);
+		CanAggregateChanged(bool canAggregate)
+			: canClump(canAggregate)
+		{
+		}
 	};
 
 	extern const char* sPart;
@@ -46,7 +49,7 @@ namespace RBX
 		float transparency;
 		float reflectance;
 		bool locked;
-		Surfaces surfaces;
+		mutable Surfaces surfaces;
 		float renderImportance;
 		boost::scoped_ptr<Primitive> primitive;
 		World* myWorld;
@@ -96,16 +99,22 @@ namespace RBX
 		void setTranslationUi(const G3D::Vector3&);
 		const G3D::Vector3& getTranslationUi() const;
 		void setPartTypeXml(Part::PartType);
-		Part::PartType getPartType() const;
-		void setPartSizeXml(const G3D::Vector3&);
+		Part::PartType getPartType() const
+		{
+			return partType;
+		}
+		void setPartSizeXml(const G3D::Vector3& value);
 		const G3D::Vector3& getPartSizeXml() const;
 		bool resize(NormalId, int);
 		void writeResizeData(XmlState*);
-		void setFormFactorXml(FormFactor);
-		FormFactor getFormFactor() const;
-		void setPhysics(const G3D::CoordinateFrame&);
-		void setPhysics(const G3D::CoordinateFrame&, const Velocity&);
-		void setCoordinateFrame(const G3D::CoordinateFrame&);
+		void setFormFactorXml(FormFactor value);
+		FormFactor getFormFactor() const
+		{
+			return formFactor;
+		}
+		void setPhysics(const G3D::CoordinateFrame& value);
+		void setPhysics(const G3D::CoordinateFrame& cf, const Velocity& vel);
+		void setCoordinateFrame(const G3D::CoordinateFrame& value);
 		const G3D::CoordinateFrame& getCoordinateFrame() const;
 		float getMass();
 		const Velocity& getVelocity() const;
@@ -113,43 +122,70 @@ namespace RBX
 		const G3D::Vector3& getLinearVelocity() const;
 		void setRotationalVelocity(const G3D::Vector3&);
 		const G3D::Vector3& getRotationalVelocity() const;
-		void setFriction(float);
+		void setFriction(float friction);
 		float getFriction() const;
-		void setElasticity(float);
+		void setElasticity(float elasticity);
 		float getElasticity() const;
-		const RBX::Surfaces& getSurfaces() const;
+		const Surfaces& getSurfaces() const;
 		Surfaces& getSurfaces();
 		Surface* getSurface(const G3D::Ray&, int&);
 		bool getCanCollide() const;
-		void setCanCollide(bool);
+		void setCanCollide(bool value);
 		bool getAnchored() const;
-		void setAnchored(bool);
+		void setAnchored(bool value);
 		bool getDragging() const;
-		void setDragging(bool);
+		void setDragging(bool value);
 		void join();
 		void destroyJoints();
-		float getRenderImportance() const;
-		void setRenderImportance(float);
-		float getTransparencyXml() const;
-		float getTransparencyUi() const;
-		bool getIsTransparent() const;
-		void setTransparency(float);
-		void setAlphaModifier(float);
-		float getReflectance() const;
-		void setReflectance(float);
-		BrickColor getColor() const;
-		void setColor(BrickColor);
-		G3D::Color3 getColor3() const;
-		void setColor3(const G3D::Color3&);
-		bool getPartLocked() const;
-		void setPartLocked(bool);
+		float getRenderImportance() const
+		{
+			return renderImportance;
+		}
+		void setRenderImportance(float value);
+		float getTransparencyXml() const
+		{
+			return transparency;
+		}
+		float getTransparencyUi() const
+		{
+			return 1.0f - (1.0f - transparency) * alphaModifier;
+		}
+		bool getIsTransparent() const
+		{
+			return getTransparencyUi() > 0.1f;
+		}
+		void setTransparency(float value);
+		void setAlphaModifier(float value);
+		float getReflectance() const
+		{
+			return reflectance;
+		}
+		void setReflectance(float value);
+		BrickColor getColor() const
+		{
+			return color;
+		}
+		void setColor(BrickColor value);
+		G3D::Color3 getColor3() const
+		{
+			return color.color3();
+		}
+		void setColor3(const G3D::Color3& value)
+		{
+			setColor(BrickColor::closest(value));
+		}
+		bool getPartLocked() const
+		{
+			return locked;
+		}
+		void setPartLocked(bool value);
 		const Part& getPart() const;
 		float alpha() const;
 		bool lockedInPlace() const;
 		bool aligned() const;
 		G3D::CoordinateFrame worldSnapLocation() const;
-		void onTouchThisStep(boost::shared_ptr<PartInstance>);
-		virtual void onCanAggregateChanged(bool);
+		void onTouchThisStep(boost::shared_ptr<PartInstance> other);
+		virtual void onCanAggregateChanged(bool canAggregate);
 		virtual bool reportTouches() const;
 		virtual void onAncestorChanged(const AncestorChanged&);
 		virtual bool askSetParent(const Instance*) const;
@@ -164,14 +200,17 @@ namespace RBX
 		virtual bool isControllable() const;
 		virtual PartInstance* getPrimaryPart();
 		virtual const PartInstance* getPrimaryPartConst() const;
-		virtual void legacyTraverseState(const G3D::CoordinateFrame&);
+		virtual void legacyTraverseState(const G3D::CoordinateFrame& parentState);
 		virtual void onParentControllerChanged();
-		virtual const Primitive* getBiggestPrimitive() const;
+		virtual const Primitive* getBiggestPrimitive() const
+		{
+			return primitive.get();
+		}
 		virtual bool hitTest(const G3D::Ray&, G3D::Vector3&);
 		virtual Extents getExtentsWorld() const;
 		virtual Extents getExtentsLocal() const;
 	private:
-		void onSurfaceChanged(RBX::NormalId);
+		void onSurfaceChanged(RBX::NormalId surfId);
 		void writeSize(XmlState*);
 		void raiseSurfacePropertyChanged(const RBX::Reflection::PropertyDescriptor&);
 	public:
@@ -182,13 +221,13 @@ namespace RBX
 		static float brickHeight();
 		static float cameraTransparentDistance();
 		static float cameraTranslucentDistance();
-		static bool nonNullInWorkspace(boost::shared_ptr<PartInstance>);
+		static bool nonNullInWorkspace(boost::shared_ptr<PartInstance> part);
 		static PartInstance* fromPrimitive(Primitive*);
 		static const RBX::PartInstance* fromPrimitiveConst(const Primitive*);
 		static void primitivesToParts(const G3D::Array<Primitive*>&, std::vector<boost::weak_ptr<PartInstance>>&);
 		static void primitivesToParts(const G3D::Array<Primitive*>&, G3D::Array<boost::shared_ptr<PartInstance>>&);
 		static void findParts(Instance*, std::vector<boost::weak_ptr<RBX::PartInstance>>&);
-		static bool getLocked(Instance*);
+		static bool getLocked(Instance* instance);
 		static void setLocked(Instance*, bool);
 	private:
 		static float defaultFriction();
