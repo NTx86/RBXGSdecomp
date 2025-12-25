@@ -12,7 +12,11 @@ namespace RBX {
 		, public IRenderable, public IJointOwner {
 	protected:
 		RBX::Joint* joint;
-		virtual bool shouldRender3dAdorn() const {
+		
+		// NEEDS: PartInstance::showSpanningTree (or some debug inline)
+		virtual bool shouldRender3dAdorn() const 
+		{
+			// return PartInstance::showSpanningTree;
 			return true;
 		}
 
