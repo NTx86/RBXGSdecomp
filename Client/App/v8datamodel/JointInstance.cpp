@@ -23,8 +23,6 @@ namespace RBX
 		joint = NULL;
 	}
 
-	// PARTIAL: 95.35% -- varying instruction ordering that 
-	// i can't figure out
 	void JointInstance::render3dAdorn(RBX::Adorn* adorn) 
 	{
 		RBXASSERT(shouldRender3dAdorn());
@@ -49,8 +47,7 @@ namespace RBX
 			else
 				color3 = G3D::Color3::red();
 
-			G3D::CoordinateFrame cframe;
-			adorn->setObjectToWorldMatrix(cframe);
+			adorn->setObjectToWorldMatrix(G3D::CoordinateFrame());
 
 			G3D::Color4 color4(color3);
 			adorn->lineSegment(
