@@ -191,15 +191,27 @@ namespace RBX
 		virtual bool askSetParent(const Instance*) const;
 		virtual void onChildAdded(Instance*);
 		virtual void onGuidChanged();
-		virtual const G3D::CoordinateFrame getLocation() const;
+		virtual const G3D::CoordinateFrame getLocation() const
+		{
+			return getCoordinateFrame();
+		}
 		virtual void onCameraNear(float);
-		virtual void getCameraIgnorePrimitives(std::vector<const Primitive*>&);
+		virtual void getCameraIgnorePrimitives(std::vector<const Primitive*>& primitives)
+		{
+			primitives.push_back(primitive.get());
+		}
 		virtual bool shouldRender3dAdorn() const;
 		virtual void render3dAdorn(Adorn*);
 		virtual void render3dSelect(Adorn*, SelectState);
 		virtual bool isControllable() const;
-		virtual PartInstance* getPrimaryPart();
-		virtual const PartInstance* getPrimaryPartConst() const;
+		virtual PartInstance* getPrimaryPart()
+		{
+			return this;
+		}
+		virtual const PartInstance* getPrimaryPartConst() const
+		{
+			return this;
+		}
 		virtual void legacyTraverseState(const G3D::CoordinateFrame& parentState);
 		virtual void onParentControllerChanged();
 		virtual const Primitive* getBiggestPrimitive() const

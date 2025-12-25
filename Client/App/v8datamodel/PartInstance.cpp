@@ -374,4 +374,9 @@ namespace RBX
 			raisePropertyChanged(prop_Elasticity);
 		}
 	}
+
+	bool PartInstance::reportTouches() const
+	{
+		return !event_Touched.empty(this);
+	}
 }
