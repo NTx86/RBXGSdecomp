@@ -215,10 +215,13 @@ namespace RBX
 		bool isDescendentOf(const Instance* ancestor) const;
 		size_t numChildren() const;
 		int findChildIndex(const Instance*) const;
-		const Instance* getChild(size_t) const;
-		Instance* getChild(size_t index)
+		const Instance* getChild(size_t i) const
 		{
-			return (*children)[index].get();
+			return (*children)[i].get();
+		}
+		Instance* getChild(size_t i)
+		{
+			return (*children)[i].get();
 		}
 		Instance* findFirstChildByName(const std::string&) const;
 		Instance* findFirstChildByNameRecursive(const std::string&) const;
