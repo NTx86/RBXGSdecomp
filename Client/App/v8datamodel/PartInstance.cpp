@@ -1,7 +1,6 @@
 #include "v8datamodel/PartInstance.h"
 #include <G3D/CoordinateFrame.h>
 #include "reflection/type.h"
-#include <intrin.h>
 
 namespace RBX
 {
@@ -91,10 +90,7 @@ namespace RBX
 		{
 			RBXASSERT(Math::isOrthonormal(value.rotation));
 			primitive->setCoordinateFrame(value);
-			PersistentPart.setDirty();
-
-			_ReadWriteBarrier(); // TODO: braces dont work and this seems to have to be here for 100% match. is this the only way of doing this?
-
+			if (PersistentPart.setDirty())
 			onExtentsChanged();
 		}
 	}
@@ -177,8 +173,7 @@ namespace RBX
 
 	Extents PartInstance::getExtentsLocal() const
 	{
-		G3D::Vector3 hVec = primitive->getGeometry()->getGridSize() * 0.5f; // primitive->getExtentsLocal() does not want to inline for some reason
-		return Extents(-hVec, hVec);
+		return primitive->getExtentsLocal();
 	}
 
 	bool PartInstance::shouldRender3dAdorn() const
@@ -198,7 +193,9 @@ namespace RBX
 		PartInstance* thisPart = fastDynamicCast<PartInstance>(instance);
 
 		if (thisPart)
+		{
 			return thisPart->locked;
+		}
 		else
 		{
 			for (size_t i = 0; i < instance->numChildren(); i++)
@@ -214,9 +211,6 @@ namespace RBX
 	{
 		PVInstance::onParentControllerChanged();
 		PersistentPart.setDirty();
-
-		_ReadWriteBarrier();
-
 		primitive->setController(getTopPVController());
 	}
 
@@ -266,9 +260,6 @@ namespace RBX
 			raisePropertyChanged(prop_Size);
 			raisePropertyChanged(prop_SizeUi);
 			PersistentPart.setDirty();
-
-			_ReadWriteBarrier();
-
 			onExtentsChanged();
 		}
 	}

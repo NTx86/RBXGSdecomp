@@ -210,7 +210,11 @@ namespace RBX
 			return geometry->getRadius();
 		}
 		float getPlanarSize() const;
-		Extents getExtentsLocal() const;
+		Extents getExtentsLocal() const
+		{
+			G3D::Vector3 hVec = geometry->getGridSize() * 0.5f;
+			return Extents(-hVec, hVec);
+		}
 		Extents getExtentsWorld() const;
 		const Extents& getFastFuzzyExtents() const;
 		bool hitTest(const G3D::Ray& worldRay, G3D::Vector3& worldHitPoint, bool& inside);
