@@ -90,7 +90,7 @@ namespace RBX
 		{
 			RBXASSERT(Math::isOrthonormal(value.rotation));
 			primitive->setCoordinateFrame(value);
-			if (PersistentPart.setDirty())
+			PersistentPart.setDirty();
 			onExtentsChanged();
 		}
 	}
