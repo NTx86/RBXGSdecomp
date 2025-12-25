@@ -774,6 +774,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8datamodel\JointInstance.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8datamodel\PartInstance.h"
 					>
 				</File>
@@ -868,6 +872,10 @@
 			</File>
 			<File
 				RelativePath=".\util\Http.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util\IRenderable.cpp"
 				>
 			</File>
 			<File
@@ -1112,6 +1120,10 @@
 			</File>
 			<File
 				RelativePath=".\v8datamodel\GlobalSettings.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8datamodel\JointInstance.cpp"
 				>
 			</File>
 			<File
