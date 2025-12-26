@@ -7,6 +7,8 @@
 
 namespace RBX
 {
+	extern const char* const category_Part = "Part";
+
 	class Part
 	{
 	public:

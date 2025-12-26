@@ -124,7 +124,11 @@ namespace RBX {
 				updatePV();
 				return pv.position;
 			}
-			const RBX::Velocity& getVelocity() const;
+			const RBX::Velocity& getVelocity() const
+			{
+				updatePV();
+				return pv.velocity;
+			}
 			const RBX::PV& getPV() const
 			{
 				updatePV();

@@ -47,8 +47,8 @@ namespace RBX
 		std::map<const Name*, Verb*> verbs;
 		VerbContainer* parent;
 	public:
-		VerbContainer(const VerbContainer& parent);
-		VerbContainer(VerbContainer*);
+		VerbContainer(const VerbContainer&);
+		VerbContainer(VerbContainer* parent);
 		virtual ~VerbContainer();
 
 		Verb* getVerb(std::string name);

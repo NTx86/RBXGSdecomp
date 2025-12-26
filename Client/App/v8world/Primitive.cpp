@@ -121,12 +121,6 @@ namespace RBX
 		return Math::planarSize(geometry->getGridSize());
 	}
 
-	Extents Primitive::getExtentsLocal() const
-	{
-		G3D::Vector3 hVec = geometry->getGridSize() * 0.5f;
-		return Extents(-hVec, hVec);
-	}
-
 	Extents Primitive::getExtentsWorld() const 
 	{
 		return getExtentsLocal().toWorldSpace(getCoordinateFrame());
@@ -403,12 +397,10 @@ namespace RBX
 			fuzzyExtentsStateId = -2;
 			geometry->setGridSize(protectedSize);
 
-			{
-				float newSize = geometry->getGridVolume();
-				body->setMass(newSize);
-				body->setMoment(geometry->getMoment(newSize));
-				JointK.setDirty();
-			}
+			float newSize = geometry->getGridVolume();
+			body->setMass(newSize);
+			body->setMoment(geometry->getMoment(newSize));
+			JointK.setDirty();
 
 			if(world)
 				world->onPrimitiveExtentsChanged(this);
