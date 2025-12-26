@@ -116,6 +116,6 @@ namespace RBX
 		static const Reflection::EnumPropDescriptor<Camera, CameraType> desc_cameraType;
 		static const Reflection::PropDescriptor<Camera, G3D::CoordinateFrame> desc_CoordFrame;
 		static const Reflection::PropDescriptor<Camera, G3D::CoordinateFrame> desc_Focus;
-		static const Reflection::PropDescriptor<Camera, Instance*> cameraSubjectProp;
+		static const Reflection::RefPropDescriptor<Camera, Instance> cameraSubjectProp;
 	};
 }
