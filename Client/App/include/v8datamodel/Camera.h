@@ -113,7 +113,7 @@ namespace RBX
 		static float distanceMinOcclude();
 		static float getNewZoomDistance(float, float);
 
-		static const Reflection::PropDescriptor<Camera, CameraType> desc_cameraType;
+		static const Reflection::EnumPropDescriptor<Camera, CameraType> desc_cameraType;
 		static const Reflection::PropDescriptor<Camera, G3D::CoordinateFrame> desc_CoordFrame;
 		static const Reflection::PropDescriptor<Camera, G3D::CoordinateFrame> desc_Focus;
 		static const Reflection::PropDescriptor<Camera, Instance*> cameraSubjectProp;
