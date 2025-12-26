@@ -77,7 +77,7 @@ namespace RBX
 		ICameraSubject* getCameraSubject() const;
 		Instance* getCameraSubjectInstance() const;
 		void setCameraSubject(Instance*);
-		const G3D::CoordinateFrame& getCameraFocus() const;
+		const G3D::CoordinateFrame& getCameraFocus() const
 		{
 			return cameraFocus;
 		}
