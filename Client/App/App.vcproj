@@ -923,6 +923,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\IRenderable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\util\Log.cpp"
 				>
 			</File>
