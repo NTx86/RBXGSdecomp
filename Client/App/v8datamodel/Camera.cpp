@@ -17,7 +17,7 @@ namespace RBX
 		return gCamera.getCoordinateFrame();
 	}
 
-	bool Camera::askSetParent(const RBX::Instance *instance) const
+	bool Camera::askSetParent(const Instance *instance) const
 	{
 		return fastDynamicCast<const Workspace>(instance) != NULL;
 	}
@@ -27,7 +27,7 @@ namespace RBX
 		Instance* instance = getParent();
 		while(instance != NULL)
 		{
-			RBX::ICameraOwner* cameraOwner = fastDynamicCast<ICameraOwner>(instance);
+			ICameraOwner* cameraOwner = fastDynamicCast<ICameraOwner>(instance);
 			if(cameraOwner)
 				return cameraOwner;
 
@@ -108,7 +108,10 @@ namespace RBX
 			if(cameraSubject)
 				return cameraSubject->zoom(in, cameraGoal, cameraFocus);
 		}
-		else if(getCameraSubjectInstance() && (cameraType == FOLLOW_CAMERA || cameraType == ATTACH_CAMERA || cameraType == TRACK_CAMERA))
+		else if(getCameraSubjectInstance() && 
+			(cameraType == FOLLOW_CAMERA || 
+			cameraType == ATTACH_CAMERA || 
+			cameraType == TRACK_CAMERA))
 		{
 			return characterZoom(in);
 		}

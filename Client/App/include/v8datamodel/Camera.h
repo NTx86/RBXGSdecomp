@@ -11,7 +11,7 @@ namespace RBX
 
 	class ICameraOwner;
 	class ICameraSubject;
-	class Camera : public RBX::DescribedCreatable<Camera, Instance, &sCamera>
+	class Camera : public DescribedCreatable<Camera, Instance, &sCamera>
 	{
 	public:
 		enum CameraType
@@ -39,26 +39,26 @@ namespace RBX
 		G3D::GCamera gCamera;
 		G3D::CoordinateFrame cameraGoal;
 		G3D::CoordinateFrame cameraFocus;
-		RBX::Camera::CameraType cameraType;
-		RBX::Camera::AnimationType animationType;
-		boost::shared_ptr<RBX::Instance> cameraSubject;
+		CameraType cameraType;
+		AnimationType animationType;
+		boost::shared_ptr<Instance> cameraSubject;
 		bool cameraExternallyAdjusted;
 	private:
-		RBX::ICameraOwner* getCameraOwner();
+		ICameraOwner* getCameraOwner();
 		void updateFocus();
 		void updateGoal();
 		bool characterZoom(float);
-		bool nonCharacterZoom(float);
-		void tryZoomExtents(float, float, float, const RBX::Extents&, const G3D::Rect2D&);
-		RBX::ContactManager& getContactManager();
+		bool nonCharacterZoom(float in);
+		void tryZoomExtents(float, float, float, const Extents&, const G3D::Rect2D&);
+		ContactManager& getContactManager();
 		float goalToFocusDistance() const;
 		void setGCameraCoordinateFrame(const G3D::CoordinateFrame&);
 		G3D::CoordinateFrame computeLineOfSiteGoal();
 		void getHeadingElevationDistance(float &heading, float &elevation, float &distance);
 		void setHeadingElevationDistance(float, float, float);
 		void tellCameraMoved();
-		void getIgnorePrims(G3D::Array<RBX::Primitive const *>&);
-		virtual bool askSetParent(const RBX::Instance*) const;
+		void getIgnorePrims(G3D::Array<Primitive const *>&);
+		virtual bool askSetParent(const Instance *instance) const;
 
 	public:
 		//Camera(const RBX::Camera&);
@@ -74,28 +74,28 @@ namespace RBX
 		void alwaysMode();
 		bool isCharacterCamera() const;
 		bool isFirstPersonCamera() const;
-		RBX::ICameraSubject* getCameraSubject() const;
-		RBX::Instance* getCameraSubjectInstance() const;
-		void setCameraSubject(RBX::Instance*);
+		ICameraSubject* getCameraSubject() const;
+		Instance* getCameraSubjectInstance() const;
+		void setCameraSubject(Instance*);
 		const G3D::CoordinateFrame& getCameraFocus() const;
-		void setCameraFocus(const G3D::CoordinateFrame&);
+		void setCameraFocus(const G3D::CoordinateFrame &value);
 		G3D::CoordinateFrame getCameraCoordinateFrame() const;
 		void setCameraCoordinateFrameNoLerp(const G3D::CoordinateFrame&);
 		void goalToCamera();
-		RBX::Camera::CameraType getCameraType() const;
-		void setCameraType(RBX::Camera::CameraType);
+		CameraType getCameraType() const;
+		void setCameraType(CameraType type);
 		bool canZoom(int) const;
 		bool canTilt(int) const;
 		void onWrapMouse(const G3D::Vector2&);
-		bool zoom(float);
+		bool zoom(float in);
 		bool setDistanceFromTarget(float);
-		void zoomExtents(RBX::Extents, const G3D::Rect2D&, RBX::Camera::ZoomType);
-		bool zoomExtents(const G3D::Rect2D&);
-		void panRadians(float);
+		void zoomExtents(Extents, const G3D::Rect2D&, ZoomType);
+		bool zoomExtents(const G3D::Rect2D &viewPort);
+		void panRadians(float angle);
 		void panUnits(int);
 		bool tiltRadians(float);
 		bool tiltUnits(int);
-		void lookAt(const G3D::Vector3&);
+		void lookAt(const G3D::Vector3 &point);
 		void setImageServerViewNoLerp(const G3D::CoordinateFrame&, const G3D::Rect2D&);
 		//RBX::Camera& operator=(const RBX::Camera&);
   
