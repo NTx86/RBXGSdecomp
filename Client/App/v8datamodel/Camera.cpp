@@ -7,16 +7,6 @@ namespace RBX
 {
 	const char* sCamera = "Camera";
 
-	const G3D::CoordinateFrame& Camera::getCameraFocus() const
-	{
-		return cameraFocus;
-	}
-
-	G3D::CoordinateFrame Camera::getCameraCoordinateFrame() const
-	{
-		return gCamera.getCoordinateFrame();
-	}
-
 	bool Camera::askSetParent(const Instance *instance) const
 	{
 		return fastDynamicCast<const Workspace>(instance) != NULL;
