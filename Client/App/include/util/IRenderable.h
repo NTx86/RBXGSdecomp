@@ -8,7 +8,7 @@ namespace RBX
 {
 	class IRenderableBucket;
 
-	class _declspec(novtable) IRenderable
+	class __declspec(novtable) IRenderable
 	{
 	private:
 		int index2d;
