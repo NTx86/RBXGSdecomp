@@ -1,5 +1,6 @@
 #pragma once
-#include <G3DAll.h>
+#include <G3D/ReferenceCount.h>
+#include <G3D/Color3.h>
 
 namespace RBX
 {
@@ -81,5 +82,21 @@ namespace RBX
 			static NullController n;
 			return &n;
 		}
+	};
+
+	class ControllerTypeArray
+	{
+	private:
+		bool values[Controller::NUM_CONTROLLER_TYPES];
+	  
+	public:
+		void clear();
+	public:
+		ControllerTypeArray();
+	public:
+		void setController(Controller::ControllerType, bool);
+		bool hasController(Controller::ControllerType) const;
+
+		ControllerTypeArray& operator|=(const ControllerTypeArray&);
 	};
 }

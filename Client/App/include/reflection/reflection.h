@@ -30,9 +30,19 @@ namespace RBX
 		class Described : public DerivedClass
 		{
 		public:
+			// helps with constructors
+			typedef Described<Class, ClassName, DerivedClass> Base;
+
+		public:
 			//Described(const Described&);
 			__forceinline Described()
 				: DerivedClass()
+			{
+				this->descriptor = &classDescriptor();
+			}
+			template<typename Arg0Type>
+			__forceinline Described(Arg0Type arg0)
+				: DerivedClass(arg0)
 			{
 				this->descriptor = &classDescriptor();
 			}
@@ -56,9 +66,15 @@ namespace RBX
 	class DescribedCreatable : public Reflection::Described<Class, ClassName, FactoryProduct<Class, DerivedClass, ClassName>>
 	{
 	public:
+		// helps with constructors
+		typedef DescribedCreatable<Class, DerivedClass, ClassName> Base;
+
+	public:
 		//DescribedCreatable(const DescribedCreatable&);
 	protected:
 		DescribedCreatable();
+		template<typename Arg0Type>
+		DescribedCreatable(Arg0Type arg0);
 	public:
 		virtual ~DescribedCreatable();
 	public:
@@ -315,6 +331,8 @@ namespace RBX
 		  
 		public:
 			//EnumPropDescriptor(EnumPropDescriptor&);
+			template<typename GetFunction, typename SetFunction>
+			EnumPropDescriptor(char const* name, char const* category, typename GetFunction get, typename SetFunction set, Functionality flags);
 		public:
 			virtual bool isReadOnly() const;
 			Enum getValue(const DescribedBase*) const;

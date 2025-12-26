@@ -215,12 +215,21 @@ namespace RBX
 		bool isDescendentOf(const Instance* ancestor) const;
 		size_t numChildren() const;
 		int findChildIndex(const Instance*) const;
-		const Instance* getChild(size_t) const;
-		Instance* getChild(size_t);
+		const Instance* getChild(size_t i) const
+		{
+			return (*children)[i].get();
+		}
+		Instance* getChild(size_t i)
+		{
+			return (*children)[i].get();
+		}
 		Instance* findFirstChildByName(const std::string&) const;
 		Instance* findFirstChildByNameRecursive(const std::string&) const;
 		boost::shared_ptr<Instance> findFirstChildByName2(std::string, bool);
-		const CopyOnWrite<std::vector<boost::shared_ptr<Instance>>>& getChildren() const;
+		const CopyOnWrite<std::vector<boost::shared_ptr<Instance>>>& getChildren() const
+		{
+			return children;
+		}
 		boost::shared_ptr<const std::vector<boost::shared_ptr<Instance>>> getChildren2()
 		{
 			return children.read();
@@ -243,14 +252,14 @@ namespace RBX
 		virtual void onAncestorChanged(const AncestorChanged& event);
 		virtual void onDescendentAdded(Instance* instance);
 		virtual void onDescendentRemoving(const boost::shared_ptr<Instance>& instance);
-		virtual void onChildAdded(Instance*);
-		virtual void onChildRemoving(Instance*);
+		virtual void onChildAdded(Instance* instance);
+		virtual void onChildRemoving(Instance* instance);
 		virtual void onChildRemoved(Instance*);
 	private:
 		virtual void onLastChildRemoved();
 		void writeProperties(XmlElement*) const;
 	protected:
-		virtual void readProperty(const XmlElement*, IReferenceBinder&);
+		virtual void readProperty(const XmlElement* propertyElement, IReferenceBinder& binder);
 	public:
 		virtual void onServiceProvider(const ServiceProvider*, const ServiceProvider*);
 		void readProperties(const XmlElement* container, IReferenceBinder& binder);
@@ -291,6 +300,13 @@ namespace RBX
 	private:
 		static void signalDescendentAdded(Instance*, Instance*, Instance*);
 		static void signalDescendentRemoving(const boost::shared_ptr<Instance>&, Instance*, Instance*);
+
+	public:
+		template<typename Type>
+		const Type* getTypedParent() const;
+
+		template<typename Type>
+		const Type* getTypedRoot() const;
 
 	public:
 		// NOTE: This is entirely inlined. See assertions in later client builds.

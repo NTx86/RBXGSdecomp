@@ -1,13 +1,12 @@
 #pragma once
-
-#include <G3DAll.h>
 #include <SDL.h>
+#include <G3D/Vector2int16.h>
 
 namespace RBX 
 {
 	class UserInputBase;
 
-	class UIEvent 
+	class UIEvent
 	{
 	public:
 		enum EventType 
@@ -23,7 +22,7 @@ namespace RBX
 			MOUSE_WHEEL_FORWARD,
 			MOUSE_WHEEL_BACKWARD,
 			KEY_DOWN,
-			KEY_UP,
+			KEY_UP
 		};
 
 	public:
@@ -33,9 +32,9 @@ namespace RBX
 		{
 			struct 
 			{
-				Vector2int16 mousePosition;
-				Vector2int16 mouseDelta;
-				Vector2int16 windowSize;
+				G3D::Vector2int16 mousePosition;
+				G3D::Vector2int16 mouseDelta;
+				G3D::Vector2int16 windowSize;
 			};
 			struct 
 			{
@@ -53,7 +52,7 @@ namespace RBX
 		{
 		}
 
-		UIEvent(UserInputBase* userInput, EventType eventType, Vector2int16 mousePosition, Vector2int16 mouseDelta)
+		UIEvent(UserInputBase* userInput, EventType eventType, G3D::Vector2int16 mousePosition, G3D::Vector2int16 mouseDelta)
 			: userInput(userInput),
 			  eventType(eventType),
 			  mousePosition(mousePosition),

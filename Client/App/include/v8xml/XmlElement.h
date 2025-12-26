@@ -242,10 +242,17 @@ public:
 	{
 		return attribute->nextSibling();
 	}
-	XmlAttribute* findAttribute(const RBX::Name&);
-	const XmlAttribute* findAttribute(const RBX::Name&) const;
+	XmlAttribute* findAttribute(const RBX::Name& _tag);
+	const XmlAttribute* findAttribute(const RBX::Name& _tag) const;
 	bool findAttributeValue(const RBX::Name&, std::string&) const;
-	bool findAttributeValue(const RBX::Name&, const RBX::Name*&) const;
+	bool findAttributeValue(const RBX::Name& _tag, const RBX::Name*& _value) const
+	{
+		const XmlAttribute* attribute = findAttribute(_tag);
+		if (!attribute)
+			return false;
+
+		return attribute->getValue(_value);
+	}
 
 public:
 	XmlElement* addChild(const RBX::Name&);

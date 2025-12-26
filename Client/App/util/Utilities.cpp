@@ -1,6 +1,8 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #include "util/Utilities.h"
 #include "util/ContentProvider.h"
+#include "util/MeshId.h"
+#include "util/TextureId.h"
 #include <stdio.h>
 #include <boost/lexical_cast.hpp>
 
@@ -210,10 +212,6 @@ namespace RBX
 		}
 	};
 
-	// TODO: Once RBX::MeshId, RBX::TextureId, or RBX::Soundscape::SoundId are added,
-	// copy the StringConverter definition below and replace ContentId with the respective class name
-	// TextureId and MeshId definitions should be in this file
-	// SoundId definition should be in sound.cpp
 	template<>
 	class StringConverter<ContentId>
 	{
@@ -227,6 +225,40 @@ namespace RBX
 		static bool convertToValue(const std::string& text, ContentId& value)
 		{
 			value = ContentId(text);
+			return true;
+		}
+	};
+
+	template<>
+	class StringConverter<MeshId>
+	{
+	public:
+		static std::string convertToString(const MeshId& value)
+		{
+			return value.toString();
+		}
+
+		// TODO: does not match
+		static bool convertToValue(const std::string& text, MeshId& value)
+		{
+			value = MeshId(text);
+			return true;
+		}
+	};
+
+	template<>
+	class StringConverter<TextureId>
+	{
+	public:
+		static std::string convertToString(const TextureId& value)
+		{
+			return value.toString();
+		}
+
+		// TODO: does not match
+		static bool convertToValue(const std::string& text, TextureId& value)
+		{
+			value = TextureId(text);
 			return true;
 		}
 	};

@@ -1,5 +1,6 @@
 #pragma once
 #include "RbxGraphics/Adorn.h"
+#include "AppDraw/SelectState.h"
 #include "util/IndexArray.h"
 
 namespace RBX 
