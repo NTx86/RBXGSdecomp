@@ -13,29 +13,34 @@ namespace RBX
                     public IRenderable
     {
     public:
-        enum TopBottom {
+        enum TopBottom
+        {
             TOP = 0,
             CENTER_TB = 1,
             BOTTOM = 2,
         };
 
-        enum LeftRight {
+        enum LeftRight
+        {
             LEFT = 0,
             CENTER_LR = 1,
             RIGHT = 2
         };
 
-        enum InOut {
+        enum InOut
+        {
             EDGE = 0,
             INSET = 1,
             CENTER_IO = 2
         };
 
-        enum InOutZ {
+        enum InOutZ
+        {
             Z_IN = 0,
             Z_OUT = 1
         };
 
+    public:
         NormalId faceId;
         TopBottom topBottom;
         LeftRight leftRight;

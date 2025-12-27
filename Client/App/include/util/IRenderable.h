@@ -10,6 +10,8 @@ namespace RBX
 
 	class __declspec(novtable) IRenderable
 	{
+		friend class IRenderableBucket;
+
 	private:
 		int index2d;
 		int index3d;
@@ -48,13 +50,13 @@ namespace RBX
 		virtual void render2d(Adorn* adorn);
 		virtual void render3dAdorn(Adorn* adorn);
 		virtual void render3dSelect(Adorn* adorn, SelectState selectState);
-
-		friend class IRenderableBucket;
 	};
 
 
 	class IRenderableBucket
 	{
+		friend class IRenderable;
+
 	private:
 		IndexArray<IRenderable, &IRenderable::indexFunc2d> renderable2ds;
 		IndexArray<IRenderable, &IRenderable::indexFunc3d> renderable3ds;
@@ -69,7 +71,5 @@ namespace RBX
 
 		void render2dItems(Adorn* adorn);
 		void render3dAdornItems(Adorn* adorn);
-
-		friend class IRenderable;
 	};
 }

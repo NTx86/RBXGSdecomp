@@ -1,7 +1,8 @@
 #include "v8datamodel/Feature.h"
 #include "v8world/MotorJoint.h"
 
-namespace RBX {
+namespace RBX 
+{
     // Note to whoever comes here next:
     // a lot of VelocityMotor's code is apparently just copied
     // from Motor in JointInstance.cpp

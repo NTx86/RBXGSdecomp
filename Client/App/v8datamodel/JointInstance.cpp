@@ -32,7 +32,8 @@ namespace RBX
 	const char* sRotateV = "RotateV";
 	const char* sMotor = "Motor";
 
-	JointInstance::JointInstance(Joint* joint) : joint(joint)
+	JointInstance::JointInstance(Joint* joint)
+		: joint(joint)
 	{
 		joint->setJointOwner(this);
 	}
@@ -87,14 +88,12 @@ namespace RBX
 		}
 	}
 
-	AutoJoint::AutoJoint(Joint* _joint) : DescribedNonCreatable(_joint)
+	AutoJoint::AutoJoint(Joint* _joint)
+		: DescribedNonCreatable(_joint)
 	{
 		PartInstance* part0 = PartInstance::fromPrimitive(joint->getPrimitive(0));
 		PartInstance* part1 = PartInstance::fromPrimitive(joint->getPrimitive(1));
 
-		// NEEDS: RBX::Hole
-		// this is supposed to be shared_from<RBX::Hole>() instead of inferring
-		// from PartInstance
 		part[0] = shared_from(part0);
 		part[1] = shared_from(part1);
 	}
@@ -211,68 +210,82 @@ namespace RBX
 		raisePropertyChanged(prop_C1);
 	}
 
-	Snap::Snap(Joint* joint) : DescribedCreatable(joint)
+	Snap::Snap(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::SNAP_JOINT);
 		setName("Snap");
 	}
 
-	Snap::Snap() : DescribedCreatable(new SnapJoint())
+	Snap::Snap()
+		: DescribedCreatable(new SnapJoint())
 	{
 		setName("Snap");
 	}
 
-	Weld::Weld(Joint* joint) : DescribedCreatable(joint)
+	Weld::Weld(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::WELD_JOINT);
 	}
 
-	Weld::Weld() : DescribedCreatable(new WeldJoint())
+	Weld::Weld()
+		: DescribedCreatable(new WeldJoint())
 	{
 	}
 
-	Glue::Glue(Joint* joint) : DescribedCreatable(joint)
+	Glue::Glue(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::GLUE_JOINT);
 	}
 
-	Glue::Glue() : DescribedCreatable(new GlueJoint())
+	Glue::Glue()
+		: DescribedCreatable(new GlueJoint())
 	{
 	}
 
-	Rotate::Rotate(Joint* joint) : DescribedCreatable(joint)
+	Rotate::Rotate(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::ROTATE_JOINT);
 	}
 
-	Rotate::Rotate() : DescribedCreatable(new RotateJoint())
+	Rotate::Rotate()
+		: DescribedCreatable(new RotateJoint())
 	{
 	}
 
-	RotateP::RotateP(Joint* joint) : DescribedCreatable(joint)
+	RotateP::RotateP(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::ROTATE_P_JOINT);
 	}
 
-	RotateP::RotateP() : DescribedCreatable(new RotatePJoint())
+	RotateP::RotateP()
+		: DescribedCreatable(new RotatePJoint())
 	{
 	}
 
-	RotateV::RotateV(Joint* joint) : DescribedCreatable(joint)
+	RotateV::RotateV(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::ROTATE_V_JOINT);
 	}
 
-	RotateV::RotateV() : DescribedCreatable(new RotateVJoint())
+	RotateV::RotateV()
+		: DescribedCreatable(new RotateVJoint())
 	{
 	}
 
-	Motor::Motor(Joint* joint) : DescribedCreatable(joint)
+	Motor::Motor(Joint* joint)
+		: DescribedCreatable(joint)
 	{
 		RBXASSERT(joint->getJointType() == Joint::MOTOR_JOINT);
 	}
 
-	Motor::Motor() : DescribedCreatable(new MotorJoint())
+	Motor::Motor()
+		: DescribedCreatable(new MotorJoint())
 	{
 		setName("Motor");
 	}

@@ -6,7 +6,8 @@
 #include "util/IRenderable.h"
 #include "reflection/reflection.h"
 
-namespace RBX {
+namespace RBX 
+{
 	extern const char* sJointInstance;
 	extern const char* sAutoJoint;
 	extern const char* sSnap;
@@ -69,7 +70,7 @@ namespace RBX {
 	public:
 		Snap(Joint* joint);
 		Snap();
-		// virtual ~Snap();
+		virtual ~Snap();
 	};
 
 	class Weld : public DescribedCreatable<Weld, AutoJoint, &sWeld>
@@ -77,7 +78,7 @@ namespace RBX {
 	public:
 		Weld(Joint* joint);
 		Weld();
-		// virtual ~Weld();
+		virtual ~Weld();
 	};
 
 	class Glue : public DescribedCreatable<Glue, AutoJoint, &sGlue>
@@ -85,7 +86,7 @@ namespace RBX {
 	public:
 		Glue(Joint* joint);
 		Glue();
-		// virtual ~Glue();
+		virtual ~Glue();
 	};
 
 	class Rotate : public DescribedCreatable<Rotate, AutoJoint, &sRotate>
@@ -93,7 +94,7 @@ namespace RBX {
 	public:
 		Rotate(Joint* joint);
 		Rotate();
-		// virtual ~Rotate();
+		virtual ~Rotate();
 	};
 
 	class RotateP : public DescribedCreatable<RotateP, AutoJoint, &sRotateP>
@@ -101,7 +102,7 @@ namespace RBX {
 	public:
 		RotateP(Joint* joint);
 		RotateP();
-		// virtual ~RotateP();
+		virtual ~RotateP();
 	};
 
 	class RotateV : public DescribedCreatable<RotateV, AutoJoint, &sRotateV>
@@ -109,7 +110,7 @@ namespace RBX {
 	public:
 		RotateV(Joint* joint);
 		RotateV();
-		// virtual ~RotateV();
+		virtual ~RotateV();
 	};
 
 	class Motor : public DescribedCreatable<Motor, AutoJoint, &sMotor>
@@ -132,6 +133,6 @@ namespace RBX {
 		float getCurrentAngle() const;
 		void setCurrentAngle(float value);
 
-		// virtual ~Motor();
+		virtual ~Motor();
 	};
 }
