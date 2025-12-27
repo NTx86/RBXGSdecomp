@@ -126,7 +126,7 @@ namespace RBX
 		if (instance)
 		{
 			ICameraSubject* subject = fastDynamicCast<ICameraSubject>(instance);
-			RBXASSERT(subject != NULL);
+			RBXASSERT(subject);
 			return subject;
 		}
 		return NULL;
