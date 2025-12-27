@@ -69,15 +69,13 @@ namespace RBX
 
 	void Camera::panRadians(float angle)
 	{
-		float heading;
-		float elevation;
-		float distance;
-
 		RBXASSERT(angle > -100);
 		RBXASSERT(angle < 100);
 
 		if (angle != 0)
 		{
+			float heading, elevation, distance;
+
 			getHeadingElevationDistance(heading, elevation, distance);
 			heading = Math::radWrap(heading + angle);
 			setHeadingElevationDistance(heading, elevation, distance);
