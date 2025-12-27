@@ -19,10 +19,10 @@ namespace RBX
 	ICameraOwner* Camera::getCameraOwner()
 	{
 		Instance* instance = getParent();
-		while(instance != NULL)
+		while (instance != NULL)
 		{
 			ICameraOwner* cameraOwner = fastDynamicCast<ICameraOwner>(instance);
-			if(cameraOwner)
+			if (cameraOwner)
 				return cameraOwner;
 
 			instance = getParent();
@@ -55,13 +55,13 @@ namespace RBX
 		float currentDistance = lookVector.magnitude();
 		float newZoomDistance = getNewZoomDistance(currentDistance, in);
 
-		if(currentDistance == newZoomDistance)
+		if (currentDistance == newZoomDistance)
 			return false;
 
 		cameraGoal.translation -= lookVector * (newZoomDistance / currentDistance - 1.0F);
 
 		ICameraOwner *owner = getCameraOwner();
-		if(owner)
+		if (owner)
 			owner->cameraMoved();
 
 		return true;
@@ -76,14 +76,14 @@ namespace RBX
 		RBXASSERT(angle > -100);
 		RBXASSERT(angle < 100);
 
-		if(angle != 0)
+		if (angle != 0)
 		{
 			getHeadingElevationDistance(heading, elevation, distance);
 			heading = Math::radWrap(heading + angle);
 			setHeadingElevationDistance(heading, elevation, distance);
 
 			ICameraOwner *owner = getCameraOwner();
-			if(owner)
+			if (owner)
 				owner->cameraMoved();
 		}
 	}
@@ -96,13 +96,13 @@ namespace RBX
 
 	bool Camera::zoom(float in)
 	{
-		if(cameraType == CUSTOM_CAMERA)
+		if (cameraType == CUSTOM_CAMERA)
 		{
 			ICameraSubject* cameraSubject = getCameraSubject();
-			if(cameraSubject)
+			if (cameraSubject)
 				return cameraSubject->zoom(in, cameraGoal, cameraFocus);
 		}
-		else if(getCameraSubjectInstance() && 
+		else if (getCameraSubjectInstance() && 
 			(cameraType == FOLLOW_CAMERA || 
 			cameraType == ATTACH_CAMERA || 
 			cameraType == TRACK_CAMERA))
@@ -125,7 +125,7 @@ namespace RBX
 	ICameraSubject* Camera::getCameraSubject() const
 	{
 		Instance* instance = getCameraSubjectInstance();
-		if(instance)
+		if (instance)
 		{
 			ICameraSubject* subject = fastDynamicCast<ICameraSubject>(instance);
 			RBXASSERT(subject != NULL);
@@ -136,45 +136,45 @@ namespace RBX
 
 	void Camera::autoMode()
 	{
-		if(animationType != AUTO)
+		if (animationType != AUTO)
 		{
 			animationType = AUTO;
 
 			ICameraOwner *owner = getCameraOwner();
-			if(owner)
+			if (owner)
 				owner->cameraMoved();
 		}
 	}
 
 	void Camera::setCameraType(CameraType type)
 	{
-		if(cameraType != type)
+		if (cameraType != type)
 		{
 			cameraType = type;
 			raisePropertyChanged(desc_cameraType);
 
 			ICameraOwner *owner = getCameraOwner();
-			if(owner)
+			if (owner)
 				owner->cameraMoved();
 		}
 	}
 
 	void Camera::setCameraFocus(const G3D::CoordinateFrame &value)
 	{
-		if(value != cameraFocus)
+		if (value != cameraFocus)
 		{
 			cameraFocus = value;
 			raisePropertyChanged(desc_Focus);
 
 			ICameraOwner *owner = getCameraOwner();
-			if(owner)
+			if (owner)
 				owner->cameraMoved();
 		}
 	}
 
 	void Camera::goalToCamera()
 	{
-		if(gCamera.getCoordinateFrame() != cameraGoal)
+		if (gCamera.getCoordinateFrame() != cameraGoal)
 		{
 			cameraExternallyAdjusted = true;
 			if (Math::legalCameraCoord(cameraGoal))
@@ -188,7 +188,7 @@ namespace RBX
 			raisePropertyChanged(desc_CoordFrame);
 
 			ICameraOwner *owner = getCameraOwner();
-			if(owner)
+			if (owner)
 				owner->cameraMoved();
 		}
 	}
@@ -196,7 +196,7 @@ namespace RBX
 	bool Camera::zoomExtents(const G3D::Rect2D &viewPort)
 	{
 		ICameraOwner *owner = getCameraOwner();
-		if(owner)
+		if (owner)
 		{
 			zoomExtents(owner->computeCameraOwnerExtents(), viewPort, ZOOM_IN_OR_OUT);
 			return true;
