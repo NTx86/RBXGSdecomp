@@ -58,7 +58,7 @@ namespace RBX
 		if (currentDistance == newZoomDistance)
 			return false;
 
-		cameraGoal.translation -= lookVector * (newZoomDistance / currentDistance - 1.0F);
+		cameraGoal.translation -= lookVector * (newZoomDistance / currentDistance - 1.0f);
 
 		ICameraOwner *owner = getCameraOwner();
 		if (owner)
@@ -101,9 +101,9 @@ namespace RBX
 				return cameraSubject->zoom(in, cameraGoal, cameraFocus);
 		}
 		else if (getCameraSubjectInstance() && 
-			(cameraType == FOLLOW_CAMERA || 
-			cameraType == ATTACH_CAMERA || 
-			cameraType == TRACK_CAMERA))
+				 (cameraType == FOLLOW_CAMERA || 
+				  cameraType == ATTACH_CAMERA || 
+				  cameraType == TRACK_CAMERA))
 		{
 			return characterZoom(in);
 		}
