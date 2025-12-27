@@ -147,6 +147,12 @@ namespace RBX
 			: DerivedClass()
 		{
 		}
+
+		template<typename T0>
+		NonFactoryProduct(T0 arg0)
+			: DerivedClass(arg0)
+		{
+		}
 	public:
 		virtual const Name& getClassName() const;
 	public:
