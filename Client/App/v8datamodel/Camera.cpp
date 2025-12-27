@@ -1,7 +1,6 @@
 #include "v8datamodel/Camera.h"
 #include "v8datamodel/Workspace.h"
 #include "util/Math.h"
-#include "util/Debug.h"
 
 namespace RBX
 {
@@ -178,14 +177,14 @@ namespace RBX
 		if(gCamera.getCoordinateFrame() != cameraGoal)
 		{
 			cameraExternallyAdjusted = true;
-			
-			#if defined(_DEBUG) || defined(_RELEASEASSERT)
-			if(Math::legalCameraCoord(cameraGoal))
+			if (Math::legalCameraCoord(cameraGoal))
+			{
 				gCamera.setCoordinateFrame(cameraGoal);
-			else if(Debugable::assertAction == CrashOnAssert)
-				Debugable::doCrash();
-			#endif
-
+			}
+			else
+			{
+				RBXASSERT(0);
+			}
 			raisePropertyChanged(desc_CoordFrame);
 
 			ICameraOwner *owner = getCameraOwner();
