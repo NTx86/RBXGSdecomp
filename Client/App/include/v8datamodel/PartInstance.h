@@ -90,7 +90,10 @@ namespace RBX
 		virtual ~PartInstance();
 	public:
 		const Primitive* getPrimitive() const;
-		Primitive* getPrimitive();
+		Primitive* getPrimitive()
+		{
+			return primitive.get();
+		}
 		void setPartTypeUi(Part::PartType);
 		void setPartSizeUi(const G3D::Vector3&);
 		void setPartSizeUnjoined(const G3D::Vector3&);
