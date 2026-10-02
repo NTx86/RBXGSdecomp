@@ -1,6 +1,6 @@
 #pragma once
 #include "v8xml/XmlSerializer.h"
-#include "reflection/reflection.h"
+#include "v8tree/Instance.h"
 
 namespace RBX
 {
@@ -30,18 +30,73 @@ namespace RBX
 		std::vector<IDREFItem> deferredIDREFItems;
 
 	public:
-		virtual void announceID(const XmlNameValuePair* valueID, Instance* target);
-		virtual void announceIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref);
-		virtual bool resolveRefs();
+		virtual void announceID(const XmlNameValuePair* valueID, Instance* target)
+		{
+			processID(valueID, target);
+		}
+		virtual void announceIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref)
+		{
+			bool success = processIDREF(valueIDREF, propertyOwner, idref);
+			RBXASSERT(success);
+		}
+		virtual bool resolveRefs()
+		{
+			for (std::vector<IDREFItem>::iterator iter = deferredIDREFItems.begin(); iter != deferredIDREFItems.end(); iter++)
+			{
+				const IIDREF*& idref = iter->idref;
+				Reflection::DescribedBase*& propertyOwner = iter->propertyOwner;
+				InstanceHandle& value = iter->value;
+
+				idref->assignIDREF(propertyOwner, value);
+			}
+
+			deferredIDREFItems.clear();
+
+			return true;
+		}
 	protected:
-		virtual bool processID(const XmlNameValuePair* valueID, Instance* source);
-		virtual bool processIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref);
-	public:
-		//MergeBinder(const MergeBinder&);
-		MergeBinder();
-		~MergeBinder();
-	public:
-		//MergeBinder& operator=(const MergeBinder&);
+		virtual bool processID(const XmlNameValuePair* valueID, Instance* source)
+		{
+			InstanceHandle h;
+			if (valueID->getValue(h))
+			{
+				h.linkTo(shared_from(source));
+				return true;
+			}
+			else if (valueID->isValueEqual(&value_IDREF_nil))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		virtual bool processIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref)
+		{
+			InstanceHandle h;
+			if (valueIDREF->getValue(h))
+			{
+				if (!h.empty())
+				{
+					idref->assignIDREF(propertyOwner, h);
+				}
+				else
+				{
+					IDREFItem item = {idref, propertyOwner, h};
+					deferredIDREFItems.push_back(item);
+				}
+				return true;
+			}
+			else if (valueIDREF->isValueEqual(&value_IDREF_nil))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	};
 }
 
@@ -76,11 +131,11 @@ public:
 public:
 	void loadInstances(XmlElement*, std::vector<boost::shared_ptr<RBX::Instance>>&);
 	void load(std::istream&, RBX::DataModel*);
-	void loadXML(std::istream&, RBX::DataModel*);
+	void loadXML(std::istream& stream, RBX::DataModel* dataModel);
 	void merge(const XmlElement*, RBX::DataModel*);
   
 public:
 	static XmlElement* newRootElement();
 	static void isolateHandles(XmlElement* root);
-	static void load(XmlElement*, RBX::DataModel*);
+	static void load(XmlElement* root, RBX::DataModel* dataModel);
 };

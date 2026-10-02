@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\View.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\WedgeMesh.cpp"
 				>
 			</File>
@@ -259,6 +263,10 @@
 			</File>
 			<File
 				RelativePath=".\TorsoMesh.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RbxView\View.h"
 				>
 			</File>
 			<File

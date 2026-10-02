@@ -1,73 +1,7 @@
 #include "v8xml/SerializerV2.h"
-#include "v8tree/Instance.h"
+#include "v8datamodel/DataModel.h"
 #include <boost/bind.hpp>
 #include <algorithm>
-
-namespace RBX
-{
-	// NOTE: ALL FUNCTIONS IN MERGEBINDER ARE DEFINED IN THE HEADER
-
-	void MergeBinder::announceID(const XmlNameValuePair* valueID, Instance* target)
-	{
-		processID(valueID, target);
-	}
-
-	void MergeBinder::announceIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref)
-	{
-		bool success = processIDREF(valueIDREF, propertyOwner, idref);
-		RBXASSERT(success);
-	}
-
-	bool MergeBinder::processID(const XmlNameValuePair* valueID, Instance* source)
-	{
-		InstanceHandle h;
-		if (valueID->getValue(h))
-		{
-			h.linkTo(shared_from(source));
-			return true;
-		}
-		else if (valueID->isValueEqual(&value_IDREF_nil))
-			return true;
-		else
-			return false;
-	}
-
-	bool MergeBinder::processIDREF(const XmlNameValuePair* valueIDREF, Reflection::DescribedBase* propertyOwner, const IIDREF* idref)
-	{
-		InstanceHandle h;
-		if (valueIDREF->getValue(h))
-		{
-			if (!h.empty())
-				idref->assignIDREF(propertyOwner, h);
-			else
-			{
-				IDREFItem item = {idref, propertyOwner, h};
-				deferredIDREFItems.push_back(item);
-			}
-			return true;
-		}
-		else if (valueIDREF->isValueEqual(&value_IDREF_nil))
-			return true;
-		else
-			return false;
-	}
-
-	bool MergeBinder::resolveRefs()
-	{
-		for (std::vector<IDREFItem>::iterator iter = deferredIDREFItems.begin(); iter != deferredIDREFItems.end(); iter++)
-		{
-			const IIDREF*& idref = iter->idref;
-			Reflection::DescribedBase*& propertyOwner = iter->propertyOwner;
-			InstanceHandle& value = iter->value;
-
-			idref->assignIDREF(propertyOwner, value);
-		}
-
-		deferredIDREFItems.clear();
-
-		return true;
-	}
-}
 
 bool ArchiveBinder::resolveRefs()
 {
@@ -127,17 +61,39 @@ bool ArchiveBinder::processIDREF(const XmlNameValuePair* valueIDREF, RBX::Reflec
 	return true;
 }
 
-void buildIsolationMap(XmlElement* element, std::map<RBX::Instance*, RBX::InstanceHandle>& isolationMap);
+static void buildIsolationMap(XmlElement* element, std::map<RBX::Instance*, RBX::InstanceHandle>& isolationMap)
+{
+	XmlAttribute* referent = element->findAttribute(name_referent);
+	if (referent)
+	{
+		RBX::InstanceHandle h;
+		bool success = referent->getValue(h);
 
-void isolate(XmlElement* element, const std::map<RBX::Instance*, RBX::InstanceHandle>& isolationMap)
+		RBXASSERT(success);
+		RBXASSERT(isolationMap.find(h.getTarget().get()) == isolationMap.end());
+
+		isolationMap[h.getTarget().get()] = RBX::InstanceHandle();
+	}
+
+	for (XmlElement* child = element->firstChild(); child != NULL; child = element->nextChild(child))
+	{
+		buildIsolationMap(child, isolationMap);
+	}
+}
+
+static void isolate(XmlElement* element, const std::map<RBX::Instance*, RBX::InstanceHandle>& isolationMap)
 {
 	element->replaceHandles(isolationMap);
 
 	for (XmlAttribute* attr = element->getFirstAttribute(); attr != NULL; attr = element->getNextAttribute(attr))
+	{
 		attr->replaceHandles(isolationMap);
+	}
 
 	for (XmlElement* elem = element->firstChild(); elem != NULL; elem = element->nextChild(elem))
+	{
 		isolate(elem, isolationMap);
+	}
 }
 
 void SerializerV2::isolateHandles(XmlElement* root)
@@ -163,4 +119,36 @@ XmlElement* SerializerV2::newRootElement()
 	thisElement->pushBackChild(new XmlElement(tag_External, &value_IDREF_nil));
 
 	return thisElement;
+}
+
+void SerializerV2::load(XmlElement* root, RBX::DataModel* dataModel)
+{
+	ArchiveBinder binder;
+	dataModel->readChildren(root, binder);
+
+	binder.resolveRefs();
+}
+
+void SerializerV2::loadXML(std::istream& stream, RBX::DataModel* dataModel)
+{
+	TextXmlParser machine(stream.rdbuf());
+	std::auto_ptr<XmlElement> root = machine.parse();
+
+	if (root->getTag() == tag_roblox)
+	{
+		XmlAttribute* version = root->findAttribute(tag_version);
+		if (!version->getValue(schemaVersionLoading))
+			throw std::runtime_error("SerializerV2::loadXML no version number");
+
+		if (schemaVersionLoading < 4)
+			throw std::runtime_error("SerializerV2::loadXML schemaVersionLoading<4");
+
+		load(root.get(), dataModel);
+		dataModel->setDirty(false);
+	}
+	else
+	{
+		schemaVersionLoading = 1;
+		throw std::runtime_error("SerializerV2::loadXML ill-formed XML. No Roblox tag");
+	}
 }
