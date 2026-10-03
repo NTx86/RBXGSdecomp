@@ -23,6 +23,8 @@ static void timeStamp(std::ofstream& stream, bool includeDate)
 
 namespace RBX
 {
+	ILogProvider* Log::provider;
+
 	void Log::setLogProvider(ILogProvider* provider)
 	{
 		Log::provider = provider;

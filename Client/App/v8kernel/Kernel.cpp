@@ -202,7 +202,7 @@ float Kernel::totalKineticEnergy() const
 }
 
 //hack to make compiler not to optimize out findStage
-void Kernel::matchDummy()
+__declspec( dllexport ) void Kernel::matchDummy()
 {
 	maxBodies = *(int*)findStage(SLEEP_STAGE);
 }

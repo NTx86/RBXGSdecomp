@@ -9,7 +9,7 @@
 namespace RBX {
 class Kernel : public IStage {
 	private:
-		void matchDummy(); //hack, not in original src
+		__declspec( dllexport ) void matchDummy(); //hack, not in original src
 		bool inStepCode;
 		KernelData *kernelData;
 		G3D::Array<RBX::Connector *> realTimeConnectors;
