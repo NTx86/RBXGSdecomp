@@ -431,12 +431,12 @@ namespace RBX
 
 			const G3D::CoordinateFrame& primPV0 = this->getPrimitive(baseId)->getBody()->getPV().position;
 			const G3D::CoordinateFrame& primPV1 = this->getPrimitive(testId)->getBody()->getPV().position;
-			G3D::Vector3* eBase = (G3D::Vector3*)this->block(baseId)->getVertices();
-			G3D::Vector3* eTest = (G3D::Vector3*)this->block(testId)->getVertices();
+			const G3D::Vector3* eBase = (const G3D::Vector3*)this->block(baseId)->getVertices();
+			const G3D::Vector3* eTest = (const G3D::Vector3*)this->block(testId)->getVertices();
 
 			G3D::Vector3 delta = primPV1.translation - primPV0.translation;
 
-			G3D::Vector3 rotTransMul = primPV0.rotation * delta;
+			G3D::Vector3 rotTransMul = delta * primPV0.rotation;
 
 			for (int j = this->separatingAxisId; j < this->separatingAxisId + 3; j++)
 			{
@@ -485,8 +485,8 @@ namespace RBX
 		}
 		const G3D::CoordinateFrame& primPV0 = this->getPrimitive(0)->getBody()->getPV().position;
 		const G3D::CoordinateFrame& primPV1 = this->getPrimitive(1)->getBody()->getPV().position;
-		G3D::Vector3* e0 = (G3D::Vector3*)this->block(0)->getVertices();
-		G3D::Vector3* e1 = (G3D::Vector3*)this->block(1)->getVertices();
+		const G3D::Vector3* e0 = (const G3D::Vector3*)this->block(0)->getVertices();
+		const G3D::Vector3* e1 = (const G3D::Vector3*)this->block(1)->getVertices();
 
 		G3D::Vector3 p0p1 = primPV1.translation - primPV0.translation;
 
@@ -500,8 +500,8 @@ namespace RBX
 
 				float p0p1inCrossAxis = crossAxis.dot(p0p1);
 
-				G3D::Vector3 crossAxisMulPV0rot = primPV0.rotation * crossAxis;
-				G3D::Vector3 crossAxisMulPV1rot = primPV1.rotation * crossAxis;
+				G3D::Vector3 crossAxisMulPV0rot = crossAxis * primPV0.rotation;
+				G3D::Vector3 crossAxisMulPV1rot = crossAxis * primPV1.rotation;
 
 				float what = Math::taxiCabMagnitude(crossAxisMulPV0rot * *e0) + Math::taxiCabMagnitude(crossAxisMulPV1rot * *e1) - fabs(p0p1inCrossAxis);
 				if (what > overlapIgnored)
