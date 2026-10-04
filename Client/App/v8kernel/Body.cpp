@@ -305,7 +305,7 @@ void Body::setMeInParent(const G3D::CoordinateFrame& _meInParent)
 
 G3D::Vector3 Body::getBranchCofmPos() const
 {
-	return cofm ? pv.position.pointToObjectSpace(getPos()) : getCoordinateFrame().translation;
+	return cofm ? pv.position.pointToWorldSpace(getPos()) : getCoordinateFrame().translation;
 }
 
 G3D::CoordinateFrame Body::getBranchCofmCoordinateFrame() const
