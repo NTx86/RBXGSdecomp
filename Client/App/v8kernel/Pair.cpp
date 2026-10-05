@@ -130,7 +130,7 @@ namespace RBX
 		{
 			float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
 			float body0Dot = bodyWorldSpaceDelta.dot(body0Normal);
-			float theSinner = (bodyNormalDot + (body1Dot * body0Dot)) / compareResult;
+			float theSinner = (body0Dot + (bodyNormalDot * body1Dot)) / compareResult;
 			theSinner = unkClampInline(theSinner, 6.0f);
 			_params.position = body0Normal * theSinner + body0worldSpace;
 			_params.length = _params.normal.dot(body1worldSpace - _params.position);
@@ -159,7 +159,7 @@ namespace RBX
 		float body0Dot = bodyWorldSpaceDelta.dot(body0Normal);
 		float body1Dot = -bodyWorldSpaceDelta.dot(body1Normal);
 		float compareResult = 1.0f - bodyNormalDot * bodyNormalDot;
-		if ( compareResult > 0.00001f )
+		if ( compareResult > 0.000001f )
 		{
 			float bodyDotCalc1 = (body0Dot + body1Dot * bodyNormalDot) * (1.0f / compareResult);
 			float bodyDotCalc2 = (body1Dot + body0Dot * bodyNormalDot) * (1.0f / compareResult);
