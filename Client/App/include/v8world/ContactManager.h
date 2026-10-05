@@ -7,6 +7,8 @@
 #include "util/HitTestFilter.h"
 #include "util/Extents.h"
 
+class MainHookClass; //HOOKHOOK_HACK
+
 namespace RBX
 {
 	class Contact;
@@ -16,6 +18,8 @@ namespace RBX
 
 	class ContactManager
 	{
+	friend class MainHookClass;
+
 	private:
 		SpatialHash* spatialHash;
 		World* world;

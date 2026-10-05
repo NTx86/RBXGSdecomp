@@ -16,6 +16,8 @@
 #include "util/Face.h"
 #include "util/Velocity.h"
 
+class MainHookClass; //HOOKHOOK_HACK
+
 namespace RBX
 {
 	class Edge;
@@ -55,6 +57,7 @@ namespace RBX
 	class Primitive : public IPipelined
 	{
 		friend class SpatialHash;
+		friend class MainHookClass; //HOOKHOOK_HACK
 
 	private:
 		Guid guid;
