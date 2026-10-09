@@ -14,6 +14,8 @@
 #define RBXClumpStageProcess 0x005A3680
 #define RBXPrimitiveNewGeometry 0x0052CE70
 #define RBXContactManagercreateContact 0x0058D680
+#define RBXPrimitiveCtor 0x0052D360
+#define RBXPrimitiveDtor 0x0052CEE0
 //unneeded
 #define RBXContactBallBallContactCtor 0x0058C790
 #define RBXContactBallBlockContactCtor 0x0058C8A0
@@ -54,6 +56,12 @@ RBX::Geometry* HooknewGeometry(RBX::Geometry::GeometryType geometryType)
 	}
 }
 
+void __fastcall PrimitiveCtor(RBX::Primitive* AThis, void* EDX, RBX::Geometry::GeometryType type)
+{
+	free(AThis);
+	AThis = new RBX::Primitive(type);
+}
+
 class MainHookClass
 {
 	public:
@@ -88,6 +96,9 @@ void MainHookClass::doHooks()
 	RBX::Contact* (RBX::ContactManager:: * ContactManagercreateContactPtr)(RBX::Primitive* p0, RBX::Primitive* p1) = &RBX::ContactManager::createContact;
 	void* ContactManagercreateContactAddr = *(void**)(&ContactManagercreateContactPtr);
 	HookFunc((void*)RBXContactManagercreateContact, ContactManagercreateContactAddr);
+
+	//RBX::Primitive::Primitive
+	HookFunc((void*)RBXPrimitiveCtor, PrimitiveCtor);
 }
 
 extern "C" __declspec(dllexport) DWORD WINAPI MainThread(LPVOID param)
