@@ -166,6 +166,28 @@ namespace RBX
 		}
 
 		template<>
+		double& Value::convert<double>()
+		{
+			if (isType<int>())
+			{
+				value = (double)boost::any_cast<int>(value);
+				_type = &Type::singleton<double>();
+			}
+			if (isType<bool>())
+			{
+				value = (double)(boost::any_cast<bool>(value) ? 1 : 0);
+				_type = &Type::singleton<double>();
+			}
+			if (isType<float>())
+			{
+				value = (double)boost::any_cast<float>(value);
+				_type = &Type::singleton<double>();
+			}
+
+			return genericConvert<double>();
+		}
+
+		template<>
 		G3D::Vector3& Value::convert<G3D::Vector3>()
 		{
 			return genericConvert<G3D::Vector3>();
@@ -251,28 +273,6 @@ namespace RBX
 				throw std::runtime_error("Unable to cast value to Object");
 				
 			return *val;
-		}
-
-		template<>
-		double& Value::convert<double>()
-		{
-			if (isType<int>())
-			{
-				value = (double)cast<int>();
-				_type = &Type::singleton<double>();
-			}
-			if (isType<bool>())
-			{
-				value = (double)(cast<bool>() ? 1 : 0);
-				_type = &Type::singleton<double>();
-			}
-			if (isType<float>())
-			{
-				value = (double)cast<float>();
-				_type = &Type::singleton<double>();
-			}
-
-			return genericConvert<double>();
 		}
 
 		template<>
