@@ -91,6 +91,29 @@ namespace RBX
 				return isType<void>();
 			}
 
+		private:
+			template<typename T>
+			T& genericConvert()
+			{
+				T* val = boost::any_cast<T>(&value);
+				if (val)
+					return *val;
+
+				if (isType<std::string>())
+				{
+					T v;
+					if (StringConverter<T>::convertToValue(*boost::any_cast<std::string>(&value), v))
+					{
+						value = v;
+						_type = &Type::singleton<T>();
+
+						return *boost::any_cast<T>(&value);
+					}
+				}
+
+				throw std::runtime_error(G3D::format("Unable to cast %s to %s", _type->tag.c_str(), Type::singleton<T>().tag.c_str()));
+			}
+
 		public:
 			template<typename T>
 			T cast() const
@@ -108,9 +131,6 @@ namespace RBX
 			T& convert();
 
 			template<typename T>
-			T& genericConvert();
-
-			template<typename T>
 			T get() const;
 
 			template<typename T>
@@ -125,14 +145,6 @@ namespace RBX
 				this->_type = &Type::singleton<T>();
 				this->value = rhs;
 				return *this;
-			}
-
-			// TODO: replace all mentions with operator=?
-			template<typename T>
-			void set(const T& value)
-			{
-				this->_type = &Type::singleton<T>();
-				this->value = value;
 			}
 		};
 

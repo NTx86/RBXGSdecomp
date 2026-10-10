@@ -508,7 +508,7 @@ namespace RBX
 			template<typename ReturnType>
 			void call(Class* o, Value& returnValue) const
 			{
-				returnValue.set<ReturnType>((o->*function)());
+				returnValue = (o->*function)();
 			}
 
 			template<>
@@ -578,7 +578,7 @@ namespace RBX
 			template<typename ReturnType>
 			void call(Class* o, Value& returnValue, Value& arg1) const
 			{
-				returnValue.set<ReturnType>((o->*function)(arg1.convert<typename Arg1>()));
+				returnValue = (o->*function)(arg1.convert<typename Arg1>());
 			}
 
 			template<>
@@ -671,7 +671,7 @@ namespace RBX
 			template<typename ReturnType>
 			void call(Class* o, Value& returnValue, Value& arg1, Value& arg2) const
 			{
-				returnValue.set<ReturnType>((o->*function)(arg1.convert<typename Arg1>(), arg2.convert<typename Arg2>()));
+				returnValue = (o->*function)(arg1.convert<typename Arg1>(), arg2.convert<typename Arg2>());
 			}
 
 			template<>
@@ -791,7 +791,7 @@ namespace RBX
 			template<typename ReturnType>
 			void call(Class* o, Value& returnValue, Value& arg1, Value& arg2, Value& arg3) const
 			{
-				returnValue.set<ReturnType>((o->*function)(arg1.convert<typename Arg1>(), arg2.convert<typename Arg2>(), arg3.convert<typename Arg3>()));
+				returnValue = (o->*function)(arg1.convert<typename Arg1>(), arg2.convert<typename Arg2>(), arg3.convert<typename Arg3>());
 			}
 
 			template<>
@@ -943,7 +943,7 @@ namespace RBX
 			template<typename ReturnType>
 			void call(Class* o, Value& returnValue, Value& arg1, Value& arg2, Value& arg3, Value& arg4) const
 			{
-				returnValue.set<ReturnType>((o->*function)(arg1.convert<typename Arg1>(), arg2.convert<typename Arg2>(), arg3.convert<typename Arg3>(), arg4.convert<typename Arg4>()));
+				returnValue = (o->*function)(arg1.convert<typename Arg1>(), arg2.convert<typename Arg2>(), arg3.convert<typename Arg3>(), arg4.convert<typename Arg4>());
 			}
 
 			template<>

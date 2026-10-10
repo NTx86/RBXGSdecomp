@@ -223,10 +223,16 @@ namespace RBX
 				boost::shared_ptr<GenericSlotWrapper> wrapper;
 			  
 			public:
-				GenericSlotAdapter(GenericSlotWrapper*);
+				GenericSlotAdapter(GenericSlotWrapper* wrapper)
+					: wrapper(wrapper)
+				{
+				}
 
 			public:
-				void operator()();
+				void operator()()
+				{
+					wrapper->execute(std::vector<boost::any>());
+				}
 			};
 
 		protected:
@@ -244,7 +250,11 @@ namespace RBX
 			}
 
 		protected:
-			virtual boost::signals::connection connectGeneric(SignalInstance*, GenericSlotWrapper*, boost::signals::connect_position) const;
+			virtual boost::signals::connection connectGeneric(SignalInstance* si, GenericSlotWrapper* wrapper, boost::signals::connect_position pos) const
+			{
+				TSignalInstance* instance = static_cast<TSignalInstance*>(si);
+				return instance->connect(GenericSlotAdapter(wrapper), pos);
+			}
 		};
 
 		template<typename CallbackSignature>
@@ -257,13 +267,16 @@ namespace RBX
 				boost::shared_ptr<GenericSlotWrapper> wrapper;
 			  
 			public:
-				GenericSlotAdapter(GenericSlotWrapper*);
+				GenericSlotAdapter(GenericSlotWrapper* wrapper)
+					: wrapper(wrapper)
+				{
+				}
 
 			public:
 				void operator()(typename boost::function_traits<CallbackSignature>::arg1_type arg1)
 				{
 					std::vector<boost::any> args(1);
-					args[0] = boost::any(arg1);
+					args[0] = arg1;
 
 					wrapper->execute(args);
 				}
@@ -284,7 +297,11 @@ namespace RBX
 			}
 
 		protected:
-			virtual boost::signals::connection connectGeneric(SignalInstance*, GenericSlotWrapper*, boost::signals::connect_position) const;
+			virtual boost::signals::connection connectGeneric(SignalInstance* si, GenericSlotWrapper* wrapper, boost::signals::connect_position pos) const
+			{
+				TSignalInstance* instance = static_cast<TSignalInstance*>(si);
+				return instance->connect(GenericSlotAdapter(wrapper), pos);
+			}
 		};
 
 		template<typename CallbackSignature>
@@ -297,10 +314,20 @@ namespace RBX
 				boost::shared_ptr<GenericSlotWrapper> wrapper;
 			  
 			public:
-				GenericSlotAdapter(GenericSlotWrapper*);
+				GenericSlotAdapter(GenericSlotWrapper* wrapper)
+					: wrapper(wrapper)
+				{
+				}
 
 			public:
-				void operator()(typename boost::function_traits<CallbackSignature>::arg1_type arg1, typename boost::function_traits<CallbackSignature>::arg2_type arg2);
+				void operator()(typename boost::function_traits<CallbackSignature>::arg1_type arg1, typename boost::function_traits<CallbackSignature>::arg2_type arg2)
+				{
+					std::vector<boost::any> args(2);
+					args[0] = arg1;
+					args[1] = arg2;
+
+					wrapper->execute(args);
+				}
 			};
 
 		protected:
@@ -318,7 +345,11 @@ namespace RBX
 			}
 
 		protected:
-			virtual boost::signals::connection connectGeneric(SignalInstance*, GenericSlotWrapper*, boost::signals::connect_position) const;
+			virtual boost::signals::connection connectGeneric(SignalInstance* si, GenericSlotWrapper* wrapper, boost::signals::connect_position pos) const
+			{
+				TSignalInstance* instance = static_cast<TSignalInstance*>(si);
+				return instance->connect(GenericSlotAdapter(wrapper), pos);
+			}
 		};
 
 		template<typename Class, typename CallbackSignature>
