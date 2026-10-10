@@ -18,6 +18,11 @@ static RBX::Reflection::BoundFuncDesc<RBX::Network::Replicator, void(void), 0> f
 
 static RBX::Reflection::BoundFuncDesc<RBX::Network::Replicator, boost::shared_ptr<RBX::Instance>(void), 0> prop_RemotePlayer(&RBX::Network::Replicator::getPlayer, "GetPlayer", RBX::Reflection::FunctionDescriptor::NeedTrustedCaller);
 
+RBX::Reflection::BoundProp<int, 1> RBX::Network::Replicator::prop_maxDataModelSendBuffer("MaxDataModelSendBuffer", "Replication", &RBX::NetworkSettings::maxDataModelSendBuffer, RBX::Reflection::PropertyDescriptor::STANDARD);
+
+RBX::Reflection::SignalDesc<RBX::Network::Marker, void(void)> RBX::Network::Marker::event_Returned("Received");
+RBX::Reflection::SignalDesc<RBX::Network::Replicator, void(std::string, bool)> event_Disconnection("Disconnection", "peer", "lostConnection");
+
 enum ValueType // NOTE: may not be intended for this file
 {
 	ValueType_nil,
