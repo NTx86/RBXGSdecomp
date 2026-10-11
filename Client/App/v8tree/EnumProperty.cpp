@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include "v8tree/Instance.h"
 #include "v8datamodel/BrickColor.h"
+#include "util/NormalId.h"
 
 namespace RBX
 {
@@ -99,6 +100,18 @@ namespace RBX
 		{
 			static Type type("BrickColor", typeid(BrickColor), "int");
 			return type;
+		}
+
+		template<>
+		EnumDesc<NormalId>::EnumDesc()
+			: EnumDescriptor("NormalId", typeid(NormalId))
+		{
+			addPair(NORM_Y, "Top"),
+			addPair(NORM_Y_NEG, "Bottom");
+			addPair(NORM_Z, "Back");
+			addPair(NORM_Z_NEG, "Front");
+			addPair(NORM_X, "Right");
+			addPair(NORM_X_NEG, "Left");
 		}
 
 		template<>
@@ -312,6 +325,12 @@ namespace RBX
 		}
 
 		template<>
+		bool TypedPropertyDescriptor<ContentId>::hasStringValue() const
+		{
+			return true;
+		}
+
+		template<>
 		bool TypedPropertyDescriptor<BrickColor>::hasStringValue() const
 		{
 			return false;
@@ -357,6 +376,12 @@ namespace RBX
 		std::string TypedPropertyDescriptor<ContentId>::getStringValue(const DescribedBase* instance) const
 		{
 			return StringConverter<ContentId>::convertToString(getValue(instance));
+		}
+
+		template<>
+		std::string TypedPropertyDescriptor<BrickColor>::getStringValue(const DescribedBase* instance) const
+		{
+			return PropertyDescriptor::getStringValue(instance);
 		}
 
 		template<>
@@ -441,6 +466,13 @@ namespace RBX
 				return true;
 			}
 
+			return false;
+		}
+
+		template<>
+		bool TypedPropertyDescriptor<BrickColor>::setStringValue(DescribedBase* instance, const std::string& text) const
+		{
+			PropertyDescriptor::setStringValue(instance, text);
 			return false;
 		}
 
