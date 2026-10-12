@@ -95,7 +95,7 @@ namespace RBX
 
 		virtual bool isStackTooBig() const
 		{
-		  return getStackSize() > 10;
+			return getStackSize() > 10;
 		}
 
 		Workspace* getWorkspace() const
