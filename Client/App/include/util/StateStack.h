@@ -35,7 +35,10 @@ namespace RBX
 		bool canRedo(std::string&) const;
 		T* redo();
 	protected:
-		size_t getStackSize() const;
+		size_t getStackSize() const
+		{
+			return stack.size();
+		}
 		virtual bool isStackTooBig() const;
 	private:
 		void clearStackAfter(int);
